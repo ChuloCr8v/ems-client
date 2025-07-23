@@ -1,11 +1,10 @@
-import type { ReactNode } from "react"
-import { IoWarningOutline } from "react-icons/io5"
+import type { ReactNode } from "react";
 
 interface OnboardingWrapperProps {
-  children: ReactNode
-  title?: string
-  subtitle?: string
-  maxWidth?: string
+  children: ReactNode;
+  title?: string;
+  subtitle?: string;
+  maxWidth?: string;
 }
 
 const OnboardingWrapper = ({
@@ -15,7 +14,9 @@ const OnboardingWrapper = ({
   maxWidth = "max-w-[800px]",
 }: OnboardingWrapperProps) => {
   return (
-    <div className={`w-full ${maxWidth} bg-white/25 !rounded-2xl !p-8 backdrop-blur-2xl relative`}>
+    <div
+      className={`w-full ${maxWidth} bg-white/25 !rounded-2xl !p-8 backdrop-blur-2xl relative`}
+    >
       <div className=" rounded-2xl ">
         {/* Header */}
         <div className="px-8 py-6 text-center">
@@ -34,7 +35,7 @@ const OnboardingWrapper = ({
         {children}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default OnboardingWrapper
+export default OnboardingWrapper;

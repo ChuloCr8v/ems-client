@@ -7,9 +7,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { twMerge } from "tailwind-merge";
 
-type Props = {};
-
-const SummaryCards = (props: Props) => {
+const SummaryCards = () => {
   const data = [
     {
       icon: HomeIcon,
