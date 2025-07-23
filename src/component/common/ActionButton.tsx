@@ -12,6 +12,16 @@ interface ActionButtonsProps {
   containerClassName?: string;
   showBackButton?: boolean;
   showProceedButton?: boolean;
+  backButtonColor?: string;
+  backTextColor?: string;
+  proceedButtonColor?: string;
+  proceedTextColor?: string;
+  hoverBackColor?: string;
+  hoverProceedColor?: string;
+  showBackIcon?: boolean;
+  showProceedIcon?: boolean;
+  backIcon?: React.ReactNode;
+  proceedIcon?: React.ReactNode;
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
@@ -24,6 +34,16 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   containerClassName = "",
   showBackButton = true,
   showProceedButton = true,
+  backButtonColor = "#0A96CC",
+  backTextColor = "#0A96CC",
+  proceedButtonColor = "#0A96CC",
+  proceedTextColor = "#ffffff",
+  hoverBackColor = "gray-400",
+  hoverProceedColor = "#0984b3",
+  showBackIcon = true,
+  showProceedIcon = true,
+  backIcon = <ArrowLeftOutlined />,
+  proceedIcon = <ArrowRightOutlined />,
 }) => {
   return (
     <div className={`flex flex-row justify-end gap-4 pt-8 !mt-4 ${containerClassName}`}>
@@ -31,8 +51,12 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         <Button
           size="large"
           onClick={onBack}
-          icon={<ArrowLeftOutlined />}
-          className="w-full sm:w-auto md:w-[144px] h-[40px] !border-[#0A96CC] !text-[#0A96CC] hover:border-gray-400 hover:text-gray-700"
+          icon={showBackIcon ? backIcon : null}
+          className={`w-full sm:w-auto md:w-[144px] h-[40px] border-[${backButtonColor}] text-[${backTextColor}] hover:border-${hoverBackColor} hover:text-${hoverBackColor}`}
+          style={{
+            borderColor: backButtonColor,
+            color: backTextColor,
+          }}
           {...backButtonProps}
         >
           {backText}
@@ -44,8 +68,19 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           type="primary"
           size="large"
           onClick={onProceed}
-          icon={<ArrowRightOutlined />}
-          className="w-full sm:w-auto md:w-[144px] h-[40px] bg-[#0A96CC] hover:bg-[#0984b3] border-[#0A96CC] font-medium"
+          icon={showProceedIcon ? proceedIcon : null}
+          className={`w-full sm:w-auto md:w-[144px] h-[40px] font-medium`}
+          style={{
+            backgroundColor: proceedButtonColor,
+            borderColor: proceedButtonColor,
+            color: proceedTextColor,
+            ...(hoverProceedColor && {
+              ':hover': {
+                backgroundColor: hoverProceedColor,
+                borderColor: hoverProceedColor,
+              }
+            })
+          }}
           {...proceedButtonProps}
         >
           {proceedText}

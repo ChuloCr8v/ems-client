@@ -1,82 +1,110 @@
+import { useState } from "react";
+import InvitationBackgroundWrapper from "../../component/InvitationBackgroundWrapper";
+import OfferAcceptance from "./OfferAcceptance";// Make sure to import the OfferDecline component
+import OnboardingPersonalInfo from "./OnBoardingPersonalInfo";
+import OnboardingKeyContacts from "./Onboarding-key-contacts";
+import OnboardingDocuments from "./OnboardingDocuments";
+import OnboardingSuccess from "./OnboardingSuccess";
+import OfferDecline from "./Offer-decline";
+import OfferDeclineSuccess from "./OfferDeclineSuccess";
 
-import { useState } from "react"
-import InvitationBackgroundWrapper from "../../component/InvitationBackgroundWrapper"
-import OfferAcceptance from "./OfferAcceptance"
-import OnboardingPersonalInfo from "./OnBoardingPersonalInfo"
-import OnboardingKeyContacts from "./Onboarding-key-contacts"
-import OnboardingDocuments from "./OnboardingDocuments"
-
-
-type FlowStep = "offer" | "personal-info" | "key-contacts" | "documents" | "completed"
+type FlowStep = "offer" | "offer-decline" | "offer-decline-success" | "personal-info" | "key-contacts" |
+    "documents" | "success";
 
 const InvitationFlow: React.FC = () => {
-    const [step, setStep] = useState<FlowStep>("offer")
+    const [step, setStep] = useState<FlowStep>("offer");
 
     const handleOfferAccept = () => {
-        setStep("personal-info")
-    }
+        setStep("personal-info");
+    };
+
+    const handleOfferDecline = () => {
+        setStep("offer-decline");
+    };
+
+    const handleDeclineConfirmed = () => {
+        console.log("Offer declined and feedback submitted");
+        // Here you might want to redirect or show a confirmation message
+        // For now, we'll just go back to the offer screen
+        setStep("offer-decline-success");
+    };
+
+    const handleDeclineCancel = () => {
+        setStep("offer");
+    };
 
     const handlePersonalInfoProceed = () => {
-        setStep("key-contacts")
-    }
+        setStep("key-contacts");
+    };
 
     const handlePersonalInfoBack = () => {
-        setStep("offer")
-    }
+        setStep("offer");
+    };
 
     const handleKeyContactsProceed = () => {
-        setStep("documents")
-        // TODO: Navigate to documents step
-        console.log("Proceeding to documents step")
-    }
+        setStep("documents");
+        console.log("Proceeding to documents step");
+    };
 
     const handleKeyContactsBack = () => {
-        setStep("personal-info")
-    }
+        setStep("personal-info");
+    };
 
     const handleDocumentsProceed = () => {
-        setStep("completed")
-        console.log("Onboarding completed!")
-    }
+        setStep("success");
+        console.log("Onboarding completed!");
+    };
 
     const handleDocumentsBack = () => {
-        setStep("key-contacts")
-    }
-
-    // const handleAcceptOffer = () => {
-    //     console.log("Offer accepted")
-    //     // Handle accept logic here
-    // }
-
-    // const handleDeclineOffer = () => {
-    //     console.log("Offer declined")
-    //     // Handle decline logic here
-    // }
+        setStep("key-contacts");
+    };
 
     return (
         <InvitationBackgroundWrapper>
-            {step === "offer" && <OfferAcceptance onContinue={handleOfferAccept} />}
+            {step === "offer" && (
+                <OfferAcceptance
+                    onContinue={handleOfferAccept}
+                    onDecline={handleOfferDecline}
+                />
+            )}
 
+            {step === "offer-decline" && (
+                <OfferDecline
+                    onCancel={handleDeclineCancel}
+                    onDecline={handleDeclineConfirmed}
+                />
+            )}
+
+            {step === "offer-decline-success" && (
+                <OfferDeclineSuccess />
+            )}
+
+            {/* Rest of your components remain the same */}
             {step === "personal-info" && (
-                <OnboardingPersonalInfo onProceed={handlePersonalInfoProceed} onBack={handlePersonalInfoBack} />
+                <OnboardingPersonalInfo
+                    onProceed={handlePersonalInfoProceed}
+                    onBack={handlePersonalInfoBack}
+                />
             )}
 
             {step === "key-contacts" && (
-                <OnboardingKeyContacts onProceed={handleKeyContactsProceed} onBack={handleKeyContactsBack} />
+                <OnboardingKeyContacts
+                    onProceed={handleKeyContactsProceed}
+                    onBack={handleKeyContactsBack}
+                />
             )}
 
-            {step === "documents" && <OnboardingDocuments onProceed={handleDocumentsProceed} onBack={handleDocumentsBack} />}
-
-            {step === "completed" && (
-                <div className="w-full max-w-[800px] bg-white/25 rounded-2xl p-8 backdrop-blur-2xl">
-                    <div className="text-center text-gray-800">
-                        <h2 className="text-2xl font-bold mb-4">Onboarding Complete!</h2>
-                        <p>Thank you for completing your profile.</p>
-                    </div>
-                </div>
+            {step === "documents" && (
+                <OnboardingDocuments
+                    onProceed={handleDocumentsProceed}
+                    onBack={handleDocumentsBack}
+                />
             )}
+
+            {step === "success" && <OnboardingSuccess />}
         </InvitationBackgroundWrapper>
-    )
-}
 
-export default InvitationFlow
+    );
+};
+
+export default InvitationFlow;

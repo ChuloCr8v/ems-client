@@ -16,7 +16,7 @@ const OnboardingSteps = ({ currentStep }: OnboardingStepsProps) => {
             }`}
           >
             {currentStep > 0 ? (
-              <svg className="w-5 h-5 text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-[16px] h-[16px] text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
                   d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -42,7 +42,7 @@ const OnboardingSteps = ({ currentStep }: OnboardingStepsProps) => {
           }`}
         >
           {currentStep > 0 ? (
-            <svg className="w-5 h-5 text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-[16px] h-[16px] text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -68,7 +68,7 @@ const OnboardingSteps = ({ currentStep }: OnboardingStepsProps) => {
             }`}
           >
             {currentStep > 1 ? (
-              <svg className="w-5 h-5 text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-[16px] h-[16px] text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
                   d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -104,7 +104,7 @@ const OnboardingSteps = ({ currentStep }: OnboardingStepsProps) => {
           }`}
         >
           {currentStep === 2 ? (
-            <svg className="w-5 h-5 text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-[16px] h-[16px] text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -139,19 +139,17 @@ const OnboardingSteps = ({ currentStep }: OnboardingStepsProps) => {
               currentStep === 2 ? "bg-[#E7F5FA]" : currentStep > 2 ? "bg-[#E7F5FA]" : "bg-[#EEF1F0]"
             }`}
           >
-            {currentStep > 2 ? (
-              <svg className="w-5 h-5 text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            ) : (
+            {currentStep <= 1 ? (
               <img
                 src="/login/OnBoarding/document.png"
                 alt="Documents"
-                className={`w-5 h-5 object-contain ${currentStep === 2 ? "filter brightness-0 invert" : ""}`}
+                className={`text-[#0A96CC] object-contain ${currentStep === 1 ? "" : ""}`}
+              />
+            ) : (
+              <img
+                src="/login/OnBoarding/documentBlue.svg"
+                alt="Documents"
+                className={`text-[#0A96CC] object-contain ${currentStep === 2 ? "" : ""}`}
               />
             )}
           </div>
@@ -170,7 +168,7 @@ const OnboardingSteps = ({ currentStep }: OnboardingStepsProps) => {
           }`}
         >
           {currentStep > 2 ? (
-            <svg className="w-5 h-5 text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-[16px] h-[16px] text-[#0A96CC]" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -194,7 +192,7 @@ const OnboardingSteps = ({ currentStep }: OnboardingStepsProps) => {
       <Steps
         current={currentStep}
         items={steps}
-        className="custom-steps-responsive !w-5/6"
+        className="custom-steps-responsive !w-5/6 "
         direction="horizontal"
         
         responsive={false}
