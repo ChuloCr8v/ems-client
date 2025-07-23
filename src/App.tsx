@@ -8,6 +8,8 @@ import AppRoutes from "./routes/AppRoutes";
 import { PopupProvider } from "./context/PopupContext";
 import PageError from "./component/PageError";
 import { Loading } from "./component/global/Loading";
+import AuthContext from "./context/AuthContext";
+// import AuthContext from "./context/AuthContext";
 
 function App() {
   return (
@@ -38,7 +40,9 @@ function App() {
         >
           <PopupProvider>
             <BrowserRouter>
-              <AppRoutes />
+              <AuthContext>
+                <AppRoutes />
+              </AuthContext>
             </BrowserRouter>
           </PopupProvider>
         </ConfigProvider>

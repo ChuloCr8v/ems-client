@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import Layout from "./layout/Layout";
-import ProtectedRoutes from "../routes/ProtectedRoutes";
-
+import Layout from "../views/layout/Layout";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const UserPages = () => {
   return (
@@ -14,7 +13,6 @@ const UserPages = () => {
           </Layout>
         }
       />
-      
     </Routes>
   );
 };

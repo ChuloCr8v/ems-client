@@ -6,8 +6,6 @@ import InvitationFlow from "../views/auth/InvitationFlow";
 import Login from "../views/auth/Login";
 import EditOnboardingInfo from "../views/auth/EditOnboardingInfo";
 
-
-
 const ProtectedRoutes = () => {
   return (
     <Routes>
@@ -18,6 +16,9 @@ const ProtectedRoutes = () => {
       <Route path="/auth/inbox" element={<Inbox />} />
       <Route path="/auth/invitation" element={<InvitationFlow />} />
       <Route path="/auth/edit" element={<EditOnboardingInfo />} />
+      <Route path="/*" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/inbox" element={<Inbox />} />
     </Routes>
   );
 };
