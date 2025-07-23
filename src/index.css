@@ -1,20 +1,15 @@
 /* src/index.css */
 @font-face {
   font-family: "raleway";
-  src: url("./assets/fonts/RalewayRaleway-Italic-VariableFont_wght.ttf")
+  src: url("./fonts/RalewayRaleway-Italic-VariableFont_wght.ttf")
       format("truetype"),
-    url("./assets/fonts/Raleway/Raleway-VariableFont_wght.ttf")
-      format("truetype");
+    url("./fonts/Raleway/Raleway-VariableFont_wght.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
 }
 
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
   font-family: "raleway", sans-serif;
-  font-size: 12px;
 }
 
 body {
@@ -23,4 +18,31 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+}
+
+.custom-upload-dragger .ant-upload-btn {
+  padding: 0 !important; /* Remove default padding */
+}
+
+.custom-upload-dragger .ant-upload-drag {
+  border: 2px dashed #86efac !important; /* Green dashed border */
+  background-color: #f0fdf4 !important; /* Light green background */
+  border-radius: 0.5rem !important; /* Rounded corners */
+  padding: 1rem !important; /* Adjust padding as needed */
+}
+
+.custom-upload-dragger .ant-upload-drag:hover {
+  border-color: #22c55e !important; /* Darker green on hover */
+}
+
+.custom-upload-dragger .ant-upload-text {
+  display: none; /* Hide default text */
+}
+
+.custom-upload-dragger .ant-upload-hint {
+  display: none; /* Hide default hint */
+}
+
+.custom-upload-dragger .ant-upload-list {
+  margin-top: 1rem; /* Space between dragger and file list */
 }

@@ -16,7 +16,7 @@ const OfferAcceptance: React.FC <OfferAcceptanceProps>= ({ onContinue}) => {
             Welcome to Zoracom, Modesta
           </h1>
           <p className="text-gray-500 text-sm !mt-2 ">
-            We’re excited to have you join our team! Below are the details <br className='hidden '/>of your offer.
+            We’re excited to have you join our team! Below are the details <br className='hidden'/>of your offer.
           </p>
         </div>
 
