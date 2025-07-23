@@ -7,8 +7,8 @@ const AuthPages = lazy(() => import("../routes/AuthPages"));
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/auth" element={<AuthPages />} />
-      <Route path="*" element={<UserPages />} />
+      <Route path="/*" element={<AuthPages />} />
+      <Route path="/" element={<UserPages />} />
     </Routes>
   );
 };

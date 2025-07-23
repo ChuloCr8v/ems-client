@@ -131,7 +131,7 @@ const menuItems = [
   },
 ];
 
-const Sidenav = (props: Props) => {
+const Sidenav = (_props: Props) => {
   const [openSections, setOpenSections] = useState(["Overview", "Performance"]);
 
   const handleExpandSection = (section: string) => {

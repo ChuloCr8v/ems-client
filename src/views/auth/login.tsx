@@ -1,8 +1,17 @@
 import React from "react";
 import { Button, Checkbox, Form, Input } from "antd";
 import BackgroundWrapper from "../../component/BackgroundWrapper";
+import { useMsalAuth } from "../../api/msal";
+import { useLoginMicrosoftMutation } from "../../api/data/auth";
+import { useAuthComplete } from "../../hooks/authHooks";
 
 const Login: React.FC = () => {
+  const [loginMs, { isLoading: isMicrosoftLoggingIn }] =
+    useLoginMicrosoftMutation();
+
+  const msal = useMsalAuth();
+  const authComplete = useAuthComplete();
+
   const onFinish = (values: any) => {
     console.log("Success:", values);
   };
@@ -11,17 +20,23 @@ const Login: React.FC = () => {
     console.log("Failed:", errorInfo);
   };
 
+  const onLoginWithMicrosoft = () => {
+    console.log("hello");
+    msal
+      .login()
+      .then((res) => authComplete(loginMs({ token: res.accessToken })));
+  };
+
   return (
     <BackgroundWrapper>
       <>
-        <div className=" flex items-center justify-center  relative h-full !w-full">
+        <div className=" flex items-center justify-center  relative h-full w-screen">
           <div className="absolute top-0 right-8 z-2 md:hidden">
-            {" "}
             <img src="/public/login/login-image.png" alt="" />
           </div>
-          <div className="bg-white/60 h-full w-full absolute top-0 left-0 z-1 backdrop-blur-2xl "></div>
+          <div className="bg-white/60 h-full w-full absolute top-0 left-0 z-1 backdrop-blur-2xl"></div>
           <div className="w-[350px] h-[350px] rounded-full bg-[#40B554]/30 backdrop-blur-3xl absolute left-0 top-0 md:hidden"></div>
-          <div className=" min-w-md w-full  bg-white top-52 lg:top-[25%]  z-10 absolute  flex items-center justify-center  !px-5">
+          <div className=" min-w-md w-full h-full top-52 md:top-0  z-10 absolute  lg:relative flex items-center justify-center !px-5">
             <div className="text-center ">
               <div className="bg-white w-full !py-5 !px-5">
                 <div className="flex flex-col items-center justify-center ">
@@ -109,6 +124,8 @@ const Login: React.FC = () => {
 
               <div>
                 <Button
+                  loading={isMicrosoftLoggingIn}
+                  onClick={onLoginWithMicrosoft}
                   icon=""
                   block
                   size="large"

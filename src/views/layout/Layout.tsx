@@ -8,7 +8,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <Sidenav />
 
         <div className="py-8 pr-5 h-full w-full">
-          <div className="h-full w-full p-6 shadow-[4px_4px_32px_0px_#131C2014] rounded-xl">
+          <div className="h-full w-full p-6 shadow-[4px_4px_32px_0px_#131C2014] rounded-xl bg-white">
             {children}
           </div>
         </div>

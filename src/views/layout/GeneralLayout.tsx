@@ -19,7 +19,7 @@ const GeneralLayout = ({ children, breadCrumbs }: Props) => {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between border-b border-outline pb-4">
         <Breadcrumb
           items={[
             {
@@ -34,7 +34,7 @@ const GeneralLayout = ({ children, breadCrumbs }: Props) => {
         <ProfileDropdown />
       </div>
 
-      <div className="border-b border-outline pb-4">{children}</div>
+      <div className="">{children}</div>
     </div>
   );
 };
