@@ -26,6 +26,7 @@ const noUser: AuthUser = {
     jobType: JobType.FULLTIME,
     user: { firstName: '', lastName: '', name: '' },
     stage: { id: '', name: '', position: 0, permission: StagePermission.LEAVE },
+    userRole: undefined
 };
 
 type ApiResult<T> = T | Promise<T> | { unwrap(): Promise<T> };

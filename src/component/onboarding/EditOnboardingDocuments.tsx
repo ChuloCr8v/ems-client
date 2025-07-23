@@ -1,20 +1,19 @@
-"use client"
-
 import type React from "react"
 import { useState } from "react"
 import { Button, Progress, Upload } from "antd"
 import { FileOutlined, DeleteOutlined } from "@ant-design/icons"
 import type { UploadFile } from "antd/lib/upload/interface"
-import ActionButtons from "../../component/common/ActionButton"
-import OnboardingWrapper from "../../component/OnboardingWrapper"
-import OnboardingSteps from "../../component/OnboardingSteps"
+import OnboardingWrapper from "../OnboardingWrapper"
+import OnboardingSteps from "../OnboardingSteps"
+import ActionButtons from "../common/ActionButton"
 
-interface OnboardingDocumentsProps {
+
+interface EditOnboardingDocumentsProps {
     onProceed: () => void
     onBack: () => void
 }
 
-const OnboardingDocuments: React.FC<OnboardingDocumentsProps> = ({ onProceed, onBack }) => {
+const OnboardingDocuments: React.FC<EditOnboardingDocumentsProps> = ({ onProceed, onBack }) => {
     const [fileList, setFileList] = useState<UploadFile[]>([])
     const [_uploading, setUploading] = useState(false)
 
@@ -38,7 +37,10 @@ const OnboardingDocuments: React.FC<OnboardingDocumentsProps> = ({ onProceed, on
     }
 
     return (
-        <OnboardingWrapper>
+        <OnboardingWrapper
+        title="Update Your Details"
+        subtitle="We've reopened your onboarding form for edits. Please review and update the sections based on the instructions from your admin"
+        >
             {/* Progress Steps */}
             <OnboardingSteps currentStep={2} />
 

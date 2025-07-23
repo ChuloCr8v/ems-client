@@ -15,11 +15,11 @@ export type HasName = { name: string } | { firstName: string; lastName: string }
 export type Maybe<T> = T | undefined;
 
 export enum Role {
-    SUPERADMIN = "SUPERADMIN",
-    ADMIN = "ADMIN",
-    USER = "USER",
-    MANAGER = "MANAGER",
-    FACILITY = "FACILITY"
+    "SUPERADMIN" = "SUPERADMIN",
+    "ADMIN" = "ADMIN",
+    "USER" = "USER",
+    "MANAGER" = "MANAGER",
+    "FACILITY" = "FACILITY"
 }
 
 export type Department = {
@@ -46,7 +46,7 @@ export type User = {
     email: string;
     firstName: string;
     lastName: string;
-    userRole: Role
+    userRole?: Role
 
 
 

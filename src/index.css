@@ -46,3 +46,20 @@ body {
 .custom-upload-dragger .ant-upload-list {
   margin-top: 1rem; /* Space between dragger and file list */
 }
+
+.ant-radio-wrapper .ant-radio .ant-radio-inner {
+  border-radius: 0.25rem !important; /* Square with rounded corners */
+  border-color: #d1d5db !important; /* Default border color */
+}
+
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+  background-color: #40b554 !important; /* Green background when checked */
+  border-color: #40b554 !important; /* Green border when checked */
+}
+
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner::after {
+  /* Adjust size of the dot */
+  top: 50% !important;
+  left: 50% !important;
+  /* Adjust to center the dot */
+}
