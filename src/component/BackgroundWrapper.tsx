@@ -19,12 +19,12 @@ const BackgroundWrapper = ({ children }: BackgroundWrapperProps) => {
               className="w-[700px] h-auto object-cover z-20 "
             />
           </div>
-          <div className="w-[550px] h-[550px] rounded-full  bg-[#0A96CC]/30 backdrop-blur-3xl absolute right-0 bottom-0 z-0"></div>
-          <div className="w-[450px] h-[450px] rounded-full bg-[#40B554]/30 backdrop-blur-3xl absolute left-0 top-0 z-0"></div>
+          <div className="max-w-screen blur-3xl max-h-screen h-full w-full rounded-full  bg-[#0A96CC]/30 backdrop-blur-3xl absolute -right-[250px] -bottom-60 z-0"></div>
+          <div className="max-w-screen blur-3xl max-h-screen  h-full w-full  rounded-full bg-[#40B554]/30 backdrop-blur-3xl absolute -left-[250px] -top-60 z-0"></div>
         </div>
       </div>
 
-      <div className=" h-full flex  z-10 w-full  justify-center items-center">
+      <div className=" h-full flex  z-10 w-full  justify-center items-center bg-white">
         {children}
       </div>
     </div>

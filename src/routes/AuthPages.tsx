@@ -5,18 +5,17 @@ import EditOnboardingInfo from "../views/auth/EditOnboardingInfo";
 import Inbox from "../views/auth/Inbox";
 import InvitationFlow from "../views/auth/InvitationFlow";
 
-const UserPages = () => {
+const AuthPages = () => {
   return (
     <Routes>
-      <Route path="/*" element={<Login />} />
+      <Route path="*" element={<Login />} />
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/auth/forgotPassword" element={<ForgotPassword />} />
-      <Route path="/auth/inbox" element={<Inbox />} />
-      <Route path="/auth/invitation" element={<InvitationFlow />} />
-      <Route path="/auth/edit" element={<EditOnboardingInfo />} />
+      <Route path="/inbox" element={<Inbox />} />
+      <Route path="/invitation" element={<InvitationFlow />} />
+      <Route path="/edit" element={<EditOnboardingInfo />} />
     </Routes>
   );
 };
 
-export default UserPages;
+export default AuthPages;

@@ -1,24 +1,21 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthUserRequired } from "../hooks/authHooks";
+import { useAuthUser } from "../hooks/authHooks";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const user = useAuthUserRequired();
+  const user = useAuthUser();
 
   const navigate = useNavigate();
 
-  console.log(user);
   useEffect(() => {
     async () => {
       if (user) {
-        navigate("/dashboard");
+        navigate("/employees");
       } else {
         navigate("/auth");
       }
     };
   }, [user]);
-
-  // if (loading) return <LoadingSpinner />;
 
   return <div>{children}</div>;
 };

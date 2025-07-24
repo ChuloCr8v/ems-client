@@ -1,14 +1,26 @@
 import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
+import NotFound from "../views/extra/404";
 
-const UserPages = lazy(() => import("../routes/UserPages"));
-const AuthPages = lazy(() => import("../routes/AuthPages"));
+const AuthPages = lazy(() => import("./AuthPages"));
+const ProtectedRoutes = lazy(() => import("./ProtectedRoutes"));
+const Layout = lazy(() => import("../views/layout/Layout"));
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/*" element={<AuthPages />} />
-      <Route path="/" element={<UserPages />} />
+      <Route path="/auth/*" element={<AuthPages />} />
+
+      <Route
+        path="/*"
+        element={
+          <Layout>
+            <ProtectedRoutes />
+          </Layout>
+        }
+      />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

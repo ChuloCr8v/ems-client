@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "../views/admin/Dashboard";
-import Inbox from "../views/auth/Inbox";
+import Employees from "../views/employees/Employees";
 
 const ProtectedRoutes = () => {
   return (
     <Routes>
-      <Route path="/*" element={<Dashboard />} />
+      <Route path="/" element={<Dashboard />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/inbox" element={<Inbox />} />
+      <Route path="/employees" element={<Employees />} />
     </Routes>
   );
 };
