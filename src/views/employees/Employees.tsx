@@ -21,6 +21,7 @@ import Icon from "../../component/common/Icon";
 import { colors } from "../../constants/colors";
 import ProspectDetail from "../../component/modals/ProspectDetail";
 import ApproveEmployee from "../../component/modals/ApproveEmployee";
+import { useListInvitationQuery } from "../../api/data/invitations.api";
 
 const Employees = () => {
   const [currentList, setCurrentList] = useState<string>("Employees");
@@ -87,7 +88,6 @@ const Employees = () => {
       align: "right",
       render: (_text, record) => (
         <>
-          {console.log(record)}
           <Dropdown
             trigger={["click"]}
             placement="bottomRight"
@@ -153,17 +153,9 @@ const Employees = () => {
     },
   ];
 
-  const invitationData = employeeData.map(
-    ({ id, firstName, lastName, email, Gender, userRole, status }) => ({
-      id,
-      firstName,
-      lastName,
-      email,
-      Gender,
-      userRole,
-      status,
-    })
-  );
+  const { data: invitationResponse, isLoading } = useListInvitationQuery();
+
+  const invitationData = invitationResponse?.prospects;
 
   const iColumns = columns.filter(
     (c) => c.title !== "ID" && c.title !== "Level"
@@ -177,6 +169,8 @@ const Employees = () => {
         return { data: invitationData, col: iColumns };
     }
   };
+
+  console.log(invitationData);
 
   return (
     <DashboardLayout
@@ -194,6 +188,7 @@ const Employees = () => {
           columns={currentTableItem().col}
           dataSource={currentTableItem().data as any}
           scroll={800}
+          loading={isLoading}
         />
       </div>
     </DashboardLayout>

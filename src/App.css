@@ -13,6 +13,19 @@
   --color-bg_elevated: #ecf8ee;
 }
 
+Hide default asterisk after label .ant-form-item-required::before {
+  display: none !important;
+}
+
+/* Move asterisk before label */
+.ant-form-item-required::before {
+  content: "*";
+  color: red;
+  margin-left: 4px !important;
+  position: absolute;
+  right: 0;
+}
+
 /* Segments */
 
 .custom-segmented-wrapper

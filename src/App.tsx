@@ -25,7 +25,7 @@ function App() {
             components: {
               Form: {
                 itemMarginBottom: 6,
-                verticalLabelPadding: 1,
+                verticalLabelPadding: 4,
                 labelFontSize: 13,
               },
 

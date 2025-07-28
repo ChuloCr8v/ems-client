@@ -1,39 +1,33 @@
 import { useEffect } from "react";
 import type { FallbackProps } from "react-error-boundary";
-import { useRouteError } from "react-router-dom";
+import Icon from "./common/Icon";
+import { SettingsError01FreeIcons } from "@hugeicons/core-free-icons";
 
-function PageErrorContent(props: {
-  message: string;
-  action: string;
-  // onClick: () => void;
-}) {
+function PageErrorContent(props: { message: string; action: string }) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full min-h-screen gap-4 text-lg bg-grey-200">
-      <h1 className="font-bold">{props.message}</h1>
-
-      {/* <Button
-        size="large"
-        className="font-bold"
-        type="primary"
-        onClick={props.onClick}
-      >
-        {props.action}
-      </Button> */}
+    <div className="flex flex-col items-center justify-center h-full min-h-screen w-screen gap-4 text-lg bg-grey-200">
+      <div className="h-32 w-32 bg-red-100 rounded-full flex justify-center items-center">
+        <Icon icon={SettingsError01FreeIcons} color="red" size={48} />
+      </div>
+      <h1 className="font-semibold text-2xl mt-4">{props.message}</h1>
+      <a href="/dashboard" className="text-primary text-center -mt-2">
+        Go Back to Dashboard
+      </a>
     </div>
   );
 }
 
 export default function PageError(props: Partial<FallbackProps>) {
-  // const navigate = useNavigate();
-  const routeError = useRouteError();
-  const error = props.error ?? routeError;
-  useEffect(() => console.error(error), [error]);
+  const error = props.error;
+
+  useEffect(() => {
+    if (error) console.error(error);
+  }, [error]);
 
   return (
     <PageErrorContent
-      message="Page not found"
+      message={error?.message ?? "Something went wrong"}
       action="Go Home"
-      // onClick={() => navigate("/", { replace: true })}
     />
   );
 }

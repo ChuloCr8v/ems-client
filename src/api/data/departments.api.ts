@@ -6,7 +6,7 @@ import type { Department } from '../types';
 export const deparmentsApi = baseApi.injectEndpoints({
     endpoints: ({ query }) => ({
 
-        listDepartments: query<Department, void>({
+        listDepartments: query<Department[], void>({
             query: () => ({ url: 'department' }),
             providesTags: ["Departments"],
         }),

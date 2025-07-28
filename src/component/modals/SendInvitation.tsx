@@ -20,118 +20,19 @@ import DynamicDocumentUpload, {
   type DocumentEntry,
 } from "../common/DynamicDocumentUpload";
 import FormItemComponent from "../common/RenderFormItem";
-
-const formSections = [
-  {
-    sectionTitle: "Personal Information",
-    formItems: [
-      {
-        label: "First Name",
-        type: "text",
-        icon: User03FreeIcons,
-        placeholder: "Enter first name",
-        name: "firstName",
-        required: true,
-      },
-      {
-        label: "Last Name",
-        type: "text",
-        icon: User03FreeIcons,
-        placeholder: "Enter last name",
-        name: "lastName",
-      },
-      {
-        label: "Email",
-        type: "email",
-        icon: Mail01FreeIcons,
-        placeholder: "Enter email",
-        name: "email",
-        required: true,
-      },
-      {
-        label: "Phone Number",
-        type: "phone",
-        icon: AiPhone01FreeIcons,
-        placeholder: "Enter mobile number",
-        name: "phone",
-        required: true,
-      },
-      {
-        label: "Gender",
-        type: "select",
-        icon: UserGroupIcon,
-        name: "gender",
-        required: true,
-        options: [
-          { label: "Male", value: "MALE" },
-          { label: "Female", value: "FEMALE" },
-          { label: "Other", value: "OTHER" },
-        ],
-      },
-    ],
-  },
-  {
-    sectionTitle: "Employment Details",
-    formItems: [
-      {
-        label: "Role",
-        type: "text",
-        icon: Briefcase03Icon,
-        placeholder: "e.g. Software Developer",
-        name: "role",
-        required: true,
-      },
-      {
-        label: "Department",
-        type: "select",
-        icon: Building03Icon,
-        name: "department",
-        required: true,
-        options: [
-          { label: "Engineering", value: "ENGINEERING" },
-          { label: "HR", value: "HR" },
-          { label: "Sales", value: "SALES" },
-          { label: "Marketing", value: "MARKETING" },
-          { label: "Finance", value: "FINANCE" },
-        ],
-      },
-      {
-        label: "Job Type",
-        type: "select",
-        icon: Layers01Icon,
-        name: "jobType",
-        required: true,
-        options: [
-          { label: "Full-Time", value: JobType.FULLTIME },
-          { label: "Contract", value: JobType.CONTRACT },
-        ],
-      },
-      {
-        label: "Duration (in months)",
-        type: "number",
-        icon: Clock02Icon,
-        name: "duration",
-        required: true,
-        placeholder: "Enter contract duration",
-      },
-      {
-        label: "Start Date",
-        type: "date",
-        icon: Calendar02Icon,
-        name: "startDate",
-        required: true,
-      },
-    ],
-  },
-];
+import { useListDepartmentsQuery } from "../../api/data/departments.api";
+import { usePopup } from "../../context/PopupContext";
 
 const SendInvitation = () => {
   const [form] = Form.useForm();
   const jobType = Form.useWatch("jobType", form);
   const { formItem } = FormItemComponent({ form });
   const [documents, setDocuments] = useState<DocumentEntry[]>([
-    { name: "", fileList: [] },
+    { name: "", fileList: [], file: undefined },
   ]);
+  const { closeModal } = usePopup();
+
+  const { data: departments } = useListDepartmentsQuery();
 
   const [sendInvitation, { isLoading }] = useSendInvitationMutation();
 
@@ -141,51 +42,144 @@ const SendInvitation = () => {
       const values = {
         ...rawValues,
         startDate: rawValues.startDate.toISOString(),
+        phone: "+" + rawValues.phone.countryCode + rawValues.phone.phoneNumber,
       };
 
       console.log(values);
 
-      const data = new FormData();
+      // return;
 
-      // Append regular form fields
+      const formData = new FormData();
+
+      // Append all regular fields
       Object.entries(values).forEach(([key, value]) => {
-        data.append(key, value as Blob);
-      });
-
-      // Append file data
-      documents.forEach((doc, _index) => {
-        const rawFile = doc.fileList?.[0]?.originFileObj;
-
-        if (rawFile && doc.name) {
-          // const extension = rawFile.name.substring(
-          //   rawFile.name.lastIndexOf(".")
-          // );
-          // const customName = `${doc.name.replace(
-          //   /\s+/g,
-          //   "_"
-          // )}_${Date.now()}${extension}`;
-          // const newFile = new File([rawFile], customName, {
-          //   type: rawFile.type,
-          // });
-          // // Append as separate structured keys
-          // data.append(`documents[${index}][filename]`, newFile.name);
-          // data.append(`documents[${index}][content]`, newFile);
-          // data.append(`documents[${index}][contentType]`, newFile.type);
+        if (key !== "documents" && value !== undefined) {
+          formData.append(key, value as string);
         }
       });
 
-      console.log(data);
+      // Append documents
+      documents.forEach((doc, index) => {
+        if (doc.fileList) {
+          formData.append(`documents[${index}][name]`, doc.name);
+          formData.append(`documents[${index}][file]`, doc.file as Blob);
+        }
+      });
 
-      await sendInvitation(data as any).unwrap();
-
+      await sendInvitation(formData as any).unwrap();
       message.success("Invitation sent successfully");
       form.resetFields();
       setDocuments([{ name: "", fileList: [] }]);
-    } catch (err) {
+      closeModal();
+    } catch (err: any) {
       console.error(err);
-      message.error("Submission failed");
+      message.error("Unable to submit data");
     }
   };
+
+  const formSections = [
+    {
+      sectionTitle: "Personal Information",
+      formItems: [
+        {
+          label: "First Name",
+          type: "text",
+          icon: User03FreeIcons,
+          placeholder: "Enter first name",
+          name: "firstName",
+          required: true,
+        },
+        {
+          label: "Last Name",
+          type: "text",
+          icon: User03FreeIcons,
+          placeholder: "Enter last name",
+          name: "lastName",
+          required: true,
+        },
+        {
+          label: "Email",
+          type: "email",
+          icon: Mail01FreeIcons,
+          placeholder: "Enter email",
+          name: "email",
+          required: true,
+        },
+        {
+          label: "Phone Number",
+          type: "phone",
+          icon: AiPhone01FreeIcons,
+          placeholder: "Enter mobile number",
+          name: "phone",
+          required: true,
+        },
+        {
+          label: "Gender",
+          type: "select",
+          icon: UserGroupIcon,
+          name: "gender",
+          required: true,
+          options: [
+            { label: "Male", value: "MALE" },
+            { label: "Female", value: "FEMALE" },
+            { label: "Other", value: "OTHER" },
+          ],
+        },
+      ],
+    },
+    {
+      sectionTitle: "Employment Details",
+      formItems: [
+        {
+          label: "Role",
+          type: "text",
+          icon: Briefcase03Icon,
+          placeholder: "e.g. Software Developer",
+          name: "role",
+          required: true,
+        },
+        {
+          label: "Department",
+          type: "select",
+          icon: Building03Icon,
+          name: "departmentId",
+          required: true,
+          options: departments?.map((item) => ({
+            label:
+              item.name.charAt(0).toUpperCase() +
+              item.name.slice(1).toLowerCase(),
+            value: item.id,
+          })),
+        },
+        {
+          label: "Job Type",
+          type: "select",
+          icon: Layers01Icon,
+          name: "jobType",
+          required: true,
+          options: [
+            { label: "Full-Time", value: JobType.FULLTIME },
+            { label: "Contract", value: JobType.CONTRACT },
+          ],
+        },
+        {
+          label: "Duration (in months)",
+          type: "number",
+          icon: Clock02Icon,
+          name: "duration",
+          required: true,
+          placeholder: "Enter contract duration",
+        },
+        {
+          label: "Start Date",
+          type: "date",
+          icon: Calendar02Icon,
+          name: "startDate",
+          required: true,
+        },
+      ],
+    },
+  ];
 
   return (
     <CustomModal
@@ -211,7 +205,12 @@ const SendInvitation = () => {
                     key={`${idx}-${index}`}
                     label={item.label}
                     name={item.name}
-                    required={item.required}
+                    rules={[
+                      {
+                        required: item.required,
+                        message: `${item.label} is required`,
+                      },
+                    ]}
                     className="w-full"
                   >
                     {formItem(item)}

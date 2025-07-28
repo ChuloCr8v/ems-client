@@ -29,6 +29,7 @@ interface Props {
   confirmationText?: string;
   modalTheme?: ModalTheme;
   hideFooter?: boolean;
+  maxHeight?: boolean;
 }
 
 export const CustomModal = ({
@@ -50,6 +51,7 @@ export const CustomModal = ({
   disabled = false,
   modalTheme = ModalTheme.DEFAULT,
   hideFooter = false,
+  maxHeight = true,
 }: Props) => {
   const [stepButtons, setStepButtons] = useState(step ?? false);
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -65,7 +67,6 @@ export const CustomModal = ({
     <Modal
       okText={okText || "Submit"}
       onOk={onOk}
-      loading={loading}
       okButtonProps={{ danger: isDanger, disabled }}
       open={isModalOpen}
       onCancel={closeModal}
@@ -106,7 +107,12 @@ export const CustomModal = ({
           </div>
         </div>
 
-        <div className="w-full p-6 max-h-[500px] h-full overflow-y-auto overflow-x-hidden">
+        <div
+          className={twMerge(
+            "w-full p-6 h-full overflow-y-auto overflow-x-hidden",
+            !maxHeight ? "" : "max-h-[500px]"
+          )}
+        >
           {children}
         </div>
 

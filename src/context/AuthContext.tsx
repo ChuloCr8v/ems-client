@@ -6,6 +6,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const user = useAuthUser();
   const navigate = useNavigate();
 
+  // console.log(user);
+
   useEffect(() => {
     const checkAuth = async () => {
       if (user.id !== "") {

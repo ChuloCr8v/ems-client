@@ -5,9 +5,12 @@ import { useAppDispatch } from "../store/store";
 import { useAuthUser } from "../hooks/authHooks";
 import { clearAuth } from "../store/slices/authSlice";
 import UserAvatar from "./Avatar";
+import { useNavigate } from "react-router-dom";
 
 const ProfileDropdown = () => {
   const user = useAuthUser();
+
+  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
 
@@ -20,6 +23,7 @@ const ProfileDropdown = () => {
       onClick: () => {
         console.log("clearing auth");
         dispatch(clearAuth());
+        navigate("/auth");
       },
       icon: <GoSignOut />,
     },

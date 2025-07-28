@@ -47,6 +47,11 @@ export type Invite = {
     duration: string;
 };
 
+export type InvitationResponse = {
+    message: string,
+    prospects: Invite[]
+}
+
 export type Department = {
     id: Id;
     name: string;

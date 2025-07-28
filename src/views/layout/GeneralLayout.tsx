@@ -1,7 +1,6 @@
 import { Breadcrumb } from "antd";
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { useListDepartmentsQuery } from "../../api/data/departments.api";
 import ProfileDropdown from "../../component/ProfileDropdown";
 
 type Props = {
@@ -17,12 +16,6 @@ type Props = {
 
 const GeneralLayout = ({ children, breadCrumbs }: Props) => {
   const { back, current } = breadCrumbs;
-
-  const { data: departments } = useListDepartmentsQuery();
-
-  useEffect(() => {
-    console.log(departments);
-  }, []);
 
   return (
     <div className="max-h-full relative">
