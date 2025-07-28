@@ -1,31 +1,30 @@
-import { Button } from "antd";
 import { useEffect } from "react";
 import type { FallbackProps } from "react-error-boundary";
-import { useNavigate, useRouteError } from "react-router-dom";
+import { useRouteError } from "react-router-dom";
 
 function PageErrorContent(props: {
   message: string;
   action: string;
-  onClick: () => void;
+  // onClick: () => void;
 }) {
   return (
     <div className="flex flex-col items-center justify-center w-full h-full min-h-screen gap-4 text-lg bg-grey-200">
       <h1 className="font-bold">{props.message}</h1>
 
-      <Button
+      {/* <Button
         size="large"
         className="font-bold"
         type="primary"
         onClick={props.onClick}
       >
         {props.action}
-      </Button>
+      </Button> */}
     </div>
   );
 }
 
 export default function PageError(props: Partial<FallbackProps>) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const routeError = useRouteError();
   const error = props.error ?? routeError;
   useEffect(() => console.error(error), [error]);
@@ -34,7 +33,7 @@ export default function PageError(props: Partial<FallbackProps>) {
     <PageErrorContent
       message="Page not found"
       action="Go Home"
-      onClick={() => navigate("/", { replace: true })}
+      // onClick={() => navigate("/", { replace: true })}
     />
   );
 }

@@ -4,20 +4,21 @@ import { useAuthUser } from "../hooks/authHooks";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const user = useAuthUser();
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    async () => {
-      if (user) {
+    const checkAuth = async () => {
+      if (user.id !== "") {
         navigate("/employees");
       } else {
-        navigate("/auth");
+        navigate("/auth/");
       }
     };
+
+    checkAuth();
   }, [user]);
 
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
 
 export default AuthProvider;

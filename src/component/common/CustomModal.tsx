@@ -2,7 +2,8 @@ import { Button, Checkbox, Modal } from "antd";
 import { useEffect, useState, type ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { usePopup } from "../../context/PopupContext";
-import { GrAction } from "react-icons/gr";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { Activity01Icon } from "@hugeicons/core-free-icons";
 
 export enum ModalTheme {
   WARNING = "WARNING",
@@ -16,7 +17,7 @@ interface Props {
   onCancel?: () => void;
   onOk?: () => void;
   modalSubtitle?: string;
-  icon?: ReactNode;
+  icon?: IconSvgElement;
   loading?: boolean;
   closable?: boolean;
   isDanger?: boolean;
@@ -27,6 +28,7 @@ interface Props {
   showConfirmation?: boolean; // Controls checkbox visibility
   confirmationText?: string;
   modalTheme?: ModalTheme;
+  hideFooter?: boolean;
 }
 
 export const CustomModal = ({
@@ -43,10 +45,11 @@ export const CustomModal = ({
   closable,
   title,
   isDanger = false,
-  width = 500,
+  width = 680,
   center = false,
   disabled = false,
   modalTheme = ModalTheme.DEFAULT,
+  hideFooter = false,
 }: Props) => {
   const [stepButtons, setStepButtons] = useState(step ?? false);
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -72,23 +75,40 @@ export const CustomModal = ({
       maskClosable={closable}
       width={width}
       centered={center}
+      closeIcon={false}
     >
-      <div className="flex flex-col items-center justify-center gap-3 pt-1">
-        <div
-          className={twMerge(
-            "text-primary text-4xl bg-green-50 h-20 w-20 rounded-full flex items-center justify-center",
-            warning && "bg-red-50 text-red-600"
-          )}
-        >
-          {icon ?? <GrAction />}
+      <div className="flex flex-col items-center">
+        <div className="modal-header flex items-center gap-4 bg-gradient-to-r from-[#5BB9DD]/20 to-[#66C476]/20 w-full  px-6 py-4">
+          <div
+            className={twMerge(
+              "text-primary text-4xl bg-green-50 p-2 rounded-full flex items-center justify-center",
+              warning && "bg-red-50 text-red-600"
+            )}
+          >
+            <HugeiconsIcon
+              icon={icon ?? Activity01Icon}
+              size={24}
+              strokeWidth={1.5}
+              color={"green"}
+            />
+          </div>
+
+          <div className="text-left">
+            <p
+              className={twMerge(
+                "font-semibold capitalize text-sm",
+                !modalSubtitle && "text-lg"
+              )}
+            >
+              {title}
+            </p>
+            <p className="text-gray text-xs">{modalSubtitle}</p>
+          </div>
         </div>
 
-        <div className="text-center px-4">
-          <p className="font-bold capitalize text-xl">{title}</p>
-          <p className="text-grey">{modalSubtitle}</p>
+        <div className="w-full p-6 max-h-[500px] h-full overflow-y-auto overflow-x-hidden">
+          {children}
         </div>
-
-        <div className="w-full">{children}</div>
 
         {/* Confirmation Checkbox */}
         {showConfirmation && (
@@ -99,17 +119,22 @@ export const CustomModal = ({
           </div>
         )}
 
-        {!stepButtons && (
-          <div className="space-x-4 mt-2">
-            <Button className="w-[144px]" onClick={onCancel ?? closeModal}>
+        {!stepButtons && !hideFooter && (
+          <div className="space-x-4 mt-2 place-self-end px-6 pb-2">
+            <Button
+              size="large"
+              className="!text-sm !px-6"
+              onClick={onCancel ?? closeModal}
+            >
               Cancel
             </Button>
             <Button
               onClick={onOk}
               loading={loading}
               type="primary"
+              size="large"
               className={twMerge(
-                "w-[144px]",
+                "!text-sm !px-6",
                 warning && "bg-red-600 text-white"
               )}
               disabled={showConfirmation ? !isConfirmed : false} // Disable based on checkbox

@@ -60,7 +60,6 @@ export function useAuth() {
 
 export function useAuthUser() {
     const authToken = useAppSelector(state => state.auth?.access_token);
-    console.log(authToken)
 
     const { data: user } = useGetMeQuery(undefined, { skip: !authToken });
     return user ?? noUser;

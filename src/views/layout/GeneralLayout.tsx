@@ -1,6 +1,7 @@
 import { Breadcrumb } from "antd";
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useListDepartmentsQuery } from "../../api/data/departments.api";
 import ProfileDropdown from "../../component/ProfileDropdown";
 
 type Props = {
@@ -17,9 +18,15 @@ type Props = {
 const GeneralLayout = ({ children, breadCrumbs }: Props) => {
   const { back, current } = breadCrumbs;
 
+  const { data: departments } = useListDepartmentsQuery();
+
+  useEffect(() => {
+    console.log(departments);
+  }, []);
+
   return (
-    <div>
-      <div className="flex items-center justify-between border-b border-outline pb-4">
+    <div className="max-h-full relative">
+      <div className="flex items-center justify-between border-b border-outline py-4 bg-white sticky top-0 z-20">
         <Breadcrumb
           items={[
             {

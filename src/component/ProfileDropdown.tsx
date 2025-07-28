@@ -1,18 +1,17 @@
 import { DownOutlined } from "@ant-design/icons";
-import { Avatar, Dropdown, type MenuProps } from "antd";
+import { Dropdown, type MenuProps } from "antd";
 import { GoSignOut } from "react-icons/go";
 import { useAppDispatch } from "../store/store";
-import { useAuthUserRequired } from "../hooks/authHooks";
+import { useAuthUser } from "../hooks/authHooks";
 import { clearAuth } from "../store/slices/authSlice";
+import UserAvatar from "./Avatar";
 
 const ProfileDropdown = () => {
-  const user = useAuthUserRequired();
+  const user = useAuthUser();
 
   const dispatch = useAppDispatch();
 
   const userName = user.firstName + " " + user.lastName;
-
-  const initals = userName.charAt(0) + userName.split(" ")[1].charAt(0);
 
   const items: MenuProps["items"] = [
     {
@@ -32,12 +31,10 @@ const ProfileDropdown = () => {
         className="flex items-center gap-20"
       >
         <div className="flex items-center gap-2">
-          <Avatar size={40}>
-            <span className="text-xl">{initals}</span>
-          </Avatar>
+          <UserAvatar />
           <div className="">
-            <p className="font-semibold">{userName}</p>
-            <p className="text-gray text-sm">{user.userRole}</p>
+            <p className="font-semibold text-sm">{userName}</p>
+            <p className="text-gray text-xs">{user.userRole}</p>
           </div>
         </div>
         <DownOutlined />

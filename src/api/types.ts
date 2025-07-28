@@ -22,6 +22,31 @@ export enum Role {
     "FACILITY" = "FACILITY"
 }
 
+export enum EmployeeStatus {
+    ACTIVE = "ACTIVE",
+    INACTIVE = "INACTIVE",
+    ON_LEAVE = "ON_LEAVE",
+    PENDING = "PENDING",
+    PENDING_INVITE = "PENDING_INVITE",
+    PENDING_REVIEW = "PENDING_REVIEW",
+    REJECTED = "REJECTED",
+}
+
+
+
+export type Invite = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    role: string;
+    departmentId: string;
+    startDate: Date;
+    jobType: JobType;
+    gender: string;
+    duration: string;
+};
+
 export type Department = {
     id: Id;
     name: string;
@@ -39,6 +64,7 @@ export type LeaveType = {
 };
 
 export type User = {
+    status: EmployeeStatus;
     stage: Stage;
     user: HasName | undefined;
     id: Id;
@@ -179,6 +205,7 @@ export type CreateManyEntitlements = {
 export enum JobType {
     FULLTIME = 'FULLTIME',
     CONTRACT = 'CONTRACT',
+    INTERN = "INTERN"
 }
 
 export const EmployeeJobType = [
@@ -195,6 +222,24 @@ export enum SalaryCalculationType {
     PERCENTAGE = 'PERCENTAGE',
     FIXED = 'FIXED',
 }
+
+
+export enum UploadType {
+    RESUME = "RESUME",
+    CONTRACT = "CONTRACT",
+    NDA = "NDA",
+    OTHER = "OTHER",
+}
+
+export type IUpload = {
+    id: string;
+    name: string;
+    originalName: string;
+    type: UploadType;
+    mimetype: string;
+    size: number;
+};
+
 
 type PayrollItem = {
     id: Id;

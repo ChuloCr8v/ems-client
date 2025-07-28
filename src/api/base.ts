@@ -15,6 +15,8 @@ export const paths = {
   Reports: 'reports',
   Report: 'report',
   Comments: 'comments',
+  Invitations: 'invitations',
+  Departments: 'departments',
 } as const;
 
 export type TagType = keyof typeof paths;

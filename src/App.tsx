@@ -9,9 +9,11 @@ import { PopupProvider } from "./context/PopupContext";
 import PageError from "./component/PageError";
 import { Loading } from "./component/global/Loading";
 import AuthContext from "./context/AuthContext";
-// import AuthContext from "./context/AuthContext";
+import { UploaderProvider, useUploaderProvider } from "./context/UploadContext";
 
 function App() {
+  const uploader = useUploaderProvider();
+
   return (
     <ErrorBoundary fallback={<PageError />}>
       <Suspense fallback={<Loading />}>
@@ -38,13 +40,15 @@ function App() {
             },
           }}
         >
-          <PopupProvider>
-            <BrowserRouter>
-              <AuthContext>
-                <AppRoutes />
-              </AuthContext>
-            </BrowserRouter>
-          </PopupProvider>
+          <UploaderProvider value={uploader}>
+            <PopupProvider>
+              <BrowserRouter>
+                <AuthContext>
+                  <AppRoutes />
+                </AuthContext>
+              </BrowserRouter>
+            </PopupProvider>
+          </UploaderProvider>
         </ConfigProvider>
       </Suspense>
     </ErrorBoundary>

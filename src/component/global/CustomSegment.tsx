@@ -1,13 +1,18 @@
 import { Segmented } from "antd";
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
   options: string[];
+  setOption: Dispatch<SetStateAction<string>>;
 };
 
-const CustomSegmented = ({ options }: Props) => {
+const CustomSegmented = ({ options, setOption }: Props) => {
   return (
-    <div>
-      <Segmented<string> options={options} />
+    <div className="custom-segmented-wrapper">
+      <Segmented<string>
+        options={options}
+        onChange={(value) => setOption(value)}
+      />
     </div>
   );
 };
