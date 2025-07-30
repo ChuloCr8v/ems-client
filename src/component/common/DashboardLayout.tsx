@@ -1,16 +1,12 @@
-import { Button } from "antd";
-import { FiUploadCloud } from "react-icons/fi";
-import { twMerge } from "tailwind-merge";
-import SummaryCards from "./SummaryCards";
-import { type ReactNode } from "react";
-import GeneralLayout from "../../views/layout/GeneralLayout";
+import { Upload03FreeIcons } from "@hugeicons/core-free-icons";
 import { type IconSvgElement } from "@hugeicons/react";
-import Icon from "./Icon";
-import {
-  MailSend02FreeIcons,
-  Upload03FreeIcons,
-} from "@hugeicons/core-free-icons";
+import { Button } from "antd";
+import { type ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 import { colors } from "../../constants/colors";
+import GeneralLayout from "../../views/layout/GeneralLayout";
+import Icon from "./Icon";
+import SummaryCards from "./SummaryCards";
 
 const DashboardLayout = ({
   children,
@@ -47,7 +43,7 @@ const DashboardLayout = ({
 
             <div className="space-x-4 relative z-20">
               <Button
-                size="large"
+                size="middle"
                 icon={
                   <Icon
                     icon={Upload03FreeIcons}
@@ -61,7 +57,7 @@ const DashboardLayout = ({
               </Button>
 
               <Button
-                size="large"
+                size="middle"
                 type="primary"
                 icon={<Icon icon={primaryButtonIcon} size={16} />}
                 onClick={action}

@@ -21,7 +21,6 @@ const Login: React.FC = () => {
   };
 
   const onLoginWithMicrosoft = () => {
-    console.log("hello");
     msal
       .login()
       .then((res) => authComplete(loginMs({ token: res.accessToken })));

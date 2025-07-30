@@ -24,6 +24,7 @@ Hide default asterisk after label .ant-form-item-required::before {
   margin-left: 4px !important;
   position: absolute;
   right: 0;
+  top: 0;
 }
 
 /* Segments */

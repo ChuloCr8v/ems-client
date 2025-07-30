@@ -1,26 +1,23 @@
 import type { IconSvgElement } from "@hugeicons/react";
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  Select,
-  type FormInstance,
-} from "antd";
+import { Button, DatePicker, Input, Select, type FormInstance } from "antd";
 import PhoneInput from "antd-phone-input";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { JobType } from "../../api/types";
 import DynamicDocumentUpload, {
   type DocumentEntry,
 } from "./DynamicDocumentUpload";
 import Icon from "./Icon";
 import MultiUpload from "./MultiUploads";
+import CustomFilePicker from "../global/CustomFilePicker";
 
 const { Option } = Select;
 
-export type MenuItemProps = {
+export type FormFieldProps = {
   label: string;
   name?: string;
+  disabled?: boolean;
+  value?: ReactNode;
+  required?: boolean;
   options?: {
     label: string;
     value: string;
@@ -36,15 +33,12 @@ type Props = {
 
 const FormItemComponent = ({ form }: Props) => {
   const [documents, setDocuments] = useState<DocumentEntry[] | []>([]);
-  const jobType = Form.useWatch("jobType", form);
-
-  console.log(jobType);
 
   const handleJobTypeChange = (value: JobType) => {
     form.setFieldsValue({ jobType: value });
   };
 
-  const formItem = (item: MenuItemProps) => {
+  const formItem = (item: FormFieldProps) => {
     switch (item.type) {
       case "text":
       case "email":
@@ -53,10 +47,11 @@ const FormItemComponent = ({ form }: Props) => {
             type={item.type}
             prefix={
               item.icon ? (
-                <Icon icon={item.icon} size={14} color="#c8d1ce" />
+                <Icon icon={item.icon} size={16} color="#c8d1ce" />
               ) : undefined
             }
             placeholder={item.placeholder}
+            allowClear
           />
         );
       case "number":
@@ -65,10 +60,11 @@ const FormItemComponent = ({ form }: Props) => {
             type="number"
             prefix={
               item.icon ? (
-                <Icon icon={item.icon} size={14} color="#c8d1ce" />
+                <Icon icon={item.icon} size={16} color="#c8d1ce" />
               ) : undefined
             }
             placeholder={item.placeholder}
+            allowClear
           />
         );
       case "phone":
@@ -85,9 +81,10 @@ const FormItemComponent = ({ form }: Props) => {
       case "select":
         return (
           <Select
+            allowClear
             prefix={
               item.icon ? (
-                <Icon icon={item.icon} size={14} color="#c8d1ce" />
+                <Icon icon={item.icon} size={16} color="#c8d1ce" />
               ) : undefined
             }
             placeholder={`Select ${item.label.toLowerCase()}`}
@@ -102,6 +99,8 @@ const FormItemComponent = ({ form }: Props) => {
         );
       case "file":
         return <MultiUpload label={item.label} />;
+      case "file-picker":
+        return <CustomFilePicker />;
       case "button":
         return (
           <Button

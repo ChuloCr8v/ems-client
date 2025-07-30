@@ -1,24 +1,33 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthUser } from "../hooks/authHooks";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const user = useAuthUser();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // console.log(user);
+  const safeRoutes = ["/onboarding/invitation"];
+
+  const isSafeRoute = safeRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
 
   useEffect(() => {
     const checkAuth = async () => {
-      if (user.id !== "") {
+      if (isSafeRoute) return;
+
+      if (!isSafeRoute && !user.id) {
+        navigate("/auth");
+      }
+
+      if (isSafeRoute && user.id) {
         navigate("/employees");
-      } else {
-        navigate("/auth/");
       }
     };
 
     checkAuth();
-  }, [user]);
+  }, [user, location.pathname]);
 
   return <>{children}</>;
 };

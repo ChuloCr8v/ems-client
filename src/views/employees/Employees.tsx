@@ -22,6 +22,7 @@ import { colors } from "../../constants/colors";
 import ProspectDetail from "../../component/modals/ProspectDetail";
 import ApproveEmployee from "../../component/modals/ApproveEmployee";
 import { useListInvitationQuery } from "../../api/data/invitations.api";
+import { sentenceCase } from "../../helpers";
 
 const Employees = () => {
   const [currentList, setCurrentList] = useState<string>("Employees");
@@ -55,6 +56,9 @@ const Employees = () => {
       title: "Gender",
       dataIndex: "Gender",
       key: "gender",
+      render: (_, record) => {
+        return sentenceCase(record.gender);
+      },
     },
     {
       title: "Role",
@@ -63,8 +67,8 @@ const Employees = () => {
       render: (_, records) => {
         return (
           <div className="">
-            <p className="text-custom_black text-sm ">{records.userRole}</p>
-            <p className="text-xs">{records.jobType}</p>
+            <p className="text-custom_black text-sm ">{records.role}</p>
+            <p className="text-xs">{sentenceCase(records.jobType)}</p>
           </div>
         );
       },
@@ -183,7 +187,6 @@ const Employees = () => {
           options={options}
           setOption={(value) => setCurrentList(value)}
         />
-
         <TableComponent
           columns={currentTableItem().col}
           dataSource={currentTableItem().data as any}

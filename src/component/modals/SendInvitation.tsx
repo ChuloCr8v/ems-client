@@ -37,6 +37,10 @@ const SendInvitation = () => {
   const [sendInvitation, { isLoading }] = useSendInvitationMutation();
 
   const onSubmit = async () => {
+    const allFiles = documents
+      .flatMap((doc) => doc.fileList.map((file) => file.originFileObj))
+      .filter(Boolean);
+
     try {
       const rawValues = await form.validateFields();
       const values = {
@@ -45,28 +49,18 @@ const SendInvitation = () => {
         phone: "+" + rawValues.phone.countryCode + rawValues.phone.phoneNumber,
       };
 
-      console.log(values);
-
-      // return;
-
       const formData = new FormData();
 
-      // Append all regular fields
-      Object.entries(values).forEach(([key, value]) => {
-        if (key !== "documents" && value !== undefined) {
-          formData.append(key, value as string);
-        }
+      for (const key in values) {
+        formData.append(key, values[key]);
+      }
+
+      allFiles.forEach((file, _index) => {
+        formData.append(`uploads`, file as Blob);
       });
 
-      // Append documents
-      documents.forEach((doc, index) => {
-        if (doc.fileList) {
-          formData.append(`documents[${index}][name]`, doc.name);
-          formData.append(`documents[${index}][file]`, doc.file as Blob);
-        }
-      });
+      await sendInvitation(formData).unwrap();
 
-      await sendInvitation(formData as any).unwrap();
       message.success("Invitation sent successfully");
       form.resetFields();
       setDocuments([{ name: "", fileList: [] }]);
@@ -226,6 +220,7 @@ const SendInvitation = () => {
           <DynamicDocumentUpload
             documents={documents}
             setDocuments={setDocuments}
+            form={form}
           />
         </div>
       </Form>

@@ -31,6 +31,10 @@ function App() {
 
               Input: {
                 activeBg: "inherit",
+                colorBorder: "#e6eae8",
+              },
+              Select: {
+                colorBorder: "#e6eae8",
               },
               Tabs: {
                 itemSelectedColor: "green",

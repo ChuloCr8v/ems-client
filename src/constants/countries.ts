@@ -1,0 +1,81 @@
+export const countriesWithStates = [
+    {
+        name: "Federal Republic of Nigeria",
+        code: "NG",
+        states: [
+            "Abia",
+            "Adamawa",
+            "Akwa Ibom",
+            "Anambra",
+            "Bauchi",
+            "Bayelsa",
+            "Benue",
+            "Borno",
+            "Cross River",
+            "Delta",
+            "Ebonyi",
+            "Edo",
+            "Ekiti",
+            "Enugu",
+            "Gombe",
+            "Imo",
+            "Jigawa",
+            "Kaduna",
+            "Kano",
+            "Katsina",
+            "Kebbi",
+            "Kogi",
+            "Kwara",
+            "Lagos",
+            "Nasarawa",
+            "Niger",
+            "Ogun",
+            "Ondo",
+            "Osun",
+            "Oyo",
+            "Plateau",
+            "Rivers",
+            "Sokoto",
+            "Taraba",
+            "Yobe",
+            "Zamfara",
+            "Federal Capital Territory"
+        ]
+    },
+    {
+        name: "Republic of Cameroon",
+        code: "CM",
+        states: [
+            "Adamawa",
+            "Centre",
+            "East",
+            "Far North",
+            "Littoral",
+            "North",
+            "Northwest",
+            "South",
+            "Southwest",
+            "West"
+        ]
+    },
+    {
+        name: "Republic of Côte d'Ivoire",
+        code: "CI",
+        states: [
+            "Abidjan",
+            "Bas-Sassandra",
+            "Comoé",
+            "Denguélé",
+            "Gôh-Djiboua",
+            "Lacs",
+            "Lagunes",
+            "Montagnes",
+            "Sassandra-Marahoué",
+            "Savanes",
+            "Vallée du Bandama",
+            "Woroba",
+            "Yamoussoukro",
+            "Zanzan"
+        ]
+    }
+];

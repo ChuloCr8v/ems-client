@@ -22,6 +22,7 @@ interface ActionButtonsProps {
   showProceedIcon?: boolean;
   backIcon?: React.ReactNode;
   proceedIcon?: React.ReactNode;
+  loading?: boolean;
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
@@ -44,9 +45,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   showProceedIcon = true,
   backIcon = <ArrowLeftOutlined />,
   proceedIcon = <ArrowRightOutlined />,
+  loading,
 }) => {
   return (
-    <div className={`flex flex-row justify-end gap-4 pt-8 !mt-4 ${containerClassName}`}>
+    <div className={`flex flex-row justify-end gap-4 ${containerClassName}`}>
       {showBackButton && (
         <Button
           size="large"
@@ -65,21 +67,23 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
       {showProceedButton && (
         <Button
+          loading={loading}
           type="primary"
           size="large"
           onClick={onProceed}
           icon={showProceedIcon ? proceedIcon : null}
+          iconPosition="end"
           className={`w-full sm:w-auto md:w-[144px] h-[40px] font-medium`}
           style={{
             backgroundColor: proceedButtonColor,
             borderColor: proceedButtonColor,
             color: proceedTextColor,
             ...(hoverProceedColor && {
-              ':hover': {
+              ":hover": {
                 backgroundColor: hoverProceedColor,
                 borderColor: hoverProceedColor,
-              }
-            })
+              },
+            }),
           }}
           {...proceedButtonProps}
         >

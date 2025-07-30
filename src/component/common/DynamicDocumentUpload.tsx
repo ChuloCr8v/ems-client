@@ -5,6 +5,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import Icon from "./Icon";
 import { useState } from "react";
+import type { FormInstance } from "antd/lib";
 
 export type DocumentEntry = {
   name: string;
@@ -16,6 +17,7 @@ type Props = {
   documents: DocumentEntry[];
   setDocuments: React.Dispatch<React.SetStateAction<DocumentEntry[]>>;
   maxFiles?: number;
+  form?: FormInstance<any>;
 };
 
 const DynamicDocumentUpload = ({
@@ -30,6 +32,8 @@ const DynamicDocumentUpload = ({
     field: keyof DocumentEntry,
     value: any
   ) => {
+    console.log(index, field, value);
+
     const newDocs = [...documents];
     newDocs[index][field] = value;
     setDocuments(newDocs);
@@ -137,7 +141,9 @@ const DynamicDocumentUpload = ({
                     ) : undefined}
                     {doc.fileList[0]?.percent ? (
                       <span className="relative z-10">
-                        {Math.round(doc.fileList[0].percent)}%
+                        {doc.fileList[0].percent === 100
+                          ? "Change"
+                          : Math.round(doc.fileList[0].percent) + " %"}
                       </span>
                     ) : (
                       "Browse"
@@ -165,7 +171,7 @@ const DynamicDocumentUpload = ({
           type="dashed"
           icon={<Icon icon={PlusSignCircleIcon} />}
           onClick={addDocument}
-          className="w-max border-primary text-primary hover:text-primary/80"
+          className="w-max border-primary text-primary hover:text-primary/80 mt-2"
         >
           Add Another Document
         </Button>

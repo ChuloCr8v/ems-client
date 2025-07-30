@@ -22,6 +22,14 @@ export enum Role {
     "FACILITY" = "FACILITY"
 }
 
+
+export enum InviteStatus {
+    PENDING = "PENDING",
+    ACCEPTED = "ACCEPTED",
+    REJECTED = "REJECTED"
+}
+
+
 export enum EmployeeStatus {
     ACTIVE = "ACTIVE",
     INACTIVE = "INACTIVE",
@@ -32,9 +40,14 @@ export enum EmployeeStatus {
     REJECTED = "REJECTED",
 }
 
-
-
 export type Invite = {
+    id: string,
+    token: string,
+    status: InviteStatus
+}
+
+
+export type Prospect = {
     firstName: string;
     lastName: string;
     email: string;
@@ -45,11 +58,12 @@ export type Invite = {
     jobType: JobType;
     gender: string;
     duration: string;
+    invite: Invite[]
 };
 
 export type InvitationResponse = {
     message: string,
-    prospects: Invite[]
+    prospects: Prospect[]
 }
 
 export type Department = {
@@ -78,8 +92,8 @@ export type User = {
     firstName: string;
     lastName: string;
     userRole?: Role
-
-
+    gender: "MALE" | "FEMALE"
+    role: String,
 
     team: Department;
     level: Level;

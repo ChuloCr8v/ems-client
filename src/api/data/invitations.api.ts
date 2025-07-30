@@ -1,11 +1,11 @@
 import { baseApi } from '../base';
-import type { InvitationResponse, Invite } from '../types';
+import type { InvitationResponse } from '../types';
 
 
 export const invitationsApi = baseApi.injectEndpoints({
     endpoints: ({ mutation, query }) => ({
 
-        sendInvitation: mutation<void, Invite>({
+        sendInvitation: mutation<void, FormData>({
             query: body => ({ url: 'invite/send', method: 'POST', body }),
             invalidatesTags: ["Invitations"],
         }),
@@ -15,8 +15,14 @@ export const invitationsApi = baseApi.injectEndpoints({
             providesTags: ["Invitations"],
         }),
 
+        acceptOffer: mutation<InvitationResponse, string>({
+            query: (token) => ({ url: `invite/accept/${token}`, method: "PUT" }),
+            invalidatesTags: ["Invitations"],
+        }),
+
 
     }),
+
 });
 
-export const { useSendInvitationMutation, useListInvitationQuery } = invitationsApi;
+export const { useSendInvitationMutation, useListInvitationQuery, useAcceptOfferMutation } = invitationsApi;

@@ -9,7 +9,7 @@ type Props = {
 
 const Icon = ({ icon, size = 14, color = colors.primary }: Props) => {
   return (
-    <HugeiconsIcon color={color} icon={icon} size={size} strokeWidth={2.5} />
+    <HugeiconsIcon color={color} icon={icon} size={size} strokeWidth={1.5} />
   );
 };
 
