@@ -45,7 +45,7 @@ const OfferAcceptance = () => {
       : employmentDeets;
 
   return (
-    <div className="max-w-xl w-full border-1 border-white bg-white/25 rounded-2xl !p-8 space-y-8 backdrop-blur-2xl shadow-xl shadow-black/5">
+    <div className="max-w-xl w-full border-1 border-white bg-white/25 rounded-2xl p-4 md:!p-8 space-y-8 backdrop-blur-2xl shadow-xl shadow-black/5">
       <div className="text-center w-full">
         <h1 className="!text-2xl md:text-3xl font-bold text-gray-800">
           Welcome to Zoracom, {prospect?.firstName}

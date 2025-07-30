@@ -6,7 +6,7 @@ const useGetPropspect = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
 
-  const { data, isLoading } = useListInvitationQuery();
+  const { data, isLoading, isFetching } = useListInvitationQuery();
   const prospects = data?.prospects ?? [];
 
   const currentProspect = useMemo(() => {
@@ -17,6 +17,7 @@ const useGetPropspect = () => {
     prospect: currentProspect ?? null,
     isLoading,
     token,
+    isFetching,
   };
 };
 

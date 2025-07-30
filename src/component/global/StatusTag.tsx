@@ -30,6 +30,7 @@ const StatusTag = ({ status }: Props) => {
           color: "red",
         };
       case EmployeeStatus.ACTIVE:
+      case EmployeeStatus.ACCEPTED:
         return {
           icon: CheckmarkCircle02Icon,
           color: "green",
@@ -59,6 +60,8 @@ const StatusTag = ({ status }: Props) => {
         return "Inactive";
       case EmployeeStatus.REJECTED:
         return "Rejected";
+      case EmployeeStatus.ACCEPTED:
+        return "Accepted";
       case EmployeeStatus.ACTIVE:
         return "Active";
       case EmployeeStatus.ON_LEAVE:

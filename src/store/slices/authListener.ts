@@ -7,7 +7,6 @@ export const authListener = createListenerMiddleware<{ auth: AuthState | null }>
 authListener.startListening({
     actionCreator: setAuth,
     effect: ({ payload }) => {
-        console.log('auth payload', payload);
         localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(payload));
     },
 });

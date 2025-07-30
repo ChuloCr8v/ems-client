@@ -4,18 +4,19 @@ import useGetPropspect from "../../hooks/useGetPropspect";
 import OnboardingPersonalInfo from "./OnBoardingPersonalInfo";
 import OnboardingKeyContacts from "./Onboarding-key-contacts";
 import OnboardingDocuments from "./OnboardingDocuments";
-import { InviteStatus } from "../../api/types";
 import OfferAcceptance from "./OfferAcceptance";
 import { useForm } from "antd/es/form/Form";
+import { EmployeeStatus } from "../../api/types";
+import OnboardingSuccess from "./OnboardingSuccess";
 
 const InvitationFlow: React.FC = () => {
   const [form] = useForm();
   const [step, setStep] = useState<number>(1);
 
-  const { isLoading, prospect } = useGetPropspect();
+  const { isLoading, prospect, isFetching } = useGetPropspect();
 
   const acceptedInvite = prospect?.invite.some(
-    (i) => i.status === InviteStatus.ACCEPTED
+    (i) => i.status === EmployeeStatus.ACCEPTED
   );
 
   const stepProps = {
@@ -33,6 +34,8 @@ const InvitationFlow: React.FC = () => {
           return <OnboardingKeyContacts {...stepProps} />;
         case 3:
           return <OnboardingDocuments {...stepProps} />;
+        case 4:
+          return <OnboardingSuccess step={step} />;
         default:
           return null;
       }
@@ -42,8 +45,13 @@ const InvitationFlow: React.FC = () => {
   };
 
   return (
-    <InvitationBackgroundWrapper loading={isLoading}>
-      {renderItem()}
+    <InvitationBackgroundWrapper loading={isLoading || isFetching}>
+      <div className="flex flex-col justify-center items-center gap-6">
+        {renderItem()}
+        <p className="text-gray">
+          Copyright ©{new Date().getFullYear()}. All Rights Reserved Zoracom
+        </p>
+      </div>
     </InvitationBackgroundWrapper>
   );
 };

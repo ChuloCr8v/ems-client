@@ -23,17 +23,12 @@ export enum Role {
 }
 
 
-export enum InviteStatus {
-    PENDING = "PENDING",
-    ACCEPTED = "ACCEPTED",
-    REJECTED = "REJECTED"
-}
-
 
 export enum EmployeeStatus {
     ACTIVE = "ACTIVE",
     INACTIVE = "INACTIVE",
     ON_LEAVE = "ON_LEAVE",
+    ACCEPTED = "ACCEPTED",
     PENDING = "PENDING",
     PENDING_INVITE = "PENDING_INVITE",
     PENDING_REVIEW = "PENDING_REVIEW",
@@ -43,7 +38,8 @@ export enum EmployeeStatus {
 export type Invite = {
     id: string,
     token: string,
-    status: InviteStatus
+    status: EmployeeStatus
+    createdAt: string
 }
 
 
@@ -94,6 +90,7 @@ export type User = {
     userRole?: Role
     gender: "MALE" | "FEMALE"
     role: String,
+    invite: Invite[]
 
     team: Department;
     level: Level;

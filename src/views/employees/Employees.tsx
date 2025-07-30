@@ -83,7 +83,19 @@ const Employees = () => {
       dataIndex: "Status",
       key: "status",
       render: (_, record) => {
-        return <StatusTag status={record.status} />;
+        const inviteStatus = record.invite?.length
+          ? [...record.invite]
+              .filter((i) => i.createdAt)
+              .sort(
+                (a, b) =>
+                  new Date(a.createdAt!).getTime() -
+                  new Date(b.createdAt!).getTime()
+              )[0]?.status
+          : undefined;
+
+        console.log(inviteStatus);
+
+        return <StatusTag status={inviteStatus ?? EmployeeStatus.PENDING} />;
       },
     },
     {
@@ -160,6 +172,8 @@ const Employees = () => {
   const { data: invitationResponse, isLoading } = useListInvitationQuery();
 
   const invitationData = invitationResponse?.prospects;
+
+  console.log(invitationData);
 
   const iColumns = columns.filter(
     (c) => c.title !== "ID" && c.title !== "Level"
