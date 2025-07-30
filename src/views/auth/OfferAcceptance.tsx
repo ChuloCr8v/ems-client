@@ -1,55 +1,92 @@
-import React from 'react';
-import { Button } from 'antd';
-import { ArrowRightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined } from "@ant-design/icons";
+import { Button, message } from "antd";
+import dayjs from "dayjs";
+import { useAcceptOfferMutation } from "../../api/data/invitations.api";
+import { JobType } from "../../api/types";
+import { sentenceCase } from "../../helpers";
+import useGetPropspect from "../../hooks/useGetPropspect";
 
-interface OfferAcceptanceProps {
-  onContinue: () => void;
-  onDecline: () => void;
-}
+const OfferAcceptance = () => {
+  const { prospect, token } = useGetPropspect();
+  const [accepOffer, { isLoading }] = useAcceptOfferMutation();
 
-const OfferAcceptance: React.FC<OfferAcceptanceProps> = ({ onContinue, onDecline }) => {
+  const acceptOffer = async () => {
+    try {
+      await accepOffer(token as string).unwrap();
+      message.success("Offer Accepted!");
+    } catch (error) {
+      message.error("Failed, try again");
+      console.log(error);
+    }
+  };
+
+  const employmentDeets = [
+    {
+      label: "Role",
+      value: prospect?.role,
+    },
+    {
+      label: "Job Type",
+      value: prospect?.jobType,
+    },
+    {
+      label: "Duration",
+      value: prospect?.duration,
+    },
+    {
+      label: "Start Date",
+      value: dayjs(prospect?.startDate).format("MMM DD, YYYY"),
+    },
+  ];
+
+  const employeeData =
+    prospect?.jobType === JobType.CONTRACT
+      ? employmentDeets.filter((item) => item.label !== "Duration")
+      : employmentDeets;
+
   return (
-    <div className="w-full max-w-xl bg-white/25 rounded-2xl !p-8 space-y-8 backdrop-blur-2xl">
-      <div className="text-center">
+    <div className="max-w-xl w-full border-1 border-white bg-white/25 rounded-2xl p-4 md:!p-8 space-y-8 backdrop-blur-2xl shadow-xl shadow-black/5">
+      <div className="text-center w-full">
         <h1 className="!text-2xl md:text-3xl font-bold text-gray-800">
-          Welcome to Zoracom, Modesta
+          Welcome to Zoracom, {prospect?.firstName}
         </h1>
-        <p className="text-gray-500 text-sm !mt-2">
-          We're excited to have you join our team! Below are the details <br className='hidden'/>of your offer.
+        <p className="text-gray-500 !mt-2">
+          We're excited to have you join our team! <br /> Below are the details
+          of your offer.
         </p>
       </div>
 
-      <div className='bg-white !rounded-xl !p-6 !mt-4'>
+      <div className="bg-white w-full !rounded-xl !p-6 !mt-4  shadow-xl shadow-black/5">
         <div className="!space-y-4">
-          <h2 className="!text-lg font-semibold text-black">Your Employment Details</h2>
-          <div className="bg-green-50 border !border-green-50 rounded-xl !p-4">
-            <div className="grid grid-cols-2 gap-y-3 text-[14px]">
-              <div className="font-medium">Role</div>
-              <div className="text-right text-gray-700">Product Designer</div>
-              <div className="font-medium">Job Type</div>
-              <div className="text-right text-gray-700">Full-Time</div>
-              <div className="font-medium">Duration</div>
-              <div className="text-right text-gray-700">6 Months</div>
-              <div className="font-medium">Start Date</div>
-              <div className="text-right text-gray-700">July 8, 2025</div>
-            </div>
+          <h2 className="!text-lg font-semibold text-black">
+            Your Employment Details
+          </h2>
+          <div className="bg-green-50 border !border-green-100 rounded-xl !p-4 space-y-4">
+            {employeeData.map((d) => (
+              <div key={d.label} className="flex items-center justify-between">
+                <p className="font-semibold">{d.label}</p>
+                <p className="text-gray">{sentenceCase(d.value ?? "")}</p>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 !pt-8">
-          <Button 
-            type="default" 
-            onClick={onDecline}
-            className="!text-[#0A96CC] border-[#0A96CC] hover:bg-[#e6f7ff] w-full !h-[40px]"
+          <Button
+            type="default"
+            // onClick={onDecline}
+            className="w-full !h-[40px]"
           >
             Decline Offer
           </Button>
           <Button
+            loading={isLoading}
             type="primary"
-            onClick={onContinue}
+            onClick={acceptOffer}
             className="bg-[#0A96CC] hover:bg-[#0984b3] flex items-center w-full !h-[40px]"
             icon={<ArrowRightOutlined />}
+            iconPosition="end"
           >
             Accept Offer & Continue
           </Button>

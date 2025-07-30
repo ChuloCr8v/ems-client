@@ -13,8 +13,8 @@ import {
   FileTextOutlined,
   CaretDownFilled,
 } from "@ant-design/icons";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 type Props = {};
@@ -132,7 +132,20 @@ const menuItems = [
 ];
 
 const Sidenav = (_props: Props) => {
-  const [openSections, setOpenSections] = useState(["Overview", "Performance"]);
+  const location = useLocation();
+  const [openSections, setOpenSections] = useState<string[]>([]);
+
+  useEffect(() => {
+    const currentPath = location.pathname;
+
+    const matchedSections = menuItems
+      .filter((section) =>
+        section.sectionItems.some((item) => currentPath.startsWith(item.url))
+      )
+      .map((section) => section.section);
+
+    setOpenSections(matchedSections);
+  }, [location.pathname]);
 
   const handleExpandSection = (section: string) => {
     setOpenSections((prev) =>
@@ -151,13 +164,13 @@ const Sidenav = (_props: Props) => {
           {menuItems.map((menuItem, index) => (
             <div
               key={index}
-              className="border-b last-of-type:border-b-0 border-outline pb-2 text-light_gray"
+              className="border-b last-of-type:border-b-0 border-outline pb-2 text-gray"
             >
               <div
                 className="flex items-center justify-between mb-2 cursor-pointer"
                 onClick={() => handleExpandSection(menuItem.section)}
               >
-                <p className="text-xs font-semibold uppercase tracking-wide">
+                <p className="text-xs text-light_gray uppercase tracking-wide">
                   {menuItem.section}
                 </p>
 
@@ -179,7 +192,11 @@ const Sidenav = (_props: Props) => {
                   <Link
                     key={itemIndex}
                     to={item.url}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray transition-all border-1 border-transparent hover:border-border_primary  hover:bg-primary_light hover:text-primary duration-200"
+                    className={twMerge(
+                      "flex items-center gap-2 px-3 py-1 rounded-lg text-sm transition-all border-1 border-transparent hover:border-border_primary hover:bg-primary_light hover:text-primary duration-200",
+                      location.pathname === item.url &&
+                        "bg-primary_light text-primary border-primary/30"
+                    )}
                   >
                     <span className="text-base">{item.icon}</span>
                     <span>{item.label}</span>

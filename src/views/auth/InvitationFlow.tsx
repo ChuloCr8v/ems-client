@@ -1,110 +1,59 @@
 import { useState } from "react";
 import InvitationBackgroundWrapper from "../../component/InvitationBackgroundWrapper";
-import OfferAcceptance from "./OfferAcceptance";// Make sure to import the OfferDecline component
+import useGetPropspect from "../../hooks/useGetPropspect";
 import OnboardingPersonalInfo from "./OnBoardingPersonalInfo";
 import OnboardingKeyContacts from "./Onboarding-key-contacts";
 import OnboardingDocuments from "./OnboardingDocuments";
+import OfferAcceptance from "./OfferAcceptance";
+import { useForm } from "antd/es/form/Form";
+import { EmployeeStatus } from "../../api/types";
 import OnboardingSuccess from "./OnboardingSuccess";
-import OfferDecline from "./Offer-decline";
-import OfferDeclineSuccess from "./OfferDeclineSuccess";
-
-type FlowStep = "offer" | "offer-decline" | "offer-decline-success" | "personal-info" | "key-contacts" |
-    "documents" | "success";
 
 const InvitationFlow: React.FC = () => {
-    const [step, setStep] = useState<FlowStep>("offer");
+  const [form] = useForm();
+  const [step, setStep] = useState<number>(1);
 
-    const handleOfferAccept = () => {
-        setStep("personal-info");
-    };
+  const { isLoading, prospect, isFetching } = useGetPropspect();
 
-    const handleOfferDecline = () => {
-        setStep("offer-decline");
-    };
+  const acceptedInvite = prospect?.invite.some(
+    (i) => i.status === EmployeeStatus.ACCEPTED
+  );
 
-    const handleDeclineConfirmed = () => {
-        console.log("Offer declined and feedback submitted");
-        // Here you might want to redirect or show a confirmation message
-        // For now, we'll just go back to the offer screen
-        setStep("offer-decline-success");
-    };
+  const stepProps = {
+    form: form,
+    currentStep: step,
+    setCurrentStep: setStep,
+  };
 
-    const handleDeclineCancel = () => {
-        setStep("offer");
-    };
+  const renderItem = () => {
+    if (acceptedInvite) {
+      switch (step) {
+        case 1:
+          return <OnboardingPersonalInfo {...stepProps} />;
+        case 2:
+          return <OnboardingKeyContacts {...stepProps} />;
+        case 3:
+          return <OnboardingDocuments {...stepProps} />;
+        case 4:
+          return <OnboardingSuccess step={step} />;
+        default:
+          return null;
+      }
+    } else {
+      return <OfferAcceptance />;
+    }
+  };
 
-    const handlePersonalInfoProceed = () => {
-        setStep("key-contacts");
-    };
-
-    const handlePersonalInfoBack = () => {
-        setStep("offer");
-    };
-
-    const handleKeyContactsProceed = () => {
-        setStep("documents");
-        console.log("Proceeding to documents step");
-    };
-
-    const handleKeyContactsBack = () => {
-        setStep("personal-info");
-    };
-
-    const handleDocumentsProceed = () => {
-        setStep("success");
-        console.log("Onboarding completed!");
-    };
-
-    const handleDocumentsBack = () => {
-        setStep("key-contacts");
-    };
-
-    return (
-        <InvitationBackgroundWrapper>
-            {step === "offer" && (
-                <OfferAcceptance
-                    onContinue={handleOfferAccept}
-                    onDecline={handleOfferDecline}
-                />
-            )}
-
-            {step === "offer-decline" && (
-                <OfferDecline
-                    onCancel={handleDeclineCancel}
-                    onDecline={handleDeclineConfirmed}
-                />
-            )}
-
-            {step === "offer-decline-success" && (
-                <OfferDeclineSuccess />
-            )}
-
-            {/* Rest of your components remain the same */}
-            {step === "personal-info" && (
-                <OnboardingPersonalInfo
-                    onProceed={handlePersonalInfoProceed}
-                    onBack={handlePersonalInfoBack}
-                />
-            )}
-
-            {step === "key-contacts" && (
-                <OnboardingKeyContacts
-                    onProceed={handleKeyContactsProceed}
-                    onBack={handleKeyContactsBack}
-                />
-            )}
-
-            {step === "documents" && (
-                <OnboardingDocuments
-                    onProceed={handleDocumentsProceed}
-                    onBack={handleDocumentsBack}
-                />
-            )}
-
-            {step === "success" && <OnboardingSuccess />}
-        </InvitationBackgroundWrapper>
-
-    );
+  return (
+    <InvitationBackgroundWrapper loading={isLoading || isFetching}>
+      <div className="flex flex-col justify-center items-center gap-6">
+        {renderItem()}
+        <p className="text-gray">
+          Copyright ©{new Date().getFullYear()}. All Rights Reserved Zoracom
+        </p>
+      </div>
+    </InvitationBackgroundWrapper>
+  );
 };
 
 export default InvitationFlow;

@@ -1,26 +1,35 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthUserRequired } from "../hooks/authHooks";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuthUser } from "../hooks/authHooks";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const user = useAuthUserRequired();
-
+  const user = useAuthUser();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  console.log(user);
+  const safeRoutes = ["/onboarding/invitation"];
+
+  const isSafeRoute = safeRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
+
   useEffect(() => {
-    async () => {
-      if (user) {
-        navigate("/dashboard");
-      } else {
+    const checkAuth = async () => {
+      if (isSafeRoute) return;
+
+      if (!isSafeRoute && !user.id) {
         navigate("/auth");
       }
+
+      if (isSafeRoute && user.id) {
+        navigate("/employees");
+      }
     };
-  }, [user]);
 
-  // if (loading) return <LoadingSpinner />;
+    checkAuth();
+  }, [user, location.pathname]);
 
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
 
 export default AuthProvider;

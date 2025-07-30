@@ -6,7 +6,7 @@ import { sendError } from '../utils/sendError';
 import type { AuthState } from '../api/data/auth';
 import { useAppDispatch, useAppSelector } from './reduxHooks';
 import type { AuthUser } from '../api/types';
-import { JobType, StagePermission } from '../api/types';
+import { EmployeeStatus, JobType, Role, StagePermission } from '../api/types';
 import type { RootState } from '../store';
 import { clearAuth, setAuth } from '../store/slices/authSlice';
 
@@ -26,7 +26,11 @@ const noUser: AuthUser = {
     jobType: JobType.FULLTIME,
     user: { firstName: '', lastName: '', name: '' },
     stage: { id: '', name: '', position: 0, permission: StagePermission.LEAVE },
-    userRole: undefined
+    userRole: undefined,
+    status: EmployeeStatus.INACTIVE,
+    gender: "MALE",
+    role: Role.USER,
+    invite: []
 };
 
 type ApiResult<T> = T | Promise<T> | { unwrap(): Promise<T> };
@@ -40,7 +44,7 @@ export function useAuthComplete() {
             event?.preventDefault();
             const dispatchAuth = (auth: AuthState) => {
                 dispatch(setAuth(auth));
-                navigate('/', { replace: true });
+                navigate('/employees', { replace: true });
             };
             if ('unwrap' in value) {
                 value.unwrap().then(dispatchAuth).catch(sendError);
@@ -60,7 +64,6 @@ export function useAuth() {
 
 export function useAuthUser() {
     const authToken = useAppSelector(state => state.auth?.access_token);
-    console.log(authToken)
 
     const { data: user } = useGetMeQuery(undefined, { skip: !authToken });
     return user ?? noUser;

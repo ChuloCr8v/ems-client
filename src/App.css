@@ -9,4 +9,113 @@
   --color-gray: #8e9492;
   --color-border_primary: #b3deef;
   --color-primary_light: #e7f5fa;
+  --color-custom_black: #262626;
+  --color-bg_elevated: #ecf8ee;
+}
+
+Hide default asterisk after label .ant-form-item-required::before {
+  display: none !important;
+}
+
+/* Move asterisk before label */
+.ant-form-item-required::before {
+  content: "*";
+  color: red;
+  margin-left: 4px !important;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* Segments */
+
+.custom-segmented-wrapper
+  :where(.css-dev-only-do-not-override-1nbmcbj).ant-segmented {
+  border: 1px #e6eae8 solid;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.custom-segmented-wrapper .ant-segmented-item-selected {
+  border: 1px #a7ddb0 solid;
+  background-color: #ecf8ee;
+  color: #40b554;
+}
+
+.custom-segmented-wrapper .ant-segmented-item {
+  padding-inline: 20px;
+  border-radius: 4px;
+}
+
+/* Table */
+
+.ant-table-thead tr {
+  background: linear-gradient(90deg, #ebf7fb, #e7f5ea);
+}
+
+.ant-table-cell {
+  background-color: transparent !important;
+  padding: 12px 24px !important;
+}
+
+:where(.css-dev-only-do-not-override-1nbmcbj).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(
+    .ant-table-row-expand-icon-cell
+  ):not([colspan])::before,
+:where(.css-dev-only-do-not-override-1nbmcbj).ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > td:not(:last-child):not(.ant-table-selection-column):not(
+    .ant-table-row-expand-icon-cell
+  ):not([colspan])::before {
+  display: none !important;
+}
+
+.ant-table-selection-column {
+  padding: 0 !important;
+  padding-left: 24px !important;
+}
+
+.ant-table-cell {
+  color: #8e9492;
+}
+
+.ant-table-cell:nth-child(2) {
+  padding-left: 12px !important;
+}
+
+/* Antd Modal */
+.ant-modal-content {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+/* form label  */
+
+label {
+  font-size: 13px !important;
+  color: #262626 !important;
+}
+
+/* For modern browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
