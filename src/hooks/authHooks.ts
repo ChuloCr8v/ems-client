@@ -29,7 +29,8 @@ const noUser: AuthUser = {
     userRole: undefined,
     status: EmployeeStatus.INACTIVE,
     gender: "MALE",
-    role: Role.USER
+    role: Role.USER,
+    invite: []
 };
 
 type ApiResult<T> = T | Promise<T> | { unwrap(): Promise<T> };
