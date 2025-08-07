@@ -172,12 +172,30 @@ const Employees = () => {
 
   console.log(invitationData);
 
+  // Calculate summary counts
+  const totalEmployees = employeeData.length;
+  const invitationsSent = invitationData?.length ?? 0;
+  const activeEmployees = employeeData.filter(emp => emp.status === EmployeeStatus.ACTIVE).length;
+  const inactiveEmployees = employeeData.filter(emp => emp.status === EmployeeStatus.INACTIVE).length;
+
   return (
-    <DashboardLayout
-      primaryButtonText={"Send Invitation"}
+   <DashboardLayout
+      primaryButtonText="Send Invitation"
       action={() => openModal(<SendInvitation />)}
       primaryButtonIcon={MailSend01Icon}
+      pageTitle="Employees"
+      pageDescription="View, manage, and track all employees across the organization."
+      summaryType="employees"
+      summaryCounts={{
+        
+        total: totalEmployees,       // Total employees
+        secondary: invitationsSent,  // Invitations sent
+        active: activeEmployees,     // Active employees
+        inactive: inactiveEmployees // Inactive employees
+      }}
     >
+
+
       <div className="space-y-6 mt-4">
         <CustomSegmented
           options={options}

@@ -5,67 +5,61 @@ import {
   CheckmarkCircle02Icon,
   CancelCircleFreeIcons,
   Loading01Icon,
+  UserWarning01FreeIcons,
+  Shield01FreeIcons,
+  CircleArrowDiagonal02FreeIcons,
+  UserCheck01FreeIcons,
+  CheckmarkCircle01Icon,
+  UserBlock01FreeIcons,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { EmployeeStatus } from "../../api/types";
+import { AssetStatus, EmployeeStatus } from "../../api/types";
+; // adjust this path as needed
 
-type Props = {
-  status: EmployeeStatus;
+type StatusTagProps = {
+  status: EmployeeStatus | AssetStatus;
 };
 
-const StatusTag = ({ status }: Props) => {
+const StatusTag = ({ status }: StatusTagProps) => {
+  const isEmployeeStatus = Object.values(EmployeeStatus).includes(status as EmployeeStatus);
+
   const property = () => {
-    switch (status) {
-      case EmployeeStatus.PENDING:
-      case EmployeeStatus.PENDING_INVITE:
-      case EmployeeStatus.PENDING_REVIEW:
-        return {
-          icon: Loading01Icon,
-          color: "orange",
-        };
-      case EmployeeStatus.REJECTED:
-      case EmployeeStatus.INACTIVE:
-        return {
-          icon: CancelCircleFreeIcons,
-          color: "red",
-        };
-      case EmployeeStatus.ACTIVE:
-        return {
-          icon: CheckmarkCircle02Icon,
-          color: "green",
-        };
-      case EmployeeStatus.ON_LEAVE:
-        return {
-          icon: Briefcase02Icon,
-          color: "blue",
-        };
-      default:
-        return {
-          icon: InformationCircleIcon,
-          color: "gray",
-        };
+    if (isEmployeeStatus) {
+      switch (status) {
+        case EmployeeStatus.PENDING:
+        case EmployeeStatus.PENDING_INVITE:
+        case EmployeeStatus.PENDING_REVIEW:
+          return { icon: Loading01Icon, color: "orange" };
+        case EmployeeStatus.REJECTED:
+        case EmployeeStatus.INACTIVE:
+          return { icon: CancelCircleFreeIcons, color: "red" };
+        case EmployeeStatus.ACTIVE:
+          return { icon: CheckmarkCircle02Icon, color: "green" };
+        case EmployeeStatus.ON_LEAVE:
+          return { icon: Briefcase02Icon, color: "blue" };
+        default:
+          return { icon: InformationCircleIcon, color: "gray" };
+      }
+    } else {
+      switch (status) {
+        case AssetStatus.AVAILABLE:
+          return { icon: UserCheck01FreeIcons, color: "green" };
+        case AssetStatus.ASSIGNED:
+          return { icon: CheckmarkCircle01Icon, color: "yellow" };
+        case AssetStatus.FAULTY:
+          return { icon: UserBlock01FreeIcons, color: "red" };
+        case AssetStatus.MAINTENANCE:
+          return { icon: Loading01Icon, color: "gray" };
+        case AssetStatus.RETIRED:
+          return { icon: CircleArrowDiagonal02FreeIcons, color: "red" };
+        default:
+          return { icon: InformationCircleIcon, color: "gray" };
+      }
     }
   };
 
   const formattedStatus = () => {
-    switch (status) {
-      case EmployeeStatus.PENDING:
-        return "Pending";
-      case EmployeeStatus.PENDING_INVITE:
-        return "Pending Invite";
-      case EmployeeStatus.PENDING_REVIEW:
-        return "Pending Review";
-      case EmployeeStatus.INACTIVE:
-        return "Inactive";
-      case EmployeeStatus.REJECTED:
-        return "Rejected";
-      case EmployeeStatus.ACTIVE:
-        return "Active";
-      case EmployeeStatus.ON_LEAVE:
-        return "On Leave";
-      default:
-        return "---";
-    }
+    return status.replaceAll("_", " ").toLowerCase().replace(/^\w|\s\w/g, (c) => c.toUpperCase());
   };
 
   const { icon, color } = property();
