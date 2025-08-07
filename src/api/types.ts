@@ -35,6 +35,48 @@ export enum EmployeeStatus {
     REJECTED = "REJECTED",
 }
 
+export enum AssetStatus {
+    AVAILABLE = "AVAILABLE",
+    ASSIGNED = "ASSIGNED",
+    FAULTY = "FAULTY",
+    MAINTENANCE = "MAINTENANCE",
+    RETIRED = "RETIRED",
+}
+
+export enum AssetCategory {
+    HARDWARE = "HARDWARE",
+    ACCESSORY = "ACCESSORY",
+    LOGISTICS = "LOGISTICS",
+    OFFICE_FURNITURE = "OFFICE_FURNITURE",
+    SAFETY_EQUIPMENT = "SAFETY_EQUIPMENT",
+    SOFTWARE = "SOFTWARE",
+}
+
+export type Asset = {
+    id: string
+    name: string
+    assetId: string
+    category: string
+    status: AssetStatus
+    assignedTo?: {
+        firstName: string
+        lastName: string
+        email: string
+        employeeId: string
+    }
+    dateAssigned?: string
+    dateRetrieved?: string
+    purchaseDate?: string
+    warrantyExpiry?: string
+    value?: number
+    condition?: string
+    location?: string
+    serialNumber?: string
+    createdAt?: string
+    updatedAt?: string
+}
+
+
 export type Invite = {
     id: string,
     token: string,
