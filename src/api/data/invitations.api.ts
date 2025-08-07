@@ -1,5 +1,5 @@
 import { baseApi } from '../base';
-import type { InvitationResponse } from '../types';
+import type { InvitationResponse, Prospect } from '../types';
 
 
 export const invitationsApi = baseApi.injectEndpoints({
@@ -7,22 +7,35 @@ export const invitationsApi = baseApi.injectEndpoints({
 
         sendInvitation: mutation<void, FormData>({
             query: body => ({ url: 'invite/send', method: 'POST', body }),
-            invalidatesTags: ["Invitations"],
+            invalidatesTags: ["User", "Invitations"],
         }),
 
         listInvitation: query<InvitationResponse, void>({
-            query: () => ({ url: `invite/prospect` }),
-            providesTags: ["Invitations"],
+            query: () => ({ url: `invite` }),
+            providesTags: ["User", "Invitations"],
+        }),
+
+        getInvite: query<Prospect, string>({
+            query: (id) => ({ url: `invite/${id}` }),
+            providesTags: ["User", "Invitations"],
         }),
 
         acceptOffer: mutation<InvitationResponse, string>({
             query: (token) => ({ url: `invite/accept/${token}`, method: "PUT" }),
-            invalidatesTags: ["Invitations"],
+            invalidatesTags: ["User", "Invitations"],
         }),
 
+        submitProspectData: mutation<void, any>({
+            query: ({ id, ...data }) => ({ url: `/users/invite/${id}`, method: "POST", body: data }),
+            invalidatesTags: ["User", "Invitations"],
+        }),
 
+        approveProspect: mutation<void, any>({
+            query: ({ id, ...data }) => ({ url: `/users/approve/${id}`, method: "PUT", body: data }),
+            invalidatesTags: ["User", "Invitations"],
+        }),
     }),
 
 });
 
-export const { useSendInvitationMutation, useListInvitationQuery, useAcceptOfferMutation } = invitationsApi;
+export const { useSendInvitationMutation, useListInvitationQuery, useAcceptOfferMutation, useGetInviteQuery, useSubmitProspectDataMutation, useApproveProspectMutation } = invitationsApi;

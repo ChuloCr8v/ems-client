@@ -1,9 +1,15 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuthUser } from "../hooks/authHooks";
+import { useGetMeQuery } from "../api/users";
+import { useAppSelector } from "../hooks/reduxHooks";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const user = useAuthUser();
+  const authToken = useAppSelector((state) => state.auth?.access_token);
+
+  const { data: user, isLoading } = useGetMeQuery(undefined, {
+    skip: !authToken,
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,20 +20,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   useEffect(() => {
-    const checkAuth = async () => {
-      if (isSafeRoute) return;
+    if (isLoading) return;
 
-      if (!isSafeRoute && !user.id) {
-        navigate("/auth");
-      }
+    if (!isSafeRoute && !user) {
+      navigate("/auth");
+    }
 
-      if (isSafeRoute && user.id) {
-        navigate("/employees");
-      }
-    };
-
-    checkAuth();
-  }, [user, location.pathname]);
+    if (user && location.pathname === "/auth") {
+      navigate("/employees");
+    }
+  }, [user, isLoading, isSafeRoute, location.pathname]);
 
   return <>{children}</>;
 };

@@ -8,11 +8,13 @@ import useGetPropspect from "../../hooks/useGetPropspect";
 
 const OfferAcceptance = () => {
   const { prospect, token } = useGetPropspect();
-  const [accepOffer, { isLoading }] = useAcceptOfferMutation();
+  const [acceptOffer, { isLoading }] = useAcceptOfferMutation();
 
-  const acceptOffer = async () => {
+  console.log(prospect);
+
+  const handleAcceptOffer = async () => {
     try {
-      await accepOffer(token as string).unwrap();
+      await acceptOffer(token as string).unwrap();
       message.success("Offer Accepted!");
     } catch (error) {
       message.error("Failed, try again");
@@ -29,10 +31,14 @@ const OfferAcceptance = () => {
       label: "Job Type",
       value: prospect?.jobType,
     },
-    {
-      label: "Duration",
-      value: prospect?.duration,
-    },
+    ...(prospect?.jobType === JobType.CONTRACT
+      ? [
+          {
+            label: "Duration",
+            value: prospect?.duration,
+          },
+        ]
+      : []),
     {
       label: "Start Date",
       value: dayjs(prospect?.startDate).format("MMM DD, YYYY"),
@@ -83,7 +89,7 @@ const OfferAcceptance = () => {
           <Button
             loading={isLoading}
             type="primary"
-            onClick={acceptOffer}
+            onClick={handleAcceptOffer}
             className="bg-[#0A96CC] hover:bg-[#0984b3] flex items-center w-full !h-[40px]"
             icon={<ArrowRightOutlined />}
             iconPosition="end"

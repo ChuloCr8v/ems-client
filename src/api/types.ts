@@ -35,6 +35,48 @@ export enum EmployeeStatus {
     REJECTED = "REJECTED",
 }
 
+export enum AssetStatus {
+    AVAILABLE = "AVAILABLE",
+    ASSIGNED = "ASSIGNED",
+    FAULTY = "FAULTY",
+    MAINTENANCE = "MAINTENANCE",
+    RETIRED = "RETIRED",
+}
+
+export enum AssetCategory {
+    HARDWARE = "HARDWARE",
+    ACCESSORY = "ACCESSORY",
+    LOGISTICS = "LOGISTICS",
+    OFFICE_FURNITURE = "OFFICE_FURNITURE",
+    SAFETY_EQUIPMENT = "SAFETY_EQUIPMENT",
+    SOFTWARE = "SOFTWARE",
+}
+
+export type Asset = {
+    id: string
+    name: string
+    assetId: string
+    category: string
+    status: AssetStatus
+    assignedTo?: {
+        firstName: string
+        lastName: string
+        email: string
+        employeeId: string
+    }
+    dateAssigned?: string
+    dateRetrieved?: string
+    purchaseDate?: string
+    warrantyExpiry?: string
+    value?: number
+    condition?: string
+    location?: string
+    serialNumber?: string
+    createdAt?: string
+    updatedAt?: string
+}
+
+
 export type Invite = {
     id: string,
     token: string,
@@ -44,22 +86,32 @@ export type Invite = {
 
 
 export type Prospect = {
+    id: string;
+    userRole: string;
     firstName: string;
     lastName: string;
     email: string;
     phone: string;
     role: string;
     departmentId: string;
+    department: Department;
     startDate: Date;
     jobType: JobType;
     gender: string;
     duration: string;
-    invite: Invite[]
+    invite: Invite[];
+    status?: string
+    user: User
 };
 
 export type InvitationResponse = {
     message: string,
     prospects: Prospect[]
+}
+
+export type Levels = {
+    name: string;
+    id: string
 }
 
 export type Department = {
@@ -83,16 +135,15 @@ export type User = {
     stage: Stage;
     user: HasName | undefined;
     id: Id;
-    employeeId: number;
+    eId: number;
     email: string;
     firstName: string;
     lastName: string;
     userRole?: Role
     gender: "MALE" | "FEMALE"
-    role: String,
+    role: string,
     invite: Invite[]
-
-    team: Department;
+    department: Department;
     level: Level;
     isAdmin: boolean;
     active: boolean;
@@ -219,7 +270,7 @@ export type CreateManyEntitlements = {
 };
 
 export enum JobType {
-    FULLTIME = 'FULLTIME',
+    FULLTIME = 'FULL_TIME',
     CONTRACT = 'CONTRACT',
     INTERN = "INTERN"
 }

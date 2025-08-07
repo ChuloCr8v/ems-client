@@ -3,6 +3,7 @@ import type { RootState } from '../store/store';
 
 export const paths = {
   User: 'users',
+  Levels: 'Levels',
   Department: 'teams',
   Stage: 'stages',
   Level: 'levels',

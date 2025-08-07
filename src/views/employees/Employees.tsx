@@ -19,24 +19,30 @@ import SendInvitation from "../../component/modals/SendInvitation";
 import { useState } from "react";
 import Icon from "../../component/common/Icon";
 import { colors } from "../../constants/colors";
-import ProspectDetail from "../../component/modals/ProspectDetail";
+import EmployeeDetailCard from "../../component/modals/EmployeeDetailCard";
 import ApproveEmployee from "../../component/modals/ApproveEmployee";
 import { useListInvitationQuery } from "../../api/data/invitations.api";
 import { sentenceCase } from "../../helpers";
+import { useListUsersQuery } from "../../api/users";
 
 const Employees = () => {
-  const [currentList, setCurrentList] = useState<string>("Employees");
+  const [currentList, setCurrentList] = useState<"EMPLOYEES" | "PROSPECTS">(
+    "EMPLOYEES"
+  );
   const [userData, setUserData] = useState<User | null>(null);
 
-  const options = ["Employees", "Invitations"];
+  const { data: invitationResponse, isLoading } = useListInvitationQuery();
+  const { data: users, isLoading: gettingUsers } = useListUsersQuery();
+
+  const options = ["EMPLOYEES", "PROSPECTS"];
 
   const { openModal } = usePopup();
 
   const columns: ColumnsType<User> = [
     {
       title: "ID",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "eId",
+      key: "eId",
     },
     {
       title: "Name",
@@ -67,7 +73,9 @@ const Employees = () => {
       render: (_, records) => {
         return (
           <div className="">
-            <p className="text-custom_black text-sm ">{records.role}</p>
+            <p className="text-custom_black text-sm ">
+              {sentenceCase(records.role ?? "")}
+            </p>
             <p className="text-xs">{sentenceCase(records.jobType)}</p>
           </div>
         );
@@ -77,6 +85,9 @@ const Employees = () => {
       title: "Level",
       dataIndex: "level",
       key: "level",
+      render: (_, record) => {
+        return <p className="">{record.level?.name}</p>;
+      },
     },
     {
       title: "Status",
@@ -93,9 +104,14 @@ const Employees = () => {
               )[0]?.status
           : undefined;
 
-        console.log(inviteStatus);
-
-        return <StatusTag status={inviteStatus ?? EmployeeStatus.PENDING} />;
+        return (
+          <StatusTag
+            status={
+              (currentList === "EMPLOYEES" ? record.status : inviteStatus) ??
+              "N/A"
+            }
+          />
+        );
       },
     },
     {
@@ -105,14 +121,14 @@ const Employees = () => {
       render: (_text, record) => (
         <>
           <Dropdown
-            trigger={["click"]}
             placement="bottomRight"
             menu={{
               items: [
                 {
                   key: "view",
                   label: "View Profile",
-                  onClick: () => openModal(<ProspectDetail data={userData} />),
+                  onClick: () =>
+                    openModal(<EmployeeDetailCard data={userData} />),
                   icon: Icon({
                     size: 16,
                     color: colors.icon_gray,
@@ -159,7 +175,10 @@ const Employees = () => {
             <Button
               type="text"
               className="p-2"
-              onClick={() => setUserData(record)}
+              onClick={(e) => {
+                e.preventDefault();
+                setUserData(record);
+              }}
             >
               <EllipsisOutlined />
             </Button>
@@ -168,8 +187,6 @@ const Employees = () => {
       ),
     },
   ];
-
-  const { data: invitationResponse, isLoading } = useListInvitationQuery();
 
   const invitationData = invitationResponse?.prospects;
 
@@ -181,8 +198,8 @@ const Employees = () => {
 
   const currentTableItem = () => {
     switch (currentList) {
-      case "Employees":
-        return { data: employeeData, col: columns };
+      case "EMPLOYEES":
+        return { data: users?.filter((u) => u.level), col: columns };
       default:
         return { data: invitationData, col: iColumns };
     }
@@ -190,22 +207,48 @@ const Employees = () => {
 
   console.log(invitationData);
 
+  // Calculate summary counts
+  const totalEmployees = currentTableItem().data?.length;
+  const invitationsSent = invitationData?.length ?? 0;
+  const activeEmployees = currentTableItem().data?.filter(
+    (emp) => emp.status === EmployeeStatus.ACTIVE
+  ).length;
+  const inactiveEmployees = currentTableItem().data?.filter(
+    (emp) => emp.status === EmployeeStatus.INACTIVE
+  ).length;
+
   return (
     <DashboardLayout
-      primaryButtonText={"Send Invitation"}
+      primaryButtonText="Send Invitation"
       action={() => openModal(<SendInvitation />)}
       primaryButtonIcon={MailSend01Icon}
+      pageTitle="Employees"
+      pageDescription="View, manage, and track all employees across the organization."
+      summaryType="employees"
+      summaryCounts={{
+        total: totalEmployees ?? 0,
+        secondary: invitationsSent ?? 0,
+        active: activeEmployees ?? 0,
+        inactive: inactiveEmployees ?? 0,
+      }}
     >
       <div className="space-y-6 mt-4">
         <CustomSegmented
           options={options}
-          setOption={(value) => setCurrentList(value)}
+          setOption={(value) =>
+            setCurrentList((value as "EMPLOYEES") || "PROSPECT")
+          }
         />
         <TableComponent
           columns={currentTableItem().col}
           dataSource={currentTableItem().data as any}
           scroll={800}
-          loading={isLoading}
+          loading={isLoading || gettingUsers}
+          onRow={(record) =>
+            openModal(
+              <EmployeeDetailCard data={record} dataSource={currentList} />
+            )
+          }
         />
       </div>
     </DashboardLayout>
@@ -213,116 +256,3 @@ const Employees = () => {
 };
 
 export default Employees;
-
-export const employeeData = [
-  {
-    id: "EMP001",
-    firstName: "Modesta",
-    lastName: "Ejeh",
-    email: "modesta.ejeh@company.com",
-    Gender: "Male",
-    userRole: "UI/UX Designer",
-    level: "Officer",
-    jobType: "Full-Time",
-    status: EmployeeStatus.ACTIVE,
-  },
-  {
-    id: "EMP002",
-    firstName: "Benedect",
-    lastName: "Nwosu",
-    email: "benedict.nwosu@company.com",
-    Gender: "Male",
-    userRole: "UI/UX Designer",
-    level: "Officer",
-    jobType: "Contract",
-    status: EmployeeStatus.ACTIVE,
-  },
-  {
-    id: "EMP003",
-    firstName: "Chinenye",
-    lastName: "Okafor",
-    email: "chinenye.okafor@company.com",
-    Gender: "Female",
-    userRole: "Frontend Developer",
-    level: "Senior Officer",
-    jobType: "Full-Time",
-    status: EmployeeStatus.ACTIVE,
-  },
-  {
-    id: "EMP004",
-    firstName: "Ifeanyi",
-    lastName: "Umeh",
-    email: "ifeanyi.umeh@company.com",
-    Gender: "Male",
-    userRole: "Backend Developer",
-    level: "Lead",
-    jobType: "Contract",
-    status: EmployeeStatus.ON_LEAVE,
-  },
-  {
-    id: "EMP005",
-    firstName: "Amaka",
-    lastName: "Obi",
-    email: "amaka.obi@company.com",
-    Gender: "Female",
-    userRole: "HR Manager",
-    level: "Head",
-    jobType: "Full-Time",
-    status: EmployeeStatus.PENDING_INVITE,
-  },
-  {
-    id: "EMP006",
-    firstName: "Obinna",
-    lastName: "Okeke",
-    email: "obinna.okeke@company.com",
-    Gender: "Male",
-    userRole: "DevOps Engineer",
-    level: "Senior Officer",
-    jobType: "Contract",
-    status: EmployeeStatus.INACTIVE,
-  },
-  {
-    id: "EMP007",
-    firstName: "Ngozi",
-    lastName: "Adebayo",
-    email: "ngozi.adebayo@company.com",
-    Gender: "Female",
-    userRole: "Product Manager",
-    level: "Lead",
-    jobType: "Full-Time",
-    status: EmployeeStatus.PENDING,
-  },
-  {
-    id: "EMP008",
-    firstName: "Chuka",
-    lastName: "Eze",
-    email: "chuka.eze@company.com",
-    Gender: "Male",
-    userRole: "QA Analyst",
-    level: "Officer",
-    jobType: "Full-Time",
-    status: EmployeeStatus.ACTIVE,
-  },
-  {
-    id: "EMP009",
-    firstName: "Kelechi",
-    lastName: "Nnaji",
-    email: "kelechi.nnaji@company.com",
-    Gender: "Female",
-    userRole: "Marketing Lead",
-    level: "Senior Officer",
-    jobType: "Contract",
-    status: EmployeeStatus.ON_LEAVE,
-  },
-  {
-    id: "EMP010",
-    firstName: "Ijeoma",
-    lastName: "Nwankwo",
-    email: "ijeoma.nwankwo@company.com",
-    Gender: "Female",
-    userRole: "Customer Support",
-    level: "Junior Officer",
-    jobType: "Full-Time",
-    status: EmployeeStatus.ACTIVE,
-  },
-];

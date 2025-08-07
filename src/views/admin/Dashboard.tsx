@@ -39,7 +39,18 @@ const Dashboard = () => {
             </Button>
           </div>
         </div>
-        <SummaryCards />
+        <SummaryCards
+          type={"employees"}
+          counts={{
+            total: 0,
+            secondary: undefined,
+            active: undefined,
+            inactive: undefined,
+            available: undefined,
+            assigned: undefined,
+            faulty: undefined,
+          }}
+        />
       </div>
     </GeneralLayout>
   );

@@ -15,6 +15,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
   const formFields = [
     {
       sectionTitle: "Guarantor Details",
+      indexName: "guarantor",
       formItems: [
         {
           label: "First Name",
@@ -23,7 +24,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
           value: undefined,
           required: true,
           type: "text",
-          name: "guarantorFirstName",
+          name: "firstName",
         },
         {
           label: "Last Name",
@@ -32,7 +33,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
           value: undefined,
           required: true,
           type: "text",
-          name: "guarantorLastName",
+          name: "lastName",
         },
         {
           label: "Email",
@@ -41,7 +42,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
           value: undefined,
           required: true,
           type: "email",
-          name: "guarantorEmail",
+          name: "email",
         },
         {
           label: "Phone Number",
@@ -50,15 +51,15 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
           value: undefined,
           required: true,
           type: "phone",
-          name: "guarantorPhone",
+          name: "phone",
         },
       ],
     },
     {
       sectionTitle: "Emergency Contact",
+      indexName: "emergency",
       sectionSubtitle:
         "Provide someone we can contact in case of an emergency (e.g., medical issue or workplace incident).",
-
       formItems: [
         {
           label: "First Name",
@@ -67,7 +68,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
           value: undefined,
           required: true,
           type: "text",
-          name: "emergencyFirstName",
+          name: "firstName",
         },
         {
           label: "Last Name",
@@ -76,7 +77,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
           value: undefined,
           required: true,
           type: "text",
-          name: "emergencyLastName",
+          name: "lastName",
         },
         {
           label: "Email",
@@ -85,7 +86,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
           value: undefined,
           required: true,
           type: "email",
-          name: "emergencyEmail",
+          name: "email",
         },
         {
           label: "Phone Number",
@@ -94,7 +95,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
           value: undefined,
           required: true,
           type: "phone",
-          name: "emergencyPhone",
+          name: "phone",
         },
       ],
     },
@@ -102,7 +103,7 @@ const OnboardingKeyContacts: React.FC<OnboardingProps> = ({
 
   return (
     <OnboardingLayout
-      indexName="keyContacts"
+      // indexName="keyContacts"
       formFields={formFields}
       step={currentStep}
       setStep={setCurrentStep}

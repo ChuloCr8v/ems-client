@@ -20,9 +20,11 @@ import {
   type SetStateAction,
 } from "react";
 import { message } from "antd";
+import { useSubmitProspectDataMutation } from "../api/data/invitations.api";
 
 interface OnboardingWrapperProps {
   formFields: {
+    indexName?: string;
     sectionTitle?: string;
     sectionSubtitle?: string;
     formItems: FormFieldProps[];
@@ -48,6 +50,8 @@ const OnboardingLayout = ({
   indexName,
   children,
 }: OnboardingWrapperProps) => {
+  const [submitProspectData] = useSubmitProspectDataMutation();
+
   const { prospect, isLoading: gettingProspect } = useGetPropspect();
 
   const { formItem } = FormItemComponent({ form });
@@ -55,11 +59,11 @@ const OnboardingLayout = ({
   useEffect(() => {
     const populateForm = async () => {
       if (prospect) {
-        form.setFieldValue(["personalInfo", "gender"], prospect.gender);
-        form.setFieldValue(["personalInfo", "firstName"], prospect.firstName);
-        form.setFieldValue(["personalInfo", "lastName"], prospect.lastName);
-        form.setFieldValue(["personalInfo", "email"], prospect.email);
-        form.setFieldValue(["personalInfo", "phone"], prospect.phone);
+        form.setFieldValue("gender", prospect.gender);
+        form.setFieldValue("firstName", prospect.firstName);
+        form.setFieldValue("lastName", prospect.lastName);
+        form.setFieldValue("email", prospect.email);
+        form.setFieldValue("phone", prospect.phone);
       }
     };
     populateForm();
@@ -76,18 +80,38 @@ const OnboardingLayout = ({
   ];
 
   const nextStep = async () => {
-    console.log("Current step before validation:", step);
     try {
       await form.validateFields();
       console.log("Validation succeeded, current step:", step);
 
       if (step === stepItems.length) {
-        console.log("Final step, submitting...");
         const allValues = form.getFieldsValue(true);
-        console.log(allValues);
+        const { emergency, guarantor } = allValues;
+
+        const { phone: emergencyPhone, ...emergencyRest } = emergency;
+        const { phone: guarantorPhone, ...guarantorRest } = guarantor;
+
+        const formattedEmergencyPhoneNumber = {
+          ...emergencyRest,
+          phone: `${emergencyPhone.countryCode}${emergencyPhone.areaCode}${emergencyPhone.phoneNumber}`,
+        };
+
+        const formattedGuarantorPhoneNumber = {
+          ...guarantorRest,
+          phone: `${guarantorPhone.countryCode}${guarantorPhone.areaCode}${guarantorPhone.phoneNumber}`,
+        };
+
+        const updatedData = {
+          ...allValues,
+          id: prospect?.id,
+          guarantor: formattedGuarantorPhoneNumber,
+          emergency: formattedEmergencyPhoneNumber,
+        };
+
+        await submitProspectData(updatedData).unwrap();
+
         setStep(step + 1);
       } else {
-        console.log("Moving to next step:", step + 1);
         setStep(step + 1);
       }
     } catch (error) {
@@ -104,7 +128,7 @@ const OnboardingLayout = ({
 
   return (
     <div
-      className={`border-1 border-white w-full ${maxWidth} bg-white/40 !rounded-2xl backdrop-blur-2xl relative shadow-2xl shadow-light_gray/50 p-4 lg:p-8`}
+      className={`border-1 border-white w-full ${maxWidth} bg-white/40 !rounded-2xl backdrop-blur-2xl relative shadow-2xl shadow-light_gray/50 p-4`}
     >
       <div className="flex flex-col justify-center items-center gap-4">
         {/* Header */}
@@ -185,7 +209,11 @@ const OnboardingLayout = ({
                             <Form.Item
                               label={item.label}
                               name={
-                                indexName ? [indexName, item.name] : item.name
+                                indexName
+                                  ? [indexName, item.name]
+                                  : field.indexName
+                                  ? [field.indexName, item.name]
+                                  : item.name
                               }
                               rules={[
                                 {

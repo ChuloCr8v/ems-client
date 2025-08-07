@@ -14,9 +14,6 @@ const OnboardingDocuments = ({
       formItems: [
         {
           label: "Upload File (e.g Contract Letter, Guarantor Form, NDA etc)",
-          // icon: User02Icon,
-          // disabled: false,
-          // value: undefined,
           required: true,
           type: "file-picker",
           name: "uploads",
@@ -27,7 +24,7 @@ const OnboardingDocuments = ({
 
   return (
     <OnboardingLayout
-      indexName="uploads"
+      // indexName="uploads"
       formFields={formFields}
       setStep={setCurrentStep}
       step={currentStep}

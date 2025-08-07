@@ -36,7 +36,7 @@ const OnboardingPersonalInfo = ({
   setCurrentStep,
   form,
 }: OnboardingProps) => {
-  const country = useWatch(["personalInfo", "country"], form);
+  const country = useWatch("country", form);
   const states = countriesWithStates.find(
     (c) => c?.name.toLowerCase() === country?.toLowerCase()
   )?.states;
@@ -157,7 +157,7 @@ const OnboardingPersonalInfo = ({
 
   return (
     <OnboardingLayout
-      indexName="personalInfo"
+      // indexName="personalInfo"
       form={form}
       setStep={setCurrentStep}
       step={currentStep}
