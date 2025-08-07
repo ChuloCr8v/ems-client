@@ -131,7 +131,7 @@ const Login: React.FC = () => {
                   className="flex items-center justify-center space-x-2 !mt-4"
                 >
                   <img
-                    src="/public/login/microsoft.png"
+                    src="/login/microsoft.png"
                     alt=""
                     className="size-[20px]"
                   />{" "}
