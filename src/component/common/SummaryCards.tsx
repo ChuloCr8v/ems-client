@@ -3,8 +3,6 @@ import {
   UserBlockIconFreeIcons,
   UserCheck01FreeIcons,
   UserQuestion01FreeIcons,
-  UserWarning02FreeIcons,
-  User03Icon,
   UserBlock01FreeIcons,
   UserListFreeIcons,
 } from "@hugeicons/core-free-icons";
@@ -25,7 +23,10 @@ interface SummaryCardsProps {
   };
 }
 
-const SummaryCards = ({ type, counts = {} as SummaryCardsProps["counts"] }: SummaryCardsProps) => {
+const SummaryCards = ({
+  type,
+  counts = {} as SummaryCardsProps["counts"],
+}: SummaryCardsProps) => {
   const employeeData = [
     {
       icon: HomeIcon,
@@ -56,9 +57,9 @@ const SummaryCards = ({ type, counts = {} as SummaryCardsProps["counts"] }: Summ
       value: counts.total ?? 0,
     },
     {
-      icon:UserCheck01FreeIcons ,
+      icon: UserCheck01FreeIcons,
       title: "Available",
-     value: counts.available ?? counts.secondary ?? 0,
+      value: counts.available ?? counts.secondary ?? 0,
     },
     {
       icon: UserQuestion01FreeIcons,

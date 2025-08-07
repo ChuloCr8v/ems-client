@@ -100,6 +100,7 @@ export type Prospect = {
     gender: string;
     duration: string;
     invite: Invite[];
+    status?: string
     user: User
 };
 

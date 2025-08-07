@@ -5,8 +5,8 @@ import { twMerge } from "tailwind-merge";
 import { colors } from "../../constants/colors";
 import GeneralLayout from "../../views/layout/GeneralLayout";
 import Icon from "./Icon";
-import { Upload03FreeIcons } from "@hugeicons/core-free-icons";
-import { colors } from "../../constants/colors";
+import SummaryCards from "./SummaryCards";
+import type { ReactNode } from "react";
 
 interface DashboardLayoutProps {
   children: ReactNode;

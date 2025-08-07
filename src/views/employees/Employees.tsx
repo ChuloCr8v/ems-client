@@ -1,4 +1,4 @@
-import { type User } from "../../api/types";
+import { EmployeeStatus, type User } from "../../api/types";
 import DashboardLayout from "../../component/common/DashboardLayout";
 import CustomSegmented from "../../component/global/CustomSegment";
 import TableComponent from "../../component/global/TableComponent";
@@ -208,12 +208,12 @@ const Employees = () => {
   console.log(invitationData);
 
   // Calculate summary counts
-  const totalEmployees = employeeData.length;
+  const totalEmployees = currentTableItem().data?.length;
   const invitationsSent = invitationData?.length ?? 0;
-  const activeEmployees = employeeData.filter(
+  const activeEmployees = currentTableItem().data?.filter(
     (emp) => emp.status === EmployeeStatus.ACTIVE
   ).length;
-  const inactiveEmployees = employeeData.filter(
+  const inactiveEmployees = currentTableItem().data?.filter(
     (emp) => emp.status === EmployeeStatus.INACTIVE
   ).length;
 
@@ -226,10 +226,10 @@ const Employees = () => {
       pageDescription="View, manage, and track all employees across the organization."
       summaryType="employees"
       summaryCounts={{
-        total: totalEmployees, // Total employees
-        secondary: invitationsSent, // Invitations sent
-        active: activeEmployees, // Active employees
-        inactive: inactiveEmployees, // Inactive employees
+        total: totalEmployees ?? 0,
+        secondary: invitationsSent ?? 0,
+        active: activeEmployees ?? 0,
+        inactive: inactiveEmployees ?? 0,
       }}
     >
       <div className="space-y-6 mt-4">

@@ -1,28 +1,27 @@
-"use client"
+"use client";
 
-import DashboardLayout from "../../component/common/DashboardLayout"
-import TableComponent from "../../component/global/TableComponent"
-import { Dropdown, Button } from "antd"
-import type { ColumnsType } from "antd/es/table"
-import { EllipsisOutlined, LaptopOutlined } from "@ant-design/icons"
-import ProfileCard from "../../component/ProfileCard"
-import StatusTag from "../../component/global/StatusTag"
+import DashboardLayout from "../../component/common/DashboardLayout";
+import TableComponent from "../../component/global/TableComponent";
+import { Dropdown, Button } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import { EllipsisOutlined, LaptopOutlined } from "@ant-design/icons";
+import ProfileCard from "../../component/ProfileCard";
+import StatusTag from "../../component/global/StatusTag";
 import {
   ArrowRight02FreeIcons,
   Edit02Icon,
   Delete02Icon,
   AiVoiceGeneratorIcon,
   MailSend01Icon,
-} from "@hugeicons/core-free-icons"
-import { useState } from "react"
-import Icon from "../../component/common/Icon"
-import { colors } from "../../constants/colors"
-import { AssetStatus } from "../../api/types"
-import type { Asset } from "../../api/types"
-import { usePopup } from "../../context/PopupContext"
-import AssetDetailsModal from "../../component/modals/AssetsDetailModal"
-import AssignAssetModal from "../../component/modals/AssignAssetModal"
-
+} from "@hugeicons/core-free-icons";
+import { useState } from "react";
+import Icon from "../../component/common/Icon";
+import { colors } from "../../constants/colors";
+import { AssetStatus } from "../../api/types";
+import type { Asset } from "../../api/types";
+import { usePopup } from "../../context/PopupContext";
+import AssetDetailsModal from "../../component/modals/AssetsDetailModal";
+import AssignAssetModal from "../../component/modals/AssignAssetModal";
 
 // Mock asset data for demonstration purposes
 const mockAssetData: Asset[] = [
@@ -141,11 +140,11 @@ const mockAssetData: Asset[] = [
     purchaseDate: "Oct 5, 2024",
     value: 75,
   },
-]
+];
 
 const Assets = () => {
-  const [assetData, setAssetData] = useState<Asset | null>(null)
-  const { openModal, closeModal } = usePopup()
+  const [_assetData, setAssetData] = useState<Asset | null>(null);
+  const { openModal, closeModal } = usePopup();
 
   const columns: ColumnsType<Asset> = [
     {
@@ -161,11 +160,13 @@ const Assets = () => {
               </div>
             </div>
             <div>
-              <p className="font-medium text-custom_black text-sm">{record.name}</p>
+              <p className="font-medium text-custom_black text-sm">
+                {record.name}
+              </p>
               <p className="text-xs text-gray">{record.assetId}</p>
             </div>
           </div>
-        )
+        );
       },
     },
     {
@@ -181,33 +182,39 @@ const Assets = () => {
           />
         ) : (
           <span className="text-gray-400">Unassigned</span>
-        )
+        );
       },
     },
     {
       title: "Category",
       dataIndex: "category",
       key: "category",
-      render: (category) => <span className="text-gray text-sm">{category}</span>,
+      render: (category) => (
+        <span className="text-gray text-sm">{category}</span>
+      ),
     },
     {
       title: "Date Assigned",
       dataIndex: "dateAssigned",
       key: "dateAssigned",
-      render: (date) => <span className="text-gray text-sm">{date || "-----"}</span>,
+      render: (date) => (
+        <span className="text-gray text-sm">{date || "-----"}</span>
+      ),
     },
     {
       title: "Date Retrieved",
       dataIndex: "dateRetrieved",
       key: "dateRetrieved",
-      render: (date) => <span className="text-gray text-sm">{date || "-----"}</span>,
+      render: (date) => (
+        <span className="text-gray text-sm">{date || "-----"}</span>
+      ),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
       render: (_, record) => {
-        return <StatusTag status={record.status as AssetStatus} />
+        return <StatusTag status={record.status as AssetStatus} />;
       },
     },
     {
@@ -224,8 +231,8 @@ const Assets = () => {
                 key: "view",
                 label: "View Details",
                 onClick: (e) => {
-                    e.domEvent.stopPropagation();
-                    handleViewAsset(record)
+                  e.domEvent.stopPropagation();
+                  handleViewAsset(record);
                 },
                 icon: Icon({
                   size: 16,
@@ -282,55 +289,65 @@ const Assets = () => {
             ],
           }}
         >
-          <Button type="text" className="p-2" onClick={(e) =>{ 
-           e.stopPropagation()
-            setAssetData(record)}}
-            >
+          <Button
+            type="text"
+            className="p-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              setAssetData(record);
+            }}
+          >
             <EllipsisOutlined />
           </Button>
         </Dropdown>
       ),
     },
-  ]
+  ];
 
   // Action handlers
   const handleAddAsset = () => {
-    console.log("Add Asset clicked")
+    console.log("Add Asset clicked");
     openModal(
- <AssignAssetModal
-      onCancel={closeModal}
-      onSubmit={(values) => {
-        console.log("Asset assigned:", values);
-        closeModal()
-      }}
-    />
-    )
-  }
+      <AssignAssetModal
+        onCancel={closeModal}
+        onSubmit={(values) => {
+          console.log("Asset assigned:", values);
+          closeModal();
+        }}
+      />
+    );
+  };
 
   const handleViewAsset = (asset: Asset) => {
-    openModal(<AssetDetailsModal asset={asset} />)
-  }
+    openModal(<AssetDetailsModal asset={asset} />);
+  };
 
   const handleAssignAsset = (asset: Asset) => {
-    console.log("Assign asset:", asset)
-  }
+    console.log("Assign asset:", asset);
+  };
 
   const handleRetrieveAsset = (asset: Asset) => {
-    console.log("Retrieve asset:", asset)
-  }
+    console.log("Retrieve asset:", asset);
+  };
 
   const handleEditAsset = (asset: Asset) => {
-    console.log("Edit asset:", asset)
-  }
+    console.log("Edit asset:", asset);
+  };
 
   const handleDeleteAsset = (asset: Asset) => {
-    console.log("Delete asset:", asset)
-  }
+    console.log("Delete asset:", asset);
+  };
 
-  const totalAssets = mockAssetData.length
-  const assignedAssets = mockAssetData.filter((a) => a.status === AssetStatus.ASSIGNED).length
-  const faultyAssets = mockAssetData.filter((a) => a.status === AssetStatus.FAULTY).length
-  const availableAssets = mockAssetData.filter((a) => a.status === AssetStatus.AVAILABLE).length
+  const totalAssets = mockAssetData.length;
+  const assignedAssets = mockAssetData.filter(
+    (a) => a.status === AssetStatus.ASSIGNED
+  ).length;
+  const faultyAssets = mockAssetData.filter(
+    (a) => a.status === AssetStatus.FAULTY
+  ).length;
+  const availableAssets = mockAssetData.filter(
+    (a) => a.status === AssetStatus.AVAILABLE
+  ).length;
 
   return (
     <DashboardLayout
@@ -357,7 +374,7 @@ const Assets = () => {
         />
       </div>
     </DashboardLayout>
-  )
-}
+  );
+};
 
-export default Assets
+export default Assets;

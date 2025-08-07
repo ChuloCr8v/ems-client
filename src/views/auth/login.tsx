@@ -68,7 +68,9 @@ const Login: React.FC = () => {
               <Form.Item
                 label="Email"
                 name="email"
-                rules={[{ required: false, message: "Please input your email!" }]}
+                rules={[
+                  { required: false, message: "Please input your email!" },
+                ]}
               >
                 <Input placeholder="Enter Email" size="large" />
               </Form.Item>
@@ -84,7 +86,11 @@ const Login: React.FC = () => {
               </Form.Item>
 
               <div className="flex items-center justify-between">
-                <Form.Item name="remember" valuePropName="checked" className="mb-0">
+                <Form.Item
+                  name="remember"
+                  valuePropName="checked"
+                  className="mb-0"
+                >
                   <Checkbox>Remember me</Checkbox>
                 </Form.Item>
 
@@ -111,33 +117,30 @@ const Login: React.FC = () => {
                 <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="px-2 bg-white text-gray-500 text-sm">
-                  or
-                </span>
+                <span className="px-2 bg-white text-gray-500 text-sm">or</span>
               </div>
             </div>
 
-              <div>
-                <Button
-                  loading={isMicrosoftLoggingIn}
-                  onClick={onLoginWithMicrosoft}
-                  icon=""
-                  block
-                  size="large"
-                  className="flex items-center justify-center space-x-2 !mt-4"
-                >
-                  <img
-                    src="/login/microsoft.png"
-                    alt=""
-                    className="size-[20px]"
-                  />{" "}
-                  <h1 className="font-bold">Sign in with Microsoft</h1>
-                </Button>
-              </div>
+            <div>
+              <Button
+                loading={isMicrosoftLoggingIn}
+                onClick={onLoginWithMicrosoft}
+                icon=""
+                block
+                size="large"
+                className="flex items-center justify-center space-x-2 !mt-4"
+              >
+                <img
+                  src="/login/microsoft.png"
+                  alt=""
+                  className="size-[20px]"
+                />{" "}
+                <h1 className="font-bold">Sign in with Microsoft</h1>
+              </Button>
             </div>
           </div>
         </div>
-      </>
+      </div>
     </BackgroundWrapper>
   );
 };

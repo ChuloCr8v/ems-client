@@ -5,25 +5,21 @@ import {
   CheckmarkCircle02Icon,
   CancelCircleFreeIcons,
   Loading01Icon,
-  UserWarning01FreeIcons,
-  Shield01FreeIcons,
   CircleArrowDiagonal02FreeIcons,
   UserCheck01FreeIcons,
   CheckmarkCircle01Icon,
   UserBlock01FreeIcons,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { AssetStatus, EmployeeStatus } from "../../api/types";
-; // adjust this path as needed
-
-type Props = {
-  status: string;
+import { AssetStatus, EmployeeStatus } from "../../api/types"; // adjust this path as needed
 type StatusTagProps = {
-  status: EmployeeStatus | AssetStatus;
+  status: string;
 };
 
 const StatusTag = ({ status }: StatusTagProps) => {
-  const isEmployeeStatus = Object.values(EmployeeStatus).includes(status as EmployeeStatus);
+  const isEmployeeStatus = Object.values(EmployeeStatus).includes(
+    status as EmployeeStatus
+  );
 
   const property = () => {
     if (isEmployeeStatus) {
@@ -61,7 +57,10 @@ const StatusTag = ({ status }: StatusTagProps) => {
   };
 
   const formattedStatus = () => {
-    return status.replaceAll("_", " ").toLowerCase().replace(/^\w|\s\w/g, (c) => c.toUpperCase());
+    return status
+      .replaceAll("_", " ")
+      .toLowerCase()
+      .replace(/^\w|\s\w/g, (c) => c.toUpperCase());
   };
 
   const { icon, color } = property();
