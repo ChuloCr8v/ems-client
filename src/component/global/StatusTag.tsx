@@ -10,7 +10,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { EmployeeStatus } from "../../api/types";
 
 type Props = {
-  status: EmployeeStatus;
+  status: string;
 };
 
 const StatusTag = ({ status }: Props) => {

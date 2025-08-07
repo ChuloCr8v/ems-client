@@ -22,6 +22,7 @@ import DynamicDocumentUpload, {
 import FormItemComponent from "../common/RenderFormItem";
 import { useListDepartmentsQuery } from "../../api/data/departments.api";
 import { usePopup } from "../../context/PopupContext";
+import dayjs from "dayjs";
 
 const SendInvitation = () => {
   const [form] = Form.useForm();
@@ -170,6 +171,7 @@ const SendInvitation = () => {
           icon: Calendar02Icon,
           name: "startDate",
           required: true,
+          minDate: dayjs(),
         },
       ],
     },

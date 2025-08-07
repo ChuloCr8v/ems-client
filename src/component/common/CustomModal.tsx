@@ -1,4 +1,4 @@
-import { Button, Checkbox, Modal } from "antd";
+import { Button, Checkbox, Modal, Spin } from "antd";
 import { useEffect, useState, type ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { usePopup } from "../../context/PopupContext";
@@ -113,7 +113,13 @@ export const CustomModal = ({
             !maxHeight ? "" : "max-h-[500px]"
           )}
         >
-          {children}
+          {loading ? (
+            <div className="h-full flex flex-col justify-center items-center py-10">
+              <Spin className="" />
+            </div>
+          ) : (
+            children
+          )}
         </div>
 
         {/* Confirmation Checkbox */}

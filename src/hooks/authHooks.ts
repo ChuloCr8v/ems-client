@@ -16,9 +16,9 @@ const noUser: AuthUser = {
     firstName: '',
     lastName: '',
     level: { id: '', name: '', rank: 0 },
-    team: { id: '', name: '' },
+    department: { id: '', name: '' },
     approverOf: [],
-    employeeId: 0,
+    eId: 0,
     isAdmin: false,
     workDays: [],
     active: true,
@@ -64,10 +64,8 @@ export function useAuth() {
 
 export function useAuthUser() {
     const authToken = useAppSelector(state => state.auth?.access_token);
-
     const { data: user } = useGetMeQuery(undefined, { skip: !authToken });
     return user ?? noUser;
-
 }
 
 export function useAuthUserRequired(): AuthUser {

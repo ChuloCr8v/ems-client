@@ -9,10 +9,13 @@ import DynamicDocumentUpload, {
 import Icon from "./Icon";
 import MultiUpload from "./MultiUploads";
 import CustomFilePicker from "../global/CustomFilePicker";
+import type { Dayjs } from "dayjs";
 
 const { Option } = Select;
 
 export type FormFieldProps = {
+  minDate?: Dayjs;
+  indexName?: string;
   label: string;
   name?: string;
   disabled?: boolean;
@@ -70,7 +73,9 @@ const FormItemComponent = ({ form }: Props) => {
       case "phone":
         return <PhoneInput enableSearch />;
       case "date":
-        return <DatePicker className="w-full" />;
+        return (
+          <DatePicker className="w-full" minDate={item.minDate ?? undefined} />
+        );
       case "dynamic-documents":
         return (
           <DynamicDocumentUpload

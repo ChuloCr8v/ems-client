@@ -32,8 +32,6 @@ const DynamicDocumentUpload = ({
     field: keyof DocumentEntry,
     value: any
   ) => {
-    console.log(index, field, value);
-
     const newDocs = [...documents];
     newDocs[index][field] = value;
     setDocuments(newDocs);

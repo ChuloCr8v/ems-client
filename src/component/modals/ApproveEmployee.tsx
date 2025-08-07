@@ -1,135 +1,155 @@
 import {
   Clock02Icon,
   UserCheck01Icon,
-  Briefcase01Icon,
   Building03Icon,
   CalendarCheckIn02Icon,
   Mail01Icon,
   AiPhoneIcon,
   Shield01Icon,
   Chart01Icon,
+  UserAccountIcon,
 } from "@hugeicons/core-free-icons";
-import { Form, Input, Tag } from "antd";
+import { Form, Input, message, Tag } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { twMerge } from "tailwind-merge";
-import { JobType } from "../../api/types";
-import { employeeData } from "../../views/employees/Employees";
+import { JobType, Role } from "../../api/types";
 import { CustomModal } from "../common/CustomModal";
 import Icon from "../common/Icon";
 import FormItemComponent from "../common/RenderFormItem";
 import ProfileCard from "../ProfileCard";
 import { useEffect } from "react";
+import {
+  useApproveProspectMutation,
+  useGetInviteQuery,
+} from "../../api/data/invitations.api";
+import { useListDepartmentsQuery } from "../../api/data/departments.api";
+import { sentenceCase } from "../../helpers";
+import { usePopup } from "../../context/PopupContext";
+import { useListLevelsQuery } from "../../api/data/levels.api";
 
 type Props = {
   id: string;
 };
 
-const formData = [
-  {
-    sectionTitle: "Employment Details",
-    formItems: [
-      {
-        label: "Role",
-        name: "userRole",
-        type: "text",
-        icon: Briefcase01Icon, // Represents a job role or position
-      },
-      {
-        label: "Department",
-        name: "department",
-        type: "select",
-        icon: Building03Icon, // Represents a department/organization
-        options: [
-          {
-            value: "1",
-            label: "Products & Services",
-          },
-          {
-            value: "2",
-            label: "Marketing",
-          },
-          {
-            value: "3",
-            label: "HR",
-          },
-        ],
-      },
-      {
-        label: "Job Type",
-        type: "select",
-        name: "jobType",
-        required: true,
-        icon: CalendarCheckIn02Icon, // Represents employment period/status
-        options: [
-          { label: "Full-Time", value: JobType.FULLTIME },
-          { label: "Contract", value: JobType.CONTRACT },
-        ],
-      },
-      {
-        label: "Level",
-        type: "select",
-        name: "level",
-        required: true,
-        icon: Chart01Icon, // Represents employment period/status
-        options: [
-          { label: "Junior Officer", value: "juniorOfficer" },
-          { label: "Senior Officer", value: "seniorOfficer" },
-        ],
-      },
-    ],
-  },
-  {
-    sectionTitle: "Additional Information",
-    formItems: [
-      {
-        label: "Work Email",
-        name: "workEmail",
-        type: "email",
-        icon: Mail01Icon, // Represents email
-      },
-      {
-        label: "Work Phone Number",
-        name: "workPhone",
-        type: "phone",
-        icon: AiPhoneIcon, // Represents phone contact
-      },
-      {
-        label: "Assign Role/Permissions",
-        name: "role",
-        type: "select",
-        icon: Shield01Icon, // Represents admin/permissions
-        options: [
-          {
-            label: "Admin",
-            value: "ADMIN",
-          },
-          {
-            label: "Super Admin",
-            value: "SUPER ADMIN",
-          },
-        ],
-      },
-    ],
-  },
-];
-
 const ApproveEmployee = ({ id }: Props) => {
   const [form] = useForm();
   const { formItem } = FormItemComponent({ form });
+  const { data: depts, isLoading: loadingDept } = useListDepartmentsQuery();
+  const { closeModal } = usePopup();
+  const [approveProspect, { isLoading: approvingProspect }] =
+    useApproveProspectMutation();
 
-  const user = employeeData.find((item) => item.id === id);
+  const { data: user, isLoading } = useGetInviteQuery(id ?? "");
+  const { data: levels, isLoading: gettingLevels } = useListLevelsQuery();
+
   const jobType =
     Form.useWatch("jobType", form) ?? form.getFieldValue("jobType");
 
   useEffect(() => {
     if (user) {
       form.setFieldsValue({
-        userRole: user.userRole,
-        jobType: user.jobType,
-        workEmail: user.email,
+        jobType: user?.jobType || "",
+        department: user?.departmentId || "",
       });
     }
   }, [user, form]);
+
+  const formData = [
+    {
+      sectionTitle: "Employment Details",
+      formItems: [
+        {
+          label: "Employee Id",
+          name: "eId",
+          type: "text",
+          required: true,
+          icon: UserAccountIcon,
+          placeholder: "Enter employee id",
+        },
+        {
+          label: "Role",
+          name: "userRole",
+          type: "select",
+          required: true,
+          icon: Shield01Icon,
+          options: Object.values(Role).map((role) => ({
+            label: sentenceCase(role ?? ""),
+            value: role,
+          })),
+        },
+        {
+          label: "Department",
+          name: "department",
+          type: "select",
+          required: true,
+          icon: Building03Icon, // Represents a department/organization
+          options: depts?.map((d) => ({
+            label: sentenceCase(d.name),
+            value: d.id,
+          })),
+        },
+        {
+          label: "Job Type",
+          type: "select",
+          name: "jobType",
+          required: true,
+          icon: CalendarCheckIn02Icon, // Represents employment period/status
+          options: [
+            { label: "Full-Time", value: JobType.FULLTIME },
+            { label: "Contract", value: JobType.CONTRACT },
+          ],
+        },
+        {
+          label: "Level",
+          type: "select",
+          name: "levelId",
+          required: true,
+          icon: Chart01Icon, // Represents employment period/status
+          options: levels?.map((d) => ({
+            label: sentenceCase(d.name),
+            value: d.id,
+          })),
+        },
+      ],
+    },
+    {
+      sectionTitle: "Additional Information",
+      formItems: [
+        {
+          label: "Work Email",
+          name: "email",
+          type: "email",
+          required: true,
+          icon: Mail01Icon, // Represents email
+        },
+        {
+          label: "Work Phone Number",
+          name: "workPhone",
+          type: "phone",
+          required: true,
+          icon: AiPhoneIcon, // Represents phone contact
+        },
+      ],
+    },
+  ];
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+
+      const updatedData = {
+        ...values,
+        workPhone: `${values.workPhone.countryCode}${values.workPhone.areaCode}${values.workPhone.phoneNumber}`,
+        id: user?.user.id,
+      };
+      await approveProspect(updatedData).unwrap();
+      message.success("Prospect approved successfully");
+
+      closeModal();
+    } catch (error) {
+      console.log(error);
+      message.error("Error.Try again");
+    }
+  };
 
   return (
     <CustomModal
@@ -137,6 +157,8 @@ const ApproveEmployee = ({ id }: Props) => {
       modalSubtitle="By approving this employee, they will be officially added to the EMS system and will receive login credentials via their work email."
       icon={UserCheck01Icon}
       okText="Approve Employee"
+      loading={isLoading || loadingDept || approvingProspect || gettingLevels}
+      onOk={handleSubmit}
     >
       <div className="!space-y-4">
         <Tag color="green" className="w-full !p-3 !rounded-lg">
@@ -166,7 +188,7 @@ const ApproveEmployee = ({ id }: Props) => {
                       key={`${sIdx}-${iIdx}`}
                       label={item.label}
                       name={item.name}
-                      required={item.required}
+                      required={item?.required ?? false}
                     >
                       {formItem(item)}
                     </Form.Item>

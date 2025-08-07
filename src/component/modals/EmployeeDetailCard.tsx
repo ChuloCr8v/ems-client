@@ -6,31 +6,37 @@ import { colors } from "../../constants/colors";
 import { CustomModal } from "../common/CustomModal";
 import Icon from "../common/Icon";
 import DocumentCard from "../global/DocumentCard";
+// import { useGetInviteQuery } from "../../api/data/invitations.api";
 
 type Props = {
   data: User | null;
+  dataSource?: "EMPLOYEES" | "PROSPECTS";
 };
 
-const ProspectDetail = ({ data }: Props) => {
+const EmployeeDetailCard = ({ data }: Props) => {
+  console.log(data);
   const overviewData = [
     {
       sectionTitle: "Personal Information",
       fields: [
-        { label: "Role", value: "Product Designer" },
-        { label: "Department", value: "Rollout & Service Delivery" },
-        { label: "Job Type", value: "Contract" },
-        { label: "Duration", value: "6 months" },
+        {
+          label: "Name",
+          value: data?.firstName + " " + data?.lastName,
+        },
+        { label: "Department", value: data?.department?.name ?? "" },
+        { label: "Job Type", value: data?.jobType },
+        // { label: "Duration", value: data?.duration ?? "Full Time" },
       ],
     },
-    {
-      sectionTitle: "Employee Information",
-      fields: [
-        { label: "Role", value: "Product Designer" },
-        { label: "Department", value: "Rollout & Service Delivery" },
-        { label: "Job Type", value: "Contract" },
-        { label: "Duration", value: "6 months" },
-      ],
-    },
+    // {
+    //   sectionTitle: "Employee Information",
+    //   fields: [
+    //     { label: "Role", value: data?.role },
+    //     { label: "Department", value: "Rollout & Service Delivery" },
+    //     { label: "Job Type", value: "Contract" },
+    //     { label: "Duration", value: "6 months" },
+    //   ],
+    // },
     {
       sectionTitle: "Emergency Contact",
       fields: [
@@ -78,6 +84,7 @@ const ProspectDetail = ({ data }: Props) => {
       title={data?.firstName + " " + data?.lastName}
       hideFooter
       width={800}
+      // loading={isLoading}
     >
       <div className="space-y-6">
         <DetailBox icon={File02Icon} title={"Overview"}>
@@ -92,14 +99,19 @@ const ProspectDetail = ({ data }: Props) => {
                 <h3 className="text-gray mb-2">{section.sectionTitle}</h3>
 
                 <div className="grid grid-cols-2 gap-3">
-                  {section.fields.map((field, idx) => (
-                    <div key={idx}>
-                      <p className="text-gray">{field.label}</p>
-                      <p className="text-custom_black font-semibold">
-                        {field.value}
-                      </p>
-                    </div>
-                  ))}
+                  {section.fields.map((field, idx) => {
+                    // if (field.label === "Duration" && !data?.duration)
+                    //   return null;
+
+                    return (
+                      <div key={idx}>
+                        <p className="text-gray">{field.label}</p>
+                        <p className="text-custom_black font-semibold">
+                          {field.value}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))}
@@ -118,4 +130,4 @@ const ProspectDetail = ({ data }: Props) => {
   );
 };
 
-export default ProspectDetail;
+export default EmployeeDetailCard;

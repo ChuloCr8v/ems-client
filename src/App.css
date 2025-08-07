@@ -45,6 +45,7 @@ Hide default asterisk after label .ant-form-item-required::before {
 .custom-segmented-wrapper .ant-segmented-item {
   padding-inline: 20px;
   border-radius: 4px;
+  margin: 4px;
 }
 
 /* Table */
