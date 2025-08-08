@@ -28,7 +28,7 @@ const Login: React.FC = () => {
 
   return (
     <BackgroundWrapper>
-      <div className="relative min-h-screen w-full overflow-hidden">
+      <div className="relative min-h-screen w-screen overflow-hidden ">
         {/* Background elements */}
         <div className="absolute top-0 !right-8 z-2 md:hidden">
           <img src="/public/login/login-image.png" alt="" />
