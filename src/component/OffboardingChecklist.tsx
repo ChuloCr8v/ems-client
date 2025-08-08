@@ -12,6 +12,7 @@ import { Button } from "antd";
 type Props = {};
 
 const OffboardingChecklist = (props: Props) => {
+  console.log(props);
   const listItems = [
     {
       icon: LaptopIcon,

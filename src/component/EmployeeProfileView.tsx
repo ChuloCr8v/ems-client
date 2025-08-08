@@ -7,10 +7,14 @@ import {
   ListViewIcon,
 } from "@hugeicons/core-free-icons";
 import DataBox from "./global/DataBox";
+import type { User } from "../api/types";
+import { sentenceCase } from "../helpers";
 
-type Props = {};
+type Props = {
+  data?: User;
+};
 
-const EmployeeProfileView = (props: Props) => {
+const EmployeeProfileView = ({ data }: Props) => {
   const employeeSections = [
     {
       header: {
@@ -25,12 +29,12 @@ const EmployeeProfileView = (props: Props) => {
         },
       },
       body: [
-        { label: "Employee ID", value: "EMP001" },
-        { label: "Role", value: "Product Designer" },
-        { label: "Department", value: "Rollout & Service Delivery" },
-        { label: "Level", value: "Senior Officer" },
-        { label: "Job Type", value: "Contract" },
-        { label: "Duration", value: "6 months" },
+        { label: "Employee ID", value: data?.eId },
+        { label: "Role", value: data?.role },
+        { label: "Department", value: data?.department.name },
+        { label: "Level", value: data?.level.name },
+        { label: "Job Type", value: data?.jobType },
+        { label: "Duration", value: data?.duration ?? "Full Time" },
       ],
     },
     {
@@ -47,11 +51,14 @@ const EmployeeProfileView = (props: Props) => {
       },
       body: [
         { label: "Date of Birth", value: "14th July 1990" },
-        { label: "Gender", value: "Female" },
-        { label: "Marital Status", value: "Single" },
+        { label: "Gender", value: data?.gender },
+        {
+          label: "Marital Status",
+          value: sentenceCase(data?.maritalStatus ?? ""),
+        },
         {
           label: "Contact Address",
-          value: "No 32 Bariga Road, Shomolu, Lagos State",
+          value: data?.address,
         },
       ],
     },
@@ -68,12 +75,18 @@ const EmployeeProfileView = (props: Props) => {
         },
       },
       body: [
-        { label: "Name", value: "Victoria Ekeh" },
+        {
+          label: "Name",
+          value:
+            data?.contacts.guarantor.firstName +
+            " " +
+            data?.contacts.guarantor.lastName,
+        },
         { label: "Relationship", value: "Sister" },
-        { label: "Phone Number", value: "+234 905 545 4545" },
+        { label: "Phone Number", value: data?.contacts.guarantor.phone },
         {
           label: "Contact Address",
-          value: "No 32 Bariga Road, Shomolu, Lagos State",
+          value: data?.contacts.guarantor.address,
         },
       ],
     },
@@ -90,12 +103,18 @@ const EmployeeProfileView = (props: Props) => {
         },
       },
       body: [
-        { label: "Name", value: "Victoria Ekeh" },
+        {
+          label: "Name",
+          value:
+            data?.contacts.emergency.firstName +
+            " " +
+            data?.contacts.emergency.lastName,
+        },
         { label: "Relationship", value: "Sister" },
-        { label: "Phone Number", value: "+234 905 545 4545" },
+        { label: "Phone Number", value: data?.contacts.emergency.phone },
         {
           label: "Contact Address",
-          value: "No 32 Bariga Road, Shomolu, Lagos State",
+          value: data?.contacts.emergency.address,
         },
       ],
     },

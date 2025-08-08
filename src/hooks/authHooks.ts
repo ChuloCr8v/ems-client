@@ -31,7 +31,24 @@ const noUser: AuthUser = {
     gender: "MALE",
     startDate: "",
     role: Role.USER,
-    invite: []
+    invite: [],
+    address: "",
+    contacts: {
+        emergency: {
+            firstName: "",
+            lastName: "",
+            phone: "",
+            address: "",
+            relationship: ""
+        },
+        guarantor: {
+            firstName: "",
+            lastName: "",
+            phone: "",
+            address: "",
+            relationship: ""
+        }
+    }
 };
 
 type ApiResult<T> = T | Promise<T> | { unwrap(): Promise<T> };
