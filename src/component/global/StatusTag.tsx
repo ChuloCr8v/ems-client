@@ -32,6 +32,7 @@ const StatusTag = ({ status }: StatusTagProps) => {
         case EmployeeStatus.INACTIVE:
           return { icon: CancelCircleFreeIcons, color: "red" };
         case EmployeeStatus.ACTIVE:
+        case AssetStatus.ACCEPTED:
           return { icon: CheckmarkCircle02Icon, color: "green" };
         case EmployeeStatus.ON_LEAVE:
           return { icon: Briefcase02Icon, color: "blue" };
@@ -41,6 +42,7 @@ const StatusTag = ({ status }: StatusTagProps) => {
     } else {
       switch (status) {
         case AssetStatus.AVAILABLE:
+        case AssetStatus.ACCEPTED:
           return { icon: UserCheck01FreeIcons, color: "green" };
         case AssetStatus.ASSIGNED:
           return { icon: CheckmarkCircle01Icon, color: "yellow" };

@@ -13,7 +13,8 @@
   --color-bg_elevated: #ecf8ee;
 }
 
-Hide default asterisk after label .ant-form-item-required::before {
+/* Hide default asterisk after  */
+label .ant-form-item-required::before {
   display: none !important;
 }
 
@@ -39,13 +40,20 @@ Hide default asterisk after label .ant-form-item-required::before {
 .custom-segmented-wrapper .ant-segmented-item-selected {
   border: 1px #a7ddb0 solid;
   background-color: #ecf8ee;
-  color: #40b554;
+  color: #40b554 !important;
 }
 
 .custom-segmented-wrapper .ant-segmented-item {
   padding-inline: 20px;
   border-radius: 4px;
-  margin: 4px;
+}
+
+.custom-segmented-wrapper .ant-segmented {
+  border: 1px rgb(230, 229, 229) solid;
+  border-radius: 8px;
+  padding: 4px;
+
+  padding-bottom: 3px;
 }
 
 /* Table */

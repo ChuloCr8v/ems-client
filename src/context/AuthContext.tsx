@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useGetMeQuery } from "../api/users";
 import { useAppSelector } from "../hooks/reduxHooks";
+import { useGetMeQuery } from "../api/data/users";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const authToken = useAppSelector((state) => state.auth?.access_token);

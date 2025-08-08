@@ -41,6 +41,7 @@ export enum AssetStatus {
     FAULTY = "FAULTY",
     MAINTENANCE = "MAINTENANCE",
     RETIRED = "RETIRED",
+    ACCEPTED = "ACCEPTED",
 }
 
 export enum AssetCategory {
@@ -150,6 +151,7 @@ export type User = {
     jobType: JobType;
     jobTitle: string;
     payroll?: Payroll;
+    startDate: string
 };
 
 export type AuthUser = User & {
