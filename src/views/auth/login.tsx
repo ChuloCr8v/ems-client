@@ -94,50 +94,48 @@ const Login: React.FC = () => {
                   <Checkbox>Remember me</Checkbox>
                 </Form.Item>
 
-                <a href="#" className="text-[#0A96CC] font-bold text-sm">
+                <a href="#" className="font-bold text-primary text-sm">
                   Forgot Password?
                 </a>
               </div>
 
-              <Form.Item>
+              <div className="">
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    block
+                    size="large"
+                    className="h-[40px]"
+                  >
+                    Sign In
+                  </Button>
+                </Form.Item>
+
+                <div className="relative flex flex-col justify-center items-center my-3">
+                  <div className="w-full border-b border-gray-300 absolute" />
+                  <span className="px-2 bg-white text-gray-500 text-sm text-center block relative z-20">
+                    or
+                  </span>
+                </div>
+
                 <Button
-                  type="primary"
-                  htmlType="submit"
+                  loading={isMicrosoftLoggingIn}
+                  onClick={onLoginWithMicrosoft}
+                  icon=""
                   block
                   size="large"
-                  className="h-[40px]"
+                  className="flex items-center justify-center space-x-2"
                 >
-                  Sign In
+                  <img
+                    src="/login/microsoft.png"
+                    alt=""
+                    className="size-[20px]"
+                  />{" "}
+                  <h1 className="font-bold">Sign in with Microsoft</h1>
                 </Button>
-              </Form.Item>
+              </div>
             </Form>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center">
-                <span className="px-2 bg-white text-gray-500 text-sm">or</span>
-              </div>
-            </div>
-
-            <div>
-              <Button
-                loading={isMicrosoftLoggingIn}
-                onClick={onLoginWithMicrosoft}
-                icon=""
-                block
-                size="large"
-                className="flex items-center justify-center space-x-2 !mt-4"
-              >
-                <img
-                  src="/login/microsoft.png"
-                  alt=""
-                  className="size-[20px]"
-                />{" "}
-                <h1 className="font-bold">Sign in with Microsoft</h1>
-              </Button>
-            </div>
           </div>
         </div>
       </div>
