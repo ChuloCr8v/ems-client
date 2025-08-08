@@ -128,7 +128,7 @@ const Login: React.FC = () => {
                 icon=""
                 block
                 size="large"
-                className="flex items-center justify-center space-x-2 !mt-4"
+                className="flex items-center justify-center space-x-2 !mt-4 !h-[40px] md:!w-[410px] md:ml-[14px] "
               >
                 <img
                   src="/login/microsoft.png"

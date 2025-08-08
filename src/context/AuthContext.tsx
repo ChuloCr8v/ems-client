@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthUserRequired } from "../hooks/authHooks";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const user = true;
+  const user = useAuthUserRequired();
 
   const navigate = useNavigate();
 
