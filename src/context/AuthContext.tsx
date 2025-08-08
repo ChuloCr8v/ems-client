@@ -1,37 +1,26 @@
-import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useGetMeQuery } from "../api/users";
-import { useAppSelector } from "../hooks/reduxHooks";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthUserRequired } from "../hooks/authHooks";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const authToken = useAppSelector((state) => state.auth?.access_token);
-
-  const { data: user, isLoading } = useGetMeQuery(undefined, {
-    skip: !authToken,
-  });
+  const user = true;
 
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const safeRoutes = ["/onboarding/invitation"];
-
-  const isSafeRoute = safeRoutes.some((route) =>
-    location.pathname.startsWith(route)
-  );
-
+  console.log(user);
   useEffect(() => {
-    if (isLoading) return;
+    async () => {
+      if (user) {
+        navigate("/dashboard");
+      } else {
+        navigate("/auth");
+      }
+    };
+  }, [user]);
 
-    if (!isSafeRoute && !user) {
-      navigate("/auth");
-    }
+  // if (loading) return <LoadingSpinner />;
 
-    if (user && location.pathname === "/auth") {
-      navigate("/employees");
-    }
-  }, [user, isLoading, isSafeRoute, location.pathname]);
-
-  return <>{children}</>;
+  return <div>{children}</div>;
 };
 
 export default AuthProvider;
