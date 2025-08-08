@@ -66,7 +66,7 @@ const TableComponent = <T extends { id: Key }>({
       expandable={expandable}
       size="small"
       className={twMerge(
-        "bg-white border w-full border-outline rounded-lg cursor-pointer custom-table",
+        "bg-white border border-outline rounded-lg cursor-pointer custom-table",
         className
       )}
     />

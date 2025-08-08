@@ -3,6 +3,7 @@ import { colors } from "../../constants/colors";
 import { Button } from "antd";
 import { twMerge, type ClassNameValue } from "tailwind-merge";
 import type { IconSvgElement } from "@hugeicons/react";
+import type { ReactNode } from "react";
 
 type Section = {
   header: {
@@ -18,7 +19,7 @@ type Section = {
   };
   body: {
     label: string;
-    value: string;
+    value?: ReactNode;
   }[];
 };
 
