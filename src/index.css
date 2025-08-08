@@ -4,12 +4,16 @@
   src: url("./fonts/RalewayRaleway-Italic-VariableFont_wght.ttf")
       format("truetype"),
     url("./fonts/Raleway/Raleway-VariableFont_wght.ttf") format("truetype");
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
 }
 
 * {
   font-family: "raleway", sans-serif;
+}
+
+p {
+  line-height: 160% !important;
 }
 
 body {

@@ -1,15 +1,18 @@
 import { Avatar } from "antd";
 import { useAuthUser } from "../hooks/authHooks";
 import type { AvatarSize } from "antd/es/avatar/AvatarContext";
+import { twMerge } from "tailwind-merge";
 
 const UserAvatar = ({
   firstName,
   lastName,
   size,
+  textSize,
 }: {
   firstName?: string;
   lastName?: string;
   size?: AvatarSize;
+  textSize?: string;
 }) => {
   const user = useAuthUser();
 
@@ -21,7 +24,7 @@ const UserAvatar = ({
 
   return (
     <Avatar size={size ?? 35}>
-      <span className="text-sm">{initials || "?"}</span>
+      <span className={twMerge("text-sm", textSize)}>{initials || "?"}</span>
     </Avatar>
   );
 };

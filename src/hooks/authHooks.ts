@@ -1,7 +1,6 @@
 import { useCallback, useEffect, type FormEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useGetMeQuery } from '../api/users';
 import { sendError } from '../utils/sendError';
 import type { AuthState } from '../api/data/auth';
 import { useAppDispatch, useAppSelector } from './reduxHooks';
@@ -9,6 +8,7 @@ import type { AuthUser } from '../api/types';
 import { EmployeeStatus, JobType, Role, StagePermission } from '../api/types';
 import type { RootState } from '../store';
 import { clearAuth, setAuth } from '../store/slices/authSlice';
+import { useGetMeQuery } from '../api/data/users';
 
 const noUser: AuthUser = {
     id: '',
@@ -29,6 +29,7 @@ const noUser: AuthUser = {
     userRole: undefined,
     status: EmployeeStatus.INACTIVE,
     gender: "MALE",
+    startDate: "",
     role: Role.USER,
     invite: []
 };

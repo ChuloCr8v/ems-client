@@ -16,6 +16,8 @@ interface DashboardLayoutProps {
   pageTitle: string;
   pageDescription: string;
   summaryType: "employees" | "assets";
+  showActionButtons?: boolean;
+  showSummaryCard?: boolean;
   summaryCounts: {
     total: number;
     secondary: number;
@@ -38,6 +40,8 @@ const DashboardLayout = ({
   summaryType,
   summaryCounts, // Provide default empty object
   showReportButton = true,
+  showActionButtons = true,
+  showSummaryCard = true,
 }: DashboardLayoutProps) => {
   // Create safe counts with default values
   const safeSummaryCounts = {
@@ -60,7 +64,7 @@ const DashboardLayout = ({
         current: pageTitle,
       }}
     >
-      <div className="space-y-4 relative">
+      <div className="space-y-4 relative ">
         <div className="space-y-4 sticky top-20 bg-white z-10 pb-4">
           {/* Header Section */}
           <div className="flex items-center pt-2 justify-between gap-4 relative">
@@ -71,36 +75,42 @@ const DashboardLayout = ({
               <p className="text-gray mt-1 text-sm">{pageDescription}</p>
             </div>
 
-            <div className="space-x-4 relative z-20">
-              {showReportButton && (
+            {showActionButtons && (
+              <div className="space-x-4 relative z-20">
+                {showReportButton && (
+                  <Button
+                    size="large"
+                    icon={
+                      <Icon
+                        icon={Upload03FreeIcons}
+                        color={colors.primary}
+                        size={16}
+                      />
+                    }
+                    className={twMerge("!border-primary !text-primary")}
+                  >
+                    <span className="!text-sm text-primary">
+                      Generate Report
+                    </span>
+                  </Button>
+                )}
+
                 <Button
                   size="large"
-                  icon={
-                    <Icon
-                      icon={Upload03FreeIcons}
-                      color={colors.primary}
-                      size={16}
-                    />
-                  }
-                  className={twMerge("!border-primary !text-primary")}
+                  type="primary"
+                  icon={<Icon icon={primaryButtonIcon} size={16} />}
+                  onClick={action}
                 >
-                  <span className="!text-sm text-primary">Generate Report</span>
+                  <span className="!text-sm">{primaryButtonText}</span>
                 </Button>
-              )}
-
-              <Button
-                size="middle"
-                type="primary"
-                icon={<Icon icon={primaryButtonIcon} size={16} />}
-                onClick={action}
-              >
-                <span className="!text-sm">{primaryButtonText}</span>
-              </Button>
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Summary Cards */}
-          <SummaryCards type={summaryType} counts={safeSummaryCounts} />
+          {showSummaryCard && (
+            <SummaryCards type={summaryType} counts={safeSummaryCounts} />
+          )}
         </div>
 
         {/* Page Content */}

@@ -23,7 +23,8 @@ import EmployeeDetailCard from "../../component/modals/EmployeeDetailCard";
 import ApproveEmployee from "../../component/modals/ApproveEmployee";
 import { useListInvitationQuery } from "../../api/data/invitations.api";
 import { sentenceCase } from "../../helpers";
-import { useListUsersQuery } from "../../api/users";
+import { useNavigate } from "react-router-dom";
+import { useListUsersQuery } from "../../api/data/users";
 
 const Employees = () => {
   const [currentList, setCurrentList] = useState<"EMPLOYEES" | "PROSPECTS">(
@@ -33,6 +34,8 @@ const Employees = () => {
 
   const { data: invitationResponse, isLoading } = useListInvitationQuery();
   const { data: users, isLoading: gettingUsers } = useListUsersQuery();
+
+  const navigate = useNavigate();
 
   const options = ["EMPLOYEES", "PROSPECTS"];
 
@@ -127,8 +130,11 @@ const Employees = () => {
                 {
                   key: "view",
                   label: "View Profile",
-                  onClick: () =>
-                    openModal(<EmployeeDetailCard data={userData} />),
+                  onClick: () => {
+                    currentList === "PROSPECTS"
+                      ? openModal(<EmployeeDetailCard data={userData} />)
+                      : navigate(`${userData?.id}`);
+                  },
                   icon: Icon({
                     size: 16,
                     color: colors.icon_gray,
@@ -205,8 +211,6 @@ const Employees = () => {
     }
   };
 
-  console.log(invitationData);
-
   // Calculate summary counts
   const totalEmployees = currentTableItem().data?.length;
   const invitationsSent = invitationData?.length ?? 0;
@@ -244,11 +248,11 @@ const Employees = () => {
           dataSource={currentTableItem().data as any}
           scroll={800}
           loading={isLoading || gettingUsers}
-          onRow={(record) =>
-            openModal(
-              <EmployeeDetailCard data={record} dataSource={currentList} />
-            )
-          }
+          // onRow={(record) =>
+          //   openModal(
+          //     <EmployeeDetailCard data={record} dataSource={currentList} />
+          //   )
+          // }
         />
       </div>
     </DashboardLayout>
