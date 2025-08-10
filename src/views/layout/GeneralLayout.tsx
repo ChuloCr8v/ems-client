@@ -18,7 +18,7 @@ const GeneralLayout = ({ children, breadCrumbs }: Props) => {
   const { back, current } = breadCrumbs;
 
   return (
-    <div className="max-h-full relative">
+    <div className="max-h-full relative mb-24">
       <div className="flex items-center justify-between border-b border-outline py-4 bg-white sticky top-0 z-20">
         <Breadcrumb
           items={[

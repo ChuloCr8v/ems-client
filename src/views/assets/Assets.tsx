@@ -21,7 +21,7 @@ import { AssetStatus } from "../../api/types";
 import type { Asset } from "../../api/types";
 import { usePopup } from "../../context/PopupContext";
 import AssetDetailsModal from "../../component/modals/AssetsDetailModal";
-import AssignAssetModal from "../../component/modals/AssignAssetModal";
+import AddAssetModal from "../../component/modals/AddAssetModal";
 
 // Mock asset data for demonstration purposes
 const mockAssetData: Asset[] = [
@@ -144,7 +144,7 @@ const mockAssetData: Asset[] = [
 
 const Assets = () => {
   const [_assetData, setAssetData] = useState<Asset | null>(null);
-  const { openModal, closeModal } = usePopup();
+  const { openModal } = usePopup();
 
   const columns: ColumnsType<Asset> = [
     {
@@ -306,16 +306,7 @@ const Assets = () => {
 
   // Action handlers
   const handleAddAsset = () => {
-    console.log("Add Asset clicked");
-    openModal(
-      <AssignAssetModal
-        onCancel={closeModal}
-        onSubmit={(values) => {
-          console.log("Asset assigned:", values);
-          closeModal();
-        }}
-      />
-    );
+    openModal(<AddAssetModal />);
   };
 
   const handleViewAsset = (asset: Asset) => {

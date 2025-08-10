@@ -41,6 +41,7 @@ export enum AssetStatus {
     FAULTY = "FAULTY",
     MAINTENANCE = "MAINTENANCE",
     RETIRED = "RETIRED",
+    ACCEPTED = "ACCEPTED",
 }
 
 export enum AssetCategory {
@@ -150,7 +151,25 @@ export type User = {
     jobType: JobType;
     jobTitle: string;
     payroll?: Payroll;
+    startDate: string
+    duration?: string
+    maritalStatus?: string
+    address: string
+    contacts: Contact
 };
+
+export type ContactInfo = {
+    firstName: string;
+    lastName: string;
+    relationship: string
+    phone: string
+    address: string
+}
+
+export type Contact = {
+    guarantor: ContactInfo
+    emergency: ContactInfo
+}
 
 export type AuthUser = User & {
     isAdmin: boolean;

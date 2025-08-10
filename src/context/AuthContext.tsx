@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAppSelector } from "../hooks/reduxHooks";
+import { useGetMeQuery } from "../api/data/users";
 import { useAuthUserRequired } from "../hooks/authHooks";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
