@@ -42,6 +42,7 @@ export enum AssetStatus {
     MAINTENANCE = "MAINTENANCE",
     RETIRED = "RETIRED",
     ACCEPTED = "ACCEPTED",
+    ACTIVE = "ACTIVE"
 }
 
 export enum AssetCategory {
@@ -54,20 +55,18 @@ export enum AssetCategory {
 }
 
 export type Asset = {
+    description?: string;
     id: string
     name: string
     assetId: string
     category: string
     status: AssetStatus
-    assignedTo?: {
-        firstName: string
-        lastName: string
-        email: string
-        employeeId: string
-    }
+    assignedTo?: User
     dateAssigned?: string
     dateRetrieved?: string
     purchaseDate?: string
+    vendor?: string
+    cost?: string
     warrantyExpiry?: string
     value?: number
     condition?: string
@@ -75,8 +74,15 @@ export type Asset = {
     serialNumber?: string
     createdAt?: string
     updatedAt?: string
+    images: Image[]
+    barcode: Image
 }
 
+export type Image = {
+    id: string
+    publicId: string
+    url: string
+}
 
 export type Invite = {
     id: string,

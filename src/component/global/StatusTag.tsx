@@ -9,6 +9,7 @@ import {
   UserCheck01FreeIcons,
   CheckmarkCircle01Icon,
   UserBlock01FreeIcons,
+  CheckmarkCircle03Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AssetStatus, EmployeeStatus } from "../../api/types"; // adjust this path as needed
@@ -42,6 +43,7 @@ const StatusTag = ({ status }: StatusTagProps) => {
     } else {
       switch (status) {
         case AssetStatus.AVAILABLE:
+          return { icon: CheckmarkCircle03Icon, color: "purple" };
         case AssetStatus.ACCEPTED:
           return { icon: UserCheck01FreeIcons, color: "green" };
         case AssetStatus.ASSIGNED:
@@ -60,7 +62,7 @@ const StatusTag = ({ status }: StatusTagProps) => {
 
   const formattedStatus = () => {
     return status
-      .replaceAll("_", " ")
+      ?.replaceAll("_", " ")
       .toLowerCase()
       .replace(/^\w|\s\w/g, (c) => c.toUpperCase());
   };

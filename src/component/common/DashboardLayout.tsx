@@ -85,11 +85,12 @@ const DashboardLayout = ({
                         icon={Upload03FreeIcons}
                         color={colors.primary}
                         size={16}
+                        thickness={2.5}
                       />
                     }
                     className={twMerge("!border-primary !text-primary")}
                   >
-                    <span className="!text-sm text-primary">
+                    <span className="!text-sm text-primary  font-semibold">
                       Generate Report
                     </span>
                   </Button>
@@ -98,10 +99,14 @@ const DashboardLayout = ({
                 <Button
                   size="large"
                   type="primary"
-                  icon={<Icon icon={primaryButtonIcon} size={16} />}
+                  icon={
+                    <Icon icon={primaryButtonIcon} size={16} thickness={2.5} />
+                  }
                   onClick={action}
                 >
-                  <span className="!text-sm">{primaryButtonText}</span>
+                  <span className="!text-sm font-semibold">
+                    {primaryButtonText}
+                  </span>
                 </Button>
               </div>
             )}

@@ -5,7 +5,7 @@ import { getApiError } from "../utils/error.util";
 import type { IUpload } from "./types";
 import { store } from "../store";
 
-const uploadsUrl = `${baseUrl}/uploads`
+const uploadsUrl = `${baseUrl}/images`;
 
 type UploadArgs = {
     file: File;
@@ -39,7 +39,7 @@ export async function uploadFile({
 }: UploadArgs) {
     const body = formBody(file);
 
-    const result = await axios.post(`${uploadsUrl}/${id}`, body, {
+    const result = await axios.post(`${uploadsUrl}/upload/${id}`, body, {
         headers: withAuth({ "Content-Type": "multipart/form-data" }),
         params: { order },
         signal,
@@ -56,7 +56,7 @@ export async function uploadFile({
 
 export async function cleanupUploads(ids: string | string[]) {
     try {
-        const res = await axios.delete(uploadsUrl, {
+        const res = await axios.delete(`${uploadsUrl}/${ids}`, {
             data: { ids },
             headers: withAuth(),
         });
@@ -78,5 +78,4 @@ export const uploadApi = baseApi.injectEndpoints({
         }),
     }),
 });
-
 export const { useListUploadsQuery } = uploadApi;

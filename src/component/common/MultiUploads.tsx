@@ -1,8 +1,18 @@
-import { CloseOutlined } from "@ant-design/icons";
-import { Input, type InputProps, message } from "antd";
-import React, { useEffect, useMemo, useRef } from "react";
-import { twJoin } from "tailwind-merge";
+import { CloseOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+  type InputProps,
+  message,
+  Upload,
+  Image,
+  type UploadFile,
+  type UploadProps,
+} from "antd";
+import { useEffect, useMemo, useState } from "react";
 import { useUploader } from "../../context/UploadContext";
+import Dragger from "antd/es/upload/Dragger";
+import Icon from "./Icon";
+import { File01Icon } from "@hugeicons/core-free-icons";
+import { twMerge } from "tailwind-merge";
 
 type MultiUploadProps = {
   className?: string;
@@ -13,7 +23,7 @@ type MultiUploadProps = {
   maxCount?: number;
   required?: boolean;
   accept?: string;
-  label?: string;
+  listType?: UploadProps["listType"];
 };
 
 const MB = 1024 * 1024;
@@ -31,38 +41,42 @@ function mapNotNull<T, R>(
     .filter((x) => x !== null && x !== undefined) as R[];
 }
 
-function isSameFile(a: File, b: File) {
-  return (
-    a.name === b.name &&
-    a.size === b.size &&
-    a.type === b.type &&
-    a.lastModified === b.lastModified
-  );
+function convertToUploadFile(upload: any): UploadFile {
+  return {
+    uid: upload.id,
+    name: upload?.file?.name,
+    status: upload.done
+      ? upload.success
+        ? "done"
+        : "error"
+      : upload.cancelled
+      ? "error"
+      : "uploading",
+    percent: upload.progress,
+    originFileObj: upload?.file,
+  };
 }
 
 export default function MultiUpload({
   value,
   onChange,
   className,
-  accept,
-  size,
   maxSizeMb = 10,
-  maxCount = 10,
-  required,
-  label = "file",
+  maxCount = 3,
+  accept = ".jpg,.jpeg,.png",
+  listType = "picture",
 }: MultiUploadProps) {
   const uploader = useUploader();
-  const fileRef = useRef<HTMLInputElement>(null);
   const uploads = useMemo(
     () => mapNotNull(value, uploader?.getUpload),
     [uploader, value]
   );
+  const [internalFileList, setInternalFileList] = useState<UploadFile[]>([]);
 
+  // Sync uploads with internal file list
   useEffect(() => {
-    if (value?.length === 0 && fileRef.current) {
-      fileRef.current.value = "";
-    }
-  }, [value]);
+    setInternalFileList(uploads.map(convertToUploadFile));
+  }, [uploads, uploads, value]);
 
   useEffect(() => {
     const idCount = value?.length ?? 0;
@@ -75,115 +89,160 @@ export default function MultiUpload({
       message.error("Some files failed to upload. Please try again");
     }
     if (stopped.length) {
-      // remove items that were not uploaded
       const notStopped = uploads.filter((up) => up.success || !up.done);
       onChange?.(notStopped.map((up) => up.id));
     }
   }, [onChange, uploads, value?.length]);
 
-  const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = e.target.files;
-
-    if (onChange && fileList) {
-      const files = Array.from(fileList);
-      const alreadyAttached = (file: File) =>
-        uploads.some((up) => isSameFile(up.file, file));
-      const newFiles = value ? files.filter((f) => !alreadyAttached(f)) : files;
-
-      if (newFiles.length + uploads.length > maxCount) {
-        message.error(`Only ${maxCount} files allowed`);
-        return;
-      }
-      if (newFiles.length < files.length) {
-        const file = files.find(alreadyAttached);
-        message.info(`${file?.name} was already attached`);
-      }
-      if (maxSizeMb && newFiles.some((file) => file.size >= maxSizeMb * MB)) {
-        message.error(`File size cannot exceed ${maxSizeMb}MB`);
-        return;
-      }
-
-      const lastNumber = Math.max(...uploads.map((up) => up.order), -1);
-      const added = uploader
-        .addUploads(newFiles, lastNumber + 1)
-        .map((up) => up.id);
-      const newValue = value ? [...value, ...added] : added;
-      onChange(newValue);
+  const beforeUpload: UploadProps["beforeUpload"] = (file) => {
+    if (maxSizeMb && file.size > maxSizeMb * MB) {
+      message.error(`File size cannot exceed ${maxSizeMb}MB`);
+      return Upload.LIST_IGNORE;
     }
+
+    // Validate image type
+    if (!file.type.startsWith("image/")) {
+      message.error("You can only upload image files!");
+      return Upload.LIST_IGNORE;
+    }
+
+    return true;
   };
 
-  const onRemove = (idtoRemove: string) => {
+  const onFileSelect: UploadProps["onChange"] = async ({ fileList }) => {
+    if (!onChange || !fileList) return;
+
+    const newFiles = fileList
+      .filter(
+        (file) =>
+          file.originFileObj && !uploads.some((up) => up.id === file.uid)
+      )
+      .map((file) => file.originFileObj as File);
+
+    if (newFiles.length + uploads.length > maxCount) {
+      message.error(`Only ${maxCount} files allowed`);
+      return;
+    }
+
+    if (
+      maxSizeMb &&
+      newFiles.some((file) => (file?.size || 0) >= maxSizeMb * MB)
+    ) {
+      message.error(`File size cannot exceed ${maxSizeMb}MB`);
+      return;
+    }
+
+    const lastNumber = Math.max(...uploads.map((up) => up.order), -1);
+    const added = uploader
+      .addUploads(newFiles, lastNumber + 1)
+      .map((up) => up.id);
+    const newValue = value ? [...value, ...added] : added;
+    onChange(newValue);
+  };
+
+  const onRemove = (upload: any) => {
     if (!onChange) return;
 
-    onChange(value?.filter((id) => id !== idtoRemove) ?? []);
-    uploader.cancelUpload(idtoRemove);
-    if (fileRef.current) fileRef.current.value = "";
+    const idToRemove = upload.id;
+    onChange(value?.filter((id) => id !== idToRemove) ?? []);
+    uploader.cancelUpload(idToRemove);
   };
 
   return (
     <div className={className}>
-      <div className="flex flex-row gap-2">
-        <Input
-          size={size}
-          readOnly
-          value={value?.length ? `${value.length} files selected` : ""}
-          placeholder={"Upload" + " " + label}
-          //   placeholder={
-          //     "Up to ten files" + (maxSizeMb ? ` (max ${maxSizeMb}MB each)` : "")
-          //   }
-        />
-
-        <label
-          role="button"
-          className={twJoin(
-            "flex items-center justify-center text-center text-xs px-6 rounded-md cursor-pointer bg-[#E6EAE8]"
-          )}
-        >
-          Browse
-          <input
-            ref={fileRef}
-            type="file"
-            multiple
-            required={required && !value?.length}
+      <div className="grid grid-cols-2 gap-2">
+        {/* Uploader */}
+        <div className={uploads.length > 0 ? "" : "col-span-2"}>
+          <Dragger
+            name="files"
+            multiple={maxCount > 1}
+            fileList={internalFileList}
             onChange={onFileSelect}
-            className="w-[1px] h-[1px] opacity-0 absolute"
+            beforeUpload={beforeUpload}
+            maxCount={maxCount}
             accept={accept}
-          />
-        </label>
-      </div>
-      <div className="flex flex-col">
-        {uploads.map((up, index) => (
-          <div
-            key={index}
-            className="relative flex items-center justify-between mt-1 overflow-hidden text-sm border border-gray-300 rounded-md bg-gray-50"
+            height={120}
+            listType={listType}
+            style={{
+              backgroundColor: "#ECF8EE",
+              border: "1px dashed #28a745",
+              borderRadius: "8px",
+            }}
+            showUploadList={false}
           >
-            <div
-              className="overflow-ellipsis whitespace-nowrap flex-grow flex-shrink basis-1 text-xs px-2 py-1.5 overflow-hidden"
-              title={up.file.name}
-            >
-              {up.file.name}
+            <div className="flex flex-col items-center justify-center">
+              <div className="bg-green/20 rounded-full p-2 flex justify-center items-center">
+                <Icon icon={File01Icon} size={16} color="green" />
+              </div>
+              <p className="!font-semibold text-black !mb-2 !text-xs">
+                Click to upload or drag & drop your files here
+              </p>
+              <p className="text-xs text-gray-500">
+                {accept} (max {maxCount} files, {maxSizeMb} mb each)
+              </p>
             </div>
+          </Dragger>
+        </div>
 
-            <button
-              type="button"
-              className="flex items-center self-stretch justify-center flex-shrink-0 px-2 border-l border-gray-300 hover:text-white hover:bg-red-500"
-              onClick={() => onRemove(up.id)}
-            >
-              <CloseOutlined />
-            </button>
-
-            {/* progress bar */}
-            {!up.done && (
-              <div
-                className="absolute bottom-0 left-0 h-1 bg-green-500"
-                style={{
-                  width: `${Math.max(up.progress, 10)}%`,
-                  transition: "width 0.2s ease-in-out",
-                }}
-              />
-            )}
+        {/* Images Grid */}
+        {uploads.length > 0 && (
+          <div className={`grid gap-2 grid-cols-${uploads.length} `}>
+            {uploads.map((upload) => (
+              <div key={upload.id} className="relative group">
+                <div className="">
+                  <div className="relative flex flex-col items-center justify-center gap-2 rounded-lg">
+                    <div
+                      className={twMerge(
+                        "overflow-hidden h-[80px] w-full rounded-xl flex flex-col justify-center items-center border-2 border-gray-300",
+                        !upload.done && "h-[92px]"
+                      )}
+                    >
+                      <Image
+                        width="100%"
+                        src={
+                          upload.file
+                            ? URL.createObjectURL(upload.file) // local file preview
+                            : upload.url // preloaded remote image
+                        }
+                        alt={upload.file?.name ?? "Uploaded image"}
+                        className="!w-full !h-[200px] object-center object-cover"
+                        preview={{
+                          mask: (
+                            <div className="flex items-center justify-center gap-2 text-white">
+                              <EyeOutlined />
+                              <span>Preview</span>
+                            </div>
+                          ),
+                        }}
+                      />
+                    </div>
+                    {!upload.done ? (
+                      <div className="h-5 rounded-xl overflow-hidden w-full bg-gray-200 z-50 flex items-start justify-start gap-2">
+                        <div
+                          className="h-full bg-green-100 transition-all duration-300"
+                          style={{
+                            width: `${Math.max(upload.progress, 10)}%`,
+                          }}
+                        />
+                        <p className="text-center w-full text-xs font-semibold absolute">
+                          {Math.max(upload.progress, 10)}%
+                        </p>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => onRemove(upload)}
+                        className="w-full flex justify-center items-center gap-2 text-red-500 border border-red-500 rounded-md py-1 px-2 hover:bg-red-50 transition-colors"
+                      >
+                        <CloseOutlined className="text-red-500" />
+                        <span>Delete</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

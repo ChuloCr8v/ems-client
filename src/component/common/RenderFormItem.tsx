@@ -10,6 +10,7 @@ import Icon from "./Icon";
 import MultiUpload from "./MultiUploads";
 import CustomFilePicker from "../global/CustomFilePicker";
 import type { Dayjs } from "dayjs";
+import TextArea from "antd/es/input/TextArea";
 
 const { Option } = Select;
 
@@ -103,9 +104,17 @@ const FormItemComponent = ({ form }: Props) => {
           </Select>
         );
       case "file":
-        return <MultiUpload label={item.label} />;
+        return <MultiUpload />;
       case "file-picker":
         return <CustomFilePicker />;
+      case "image-picker":
+        return (
+          <CustomFilePicker
+            listType="picture"
+            containerStyle="grid grid-cols-2"
+            maxFiles={3}
+          />
+        );
       case "button":
         return (
           <Button
@@ -115,6 +124,8 @@ const FormItemComponent = ({ form }: Props) => {
             {item.label}
           </Button>
         );
+      case "textArea":
+        return <TextArea />;
       default:
         return <Input placeholder={item.placeholder} />;
     }

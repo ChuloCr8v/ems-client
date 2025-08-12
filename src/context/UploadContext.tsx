@@ -1,16 +1,17 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { v4 as uuid } from "uuid";
-import { cleanupUploads, uploadFile } from "../api/uploads.api";
+import { uploadFile, cleanupUploads } from "../api/uploads.api";
 
 export type UploaderItem = {
   id: string;
-  file: File;
+  file?: File | null; // local file (optional)
+  url?: string; // remote image URL (optional)
   order: number;
   done: boolean;
   progress: number;
   success: boolean;
   cancelled: boolean;
-  controller: AbortController;
+  controller: AbortController | null; // null for preloaded uploads
 };
 
 const newItem = (file: File, order: number): UploaderItem => ({
@@ -39,10 +40,11 @@ export function useUploaderProvider() {
     async function startUpload(up: UploaderItem) {
       setUploads((u) => [...u, up]);
       const { file, id, order } = up;
-      const signal = up.controller.signal;
+      const signal = up.controller?.signal;
       const onProgress = (progress: number) => modify(id, { progress });
 
       try {
+        if (!file) throw new Error("No file to upload");
         await uploadFile({ file, id, order, signal, onProgress });
         modify(id, { done: true, success: true });
         return true;
@@ -66,6 +68,26 @@ export function useUploaderProvider() {
       return { id: item.id, uploaded };
     }
 
+    /** ✅ New helper: preload already uploaded files (edit mode) */
+    function addExistingUploads(
+      items: { id: string; url: string; order?: number }[]
+    ) {
+      const existingItems: UploaderItem[] = items.map((item, i) => ({
+        id: item.id,
+        file: null,
+        url: item.url,
+        order: item.order ?? i,
+        done: true,
+        progress: 100,
+        success: true,
+        cancelled: false,
+        controller: null,
+      }));
+
+      setUploads((u) => [...u, ...existingItems]);
+      return existingItems;
+    }
+
     function getUpload(id: string) {
       return uploads.find((up) => up.id === id);
     }
@@ -77,19 +99,19 @@ export function useUploaderProvider() {
       if (up.done) {
         console.log("Releasing"), cleanupUploads(up.id);
       } else {
-        up.controller.abort();
+        up.controller?.abort();
         modify(id, { cancelled: true, done: true });
       }
-      setUploads((up) => up.filter((up) => up.id !== id));
+      setUploads((up) => up.filter((u) => u.id !== id));
     }
 
     function cleanup() {
-      if (uploads.length == 0) return;
+      if (uploads.length === 0) return;
       console.log("Uploader cleanup initiated");
 
       uploads.forEach((up) => {
         try {
-          up.controller.abort();
+          up.controller?.abort();
         } catch (e) {}
       });
       const ids = uploads.map((up) => up.id);
@@ -103,6 +125,7 @@ export function useUploaderProvider() {
       getUpload,
       addUploads,
       addUploadNow,
+      addExistingUploads, // ✅ now exposed
       cancelUpload,
       cleanup,
     };

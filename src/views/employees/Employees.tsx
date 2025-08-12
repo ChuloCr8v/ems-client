@@ -196,8 +196,6 @@ const Employees = () => {
 
   const invitationData = invitationResponse?.prospects;
 
-  console.log(invitationData);
-
   const iColumns = columns.filter(
     (c) => c.title !== "ID" && c.title !== "Level"
   );

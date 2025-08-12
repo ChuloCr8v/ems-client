@@ -12,7 +12,7 @@ type Props<T> = {
   onRow?: (record: T) => void;
   isRowSelection?: boolean;
   onSelectionChange?: (selectedRows: T[]) => void;
-  scroll?: number;
+  scroll?: string | number | true | undefined;
   paginationConfig?: TablePaginationConfig;
   expandable?: import("antd").TableProps<T>["expandable"];
 };
@@ -55,7 +55,7 @@ const TableComponent = <T extends { id: Key }>({
       dataSource={data}
       loading={loading}
       pagination={paginationConfig || false}
-      scroll={{ x: scroll ?? 800 }}
+      scroll={data?.length ? { x: scroll ?? 800 } : undefined}
       rowSelection={rowSelection}
       rowClassName={(_record, index) =>
         index % 2 === 0 ? "even-row" : "odd-row"

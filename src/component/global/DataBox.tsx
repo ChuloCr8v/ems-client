@@ -11,13 +11,13 @@ type Section = {
       icon: IconSvgElement;
       text: string;
     };
-    action: {
+    action?: {
       icon: IconSvgElement;
       text: string;
       action: () => void;
     };
   };
-  body: {
+  body?: {
     label: string;
     value?: ReactNode;
   }[];
@@ -28,6 +28,7 @@ type Props = {
   bodyWrapper?: ClassNameValue;
   containerWrapper?: ClassNameValue;
   data: Section;
+  children?: ReactNode;
 };
 
 const DataBox = ({
@@ -35,11 +36,12 @@ const DataBox = ({
   contentWrapper,
   bodyWrapper,
   containerWrapper,
+  children,
 }: Props) => {
   return (
     <div
       className={twMerge(
-        "border-gray/20 overflow-hidden border-2 rounded-lg min-w-[200px]",
+        "border-gray/20 overflow-hidden border rounded-lg min-w-[200px]",
         containerWrapper
       )}
     >
@@ -65,20 +67,23 @@ const DataBox = ({
         )}
       </div>
       <div className={twMerge(bodyWrapper, "p-4 space-y-2")}>
-        {data.body.map((d) => (
-          <div
-            className={twMerge(
-              contentWrapper,
-              "flex justify-between",
-              d.label.toLowerCase().includes("contact") && "flex-col"
-            )}
-          >
-            <p className={twMerge("text-gray text-sm")}>{d.label}</p>
-            <p className={twMerge("font-semibold text-black text-sm")}>
-              {d.value}
-            </p>
-          </div>
-        ))}
+        {children
+          ? children
+          : data?.body?.map((d) => (
+              <div
+                className={twMerge(
+                  contentWrapper,
+                  "flex justify-between",
+                  d.label.toLowerCase().includes("contact") && "flex-col",
+                  d.label.toLowerCase().includes("description") && "col-span-2"
+                )}
+              >
+                <p className={twMerge("text-gray text-sm")}>{d.label}</p>
+                <p className={twMerge("font-semibold text-black text-sm")}>
+                  {d.value}
+                </p>
+              </div>
+            ))}
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ export const paths = {
   Comments: 'comments',
   Invitations: 'invitations',
   Departments: 'departments',
+  Assets: "Assets"
 } as const;
 
 export type TagType = keyof typeof paths;
@@ -35,7 +36,8 @@ export const baseApi = createApi({
       const state = getState() as RootState;
       const token = state.auth?.access_token;
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+        headers.set('Authorization', `Bearer ${token}`
+        );
       }
       return headers;
     },
