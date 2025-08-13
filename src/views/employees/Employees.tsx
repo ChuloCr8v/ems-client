@@ -11,6 +11,8 @@ import {
   ArrowRight02FreeIcons,
   CheckmarkCircle01Icon,
   Delete02Icon,
+  Download03FreeIcons,
+  Logout03FreeIcons,
   MailAccount01Icon,
   MailSend01Icon,
 } from "@hugeicons/core-free-icons";
@@ -25,6 +27,7 @@ import { useListInvitationQuery } from "../../api/data/invitations.api";
 import { sentenceCase } from "../../helpers";
 import { useNavigate } from "react-router-dom";
 import { useListUsersQuery } from "../../api/data/users";
+import InitiateOffboardingModal from "../../component/modals/offboardingModal/InitiateOffboardingModal";
 
 const Employees = () => {
   const [currentList, setCurrentList] = useState<"EMPLOYEES" | "PROSPECTS">(
@@ -40,6 +43,110 @@ const Employees = () => {
   const options = ["EMPLOYEES", "PROSPECTS"];
 
   const { openModal } = usePopup();
+
+  const getActionMenuItems = (record: User) => {
+    if (currentList === "EMPLOYEES") {
+      return [
+        {
+          key: "view",
+          label: "View Profile",
+          onClick: () => navigate(`${userData?.id}`),
+          icon: Icon({
+            size: 16,
+            color: colors.icon_gray,
+            icon: ArrowRight02FreeIcons,
+          }),
+          style: { color: colors.icon_gray },
+        },
+         {
+          key: "retrieve Assets",
+          label: "Retrieve Assets",
+          icon: Icon({
+            size: 16,
+            color: colors.icon_gray,
+            icon: Download03FreeIcons,
+          }),
+          style: { color: colors.icon_gray },
+        },
+        {
+          key: "initiate-exit",
+          label: "Initiate Exit",
+          onClick: () =>
+            openModal(
+              <InitiateOffboardingModal />,
+            ),
+          icon: Icon({
+            size: 16,
+            color: colors.icon_gray,
+            icon: Logout03FreeIcons,
+          }),
+          style: { color: colors.icon_gray },
+        },
+        {
+          key: "exit employee",
+          label: "Exit Employee",
+          // onClick: () =>
+          //   openModal(
+          //     <InitiateOffboardingModal />,
+          //   ),
+          icon: Icon({
+            size: 16,
+            color: colors.icon_gray,
+            icon: Logout03FreeIcons,
+          }),
+          style: { color: colors.icon_gray },
+        },
+      ]
+    } else {
+
+      return [
+        {
+          key: "view",
+          label: "View Profile",
+          onClick: () => openModal(<EmployeeDetailCard data={userData} />),
+          icon: Icon({
+            size: 16,
+            color: colors.icon_gray,
+            icon: ArrowRight02FreeIcons,
+          }),
+          style: { color: colors.icon_gray },
+        },
+        {
+          key: "approve",
+          label: "Approve Employee",
+          onClick: () => openModal(<ApproveEmployee id={record.id} />),
+          icon: Icon({
+            size: 16,
+            color: colors.icon_gray,
+            icon: CheckmarkCircle01Icon,
+          }),
+          style: { color: colors.icon_gray },
+        },
+        {
+          key: "slink",
+          label: "Send Link",
+          onClick: () => console.log("Deactivate", record),
+          icon: Icon({
+            size: 16,
+            color: colors.icon_gray,
+            icon: MailAccount01Icon,
+          }),
+          style: { color: colors.icon_gray },
+        },
+        {
+          key: "delete",
+          label: "Delete Invitation",
+          onClick: () => console.log("Deactivate", record),
+          style: { color: colors.icon_gray },
+          icon: Icon({
+            icon: Delete02Icon,
+            size: 16,
+            color: colors.icon_gray,
+          }),
+        },
+      ]
+    }
+  }
 
   const columns: ColumnsType<User> = [
     {
@@ -99,12 +206,12 @@ const Employees = () => {
       render: (_, record) => {
         const inviteStatus = record.invite?.length
           ? [...record.invite]
-              .filter((i) => i.createdAt)
-              .sort(
-                (a, b) =>
-                  new Date(a.createdAt!).getTime() -
-                  new Date(b.createdAt!).getTime()
-              )[0]?.status
+            .filter((i) => i.createdAt)
+            .sort(
+              (a, b) =>
+                new Date(a.createdAt!).getTime() -
+                new Date(b.createdAt!).getTime()
+            )[0]?.status
           : undefined;
 
         return (
@@ -117,7 +224,7 @@ const Employees = () => {
         );
       },
     },
-    {
+ {
       title: "Action",
       key: "actions",
       align: "right",
@@ -126,56 +233,7 @@ const Employees = () => {
           <Dropdown
             placement="bottomRight"
             menu={{
-              items: [
-                {
-                  key: "view",
-                  label: "View Profile",
-                  onClick: () => {
-                    currentList === "PROSPECTS"
-                      ? openModal(<EmployeeDetailCard data={userData} />)
-                      : navigate(`${userData?.id}`);
-                  },
-                  icon: Icon({
-                    size: 16,
-                    color: colors.icon_gray,
-                    icon: ArrowRight02FreeIcons,
-                  }),
-                  style: { color: colors.icon_gray },
-                },
-                {
-                  key: "approve",
-                  label: "Approve Employee",
-                  onClick: () => openModal(<ApproveEmployee id={record.id} />),
-                  icon: Icon({
-                    size: 16,
-                    color: colors.icon_gray,
-                    icon: CheckmarkCircle01Icon,
-                  }),
-                  style: { color: colors.icon_gray },
-                },
-                {
-                  key: "slink",
-                  label: "Send Link",
-                  onClick: () => console.log("Deactivate", record),
-                  icon: Icon({
-                    size: 16,
-                    color: colors.icon_gray,
-                    icon: MailAccount01Icon,
-                  }),
-                  style: { color: colors.icon_gray },
-                },
-                {
-                  key: "delete",
-                  label: "Delete Invitation",
-                  onClick: () => console.log("Deactivate", record),
-                  style: { color: colors.icon_gray },
-                  icon: Icon({
-                    icon: Delete02Icon,
-                    size: 16,
-                    color: colors.icon_gray,
-                  }),
-                },
-              ],
+              items: getActionMenuItems(record),
             }}
           >
             <Button
@@ -248,11 +306,11 @@ const Employees = () => {
           dataSource={currentTableItem().data as any}
           scroll={800}
           loading={isLoading || gettingUsers}
-          // onRow={(record) =>
-          //   openModal(
-          //     <EmployeeDetailCard data={record} dataSource={currentList} />
-          //   )
-          // }
+        // onRow={(record) =>
+        //   openModal(
+        //     <EmployeeDetailCard data={record} dataSource={currentList} />
+        //   )
+        // }
         />
       </div>
     </DashboardLayout>

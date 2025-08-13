@@ -78,7 +78,7 @@ export const CustomModal = ({
       centered={center}
       closeIcon={false}
     >
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center ">
         <div className="modal-header flex items-center gap-4 bg-gradient-to-r from-[#5BB9DD]/20 to-[#66C476]/20 w-full  px-6 py-4">
           <div
             className={twMerge(
@@ -124,8 +124,8 @@ export const CustomModal = ({
 
         {/* Confirmation Checkbox */}
         {showConfirmation && (
-          <div className="w-full px-">
-            <Checkbox onChange={(e) => setIsConfirmed(e.target.checked)}>
+          <div className="w-full px-6">
+            <Checkbox onChange={(e) => setIsConfirmed(e.target.checked)} className="custom-checkbox">
               {confirmationText ?? "I confirm this action"}
             </Checkbox>
           </div>
