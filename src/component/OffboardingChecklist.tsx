@@ -4,7 +4,7 @@ import {
   Doc01Icon,
   LaptopIcon,
   LegalDocument01Icon,
-  Upload01Icon,
+  Upload01Icon
 } from "@hugeicons/core-free-icons";
 import Icon from "./common/Icon";
 import StatusTag from "./global/StatusTag";
@@ -54,7 +54,7 @@ const OffboardingChecklist = (props: Props) => {
       content:
         "If you’re unable to return an assigned asset or required to make a payment in-lieu of damage or loss, please upload proof of payment.",
       status: "PENDING",
-            comment: {
+      comment: {
         onclick: () => {
           openModal(
             <CommentModal />
@@ -122,6 +122,7 @@ const OffboardingChecklist = (props: Props) => {
             >
               {l.comment.text}
             </Button>
+
             <Button
               icon={<Icon icon={l.action.icon} size={16} thickness={3} />}
               onClick={l.action.onclick}

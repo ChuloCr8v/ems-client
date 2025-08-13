@@ -19,10 +19,10 @@ const CommentModal = () => {
 
     const handleOk = async () => {
         try {
-            const values = await form.validateFields()
+            // const values = await form.validateFields()
             setLoading(true)
 
-            await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate API call
+            await new Promise((resolve) => setTimeout(resolve, 1500)) 
             form.resetFields()
         } catch (error) {
             console.error("Error submitting comment:", error)
@@ -55,7 +55,7 @@ const CommentModal = () => {
                     }]}>
                         <TextArea
                             rows={1}
-                            placeholder="Enter your comment here..."
+                            placeholder="Type here..."
                             maxLength={100}
                         />
                         <div className="mt-4">
