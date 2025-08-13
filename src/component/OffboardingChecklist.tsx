@@ -1,5 +1,6 @@
 import {
   CheckmarkCircle03Icon,
+  Comment01Icon,
   Doc01Icon,
   LaptopIcon,
   LegalDocument01Icon,
@@ -8,10 +9,18 @@ import {
 import Icon from "./common/Icon";
 import StatusTag from "./global/StatusTag";
 import { Button } from "antd";
+import { usePopup } from "../context/PopupContext";
+import UploadPaymentReceiptModal from "./modals/offboardingModal/UploadPaymentReceiptModal";
+import UploadHandoverDocumentModal from "./modals/offboardingModal/UploadHandoverDocumentModal";
+import ReturnAssetModal from "./modals/offboardingModal/ReturnAssetModal";
+import CommentModal from "./modals/offboardingModal/CommentModal";
 
 type Props = {};
 
 const OffboardingChecklist = (props: Props) => {
+
+  const { openModal } = usePopup();
+
   console.log(props);
   const listItems = [
     {
@@ -20,8 +29,21 @@ const OffboardingChecklist = (props: Props) => {
       content:
         "Kindly ensure all company-issued assets assigned to you are returned. Once done, navigate to the Assets section and mark each item as returned.",
       status: "PENDING",
+      comment: {
+        onclick: () => {
+          openModal(
+            <CommentModal />
+          )
+        },
+        text: "Comment",
+        icon: Comment01Icon,
+      },
       action: {
-        onclick: () => {},
+        onclick: () => {
+          openModal(
+            <ReturnAssetModal />
+          )
+        },
         text: "Complete Now",
         icon: CheckmarkCircle03Icon,
       },
@@ -32,8 +54,21 @@ const OffboardingChecklist = (props: Props) => {
       content:
         "If you’re unable to return an assigned asset or required to make a payment in-lieu of damage or loss, please upload proof of payment.",
       status: "PENDING",
+            comment: {
+        onclick: () => {
+          openModal(
+            <CommentModal />
+          )
+        },
+        text: "Comment",
+        icon: Comment01Icon,
+      },
       action: {
-        onclick: () => {},
+        onclick: () => {
+          openModal(
+            <UploadPaymentReceiptModal />
+          )
+        },
         text: "Upload Proof",
         icon: Upload01Icon,
       },
@@ -44,8 +79,21 @@ const OffboardingChecklist = (props: Props) => {
       content:
         "Please complete and submit your handover form to ensure a smooth transition. It should outline any pending tasks, list transferred files or documents, and specify the designated officer taking over your responsibilities.",
       status: "PENDING",
+      comment: {
+        onclick: () => {
+          openModal(
+            <CommentModal />
+          )
+        },
+        text: "Comment",
+        icon: Comment01Icon,
+      },
       action: {
-        onclick: () => {},
+        onclick: () => {
+          openModal(
+            <UploadHandoverDocumentModal />
+          )
+        },
         text: "Upload Document",
         icon: Upload01Icon,
       },
@@ -58,7 +106,7 @@ const OffboardingChecklist = (props: Props) => {
         {listItems.map((l) => (
           <div className="flex justify-between items-center gap-6 border-b border-light_gray/70 pb-6">
             <div className="bg-green-50 rounded-md p-5">
-                <Icon icon={l.icon} size={30} color="green" />
+              <Icon icon={l.icon} size={30} color="green" />
             </div>
             <div className="text-sm space-y-2">
               <p className="font-semibold">{l.title}</p>
@@ -67,8 +115,16 @@ const OffboardingChecklist = (props: Props) => {
             <StatusTag status={l.status} />
 
             <Button
+              icon={<Icon icon={l.comment.icon} size={16} thickness={3} />}
+              onClick={l.comment.onclick}
+              size="large"
+              className="!text-primary !border-primary/30 !font-semibold min-w-[200px]"
+            >
+              {l.comment.text}
+            </Button>
+            <Button
               icon={<Icon icon={l.action.icon} size={16} thickness={3} />}
-              onClick={() => l.action.onclick}
+              onClick={l.action.onclick}
               size="large"
               className="!text-primary !border-primary/30 !font-semibold min-w-[200px]"
             >
