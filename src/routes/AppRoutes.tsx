@@ -1,7 +1,6 @@
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import NotFound from "../views/extra/404";
-
 const AuthPages = lazy(() => import("./AuthPages"));
 const ProtectedRoutes = lazy(() => import("./ProtectedRoutes"));
 export const Layout = lazy(() => import("../views/layout/Layout"));

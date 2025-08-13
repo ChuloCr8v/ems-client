@@ -158,7 +158,7 @@ const Sidenav = (_props: Props) => {
   return (
     <div className="h-screen w-screen lg:max-w-[264px]">
       <div className="py-8 px-4 w-full h-full flex flex-col gap-6 overflow-y-auto">
-        <img src="miroLogo.png" alt="miro ems" className="mb-4 w-[70px]" />
+        <img src="/miroLogo.png" alt="miro ems" className="mb-4 w-[70px]" />
 
         <div className="space-y-4">
           {menuItems.map((menuItem, index) => (

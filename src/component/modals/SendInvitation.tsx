@@ -138,7 +138,7 @@ const SendInvitation = () => {
           type: "select",
           icon: Building03Icon,
           name: "departmentId",
-          required: true,
+          required: false,
           options: departments?.map((item) => ({
             label:
               item.name.charAt(0).toUpperCase() +
