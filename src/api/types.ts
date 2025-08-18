@@ -125,7 +125,7 @@ export type Levels = {
 }
 
 export type Department = {
-    createdAt: Dayjs
+    createdAt?: Dayjs
     status?: AssetStatus;
     head?: User;
     description?: string;
@@ -158,7 +158,7 @@ export type User = {
     role: string,
     invite: Invite[]
     department: Department;
-    departmentId: string;
+    departmentId?: string;
     level: Level;
     isAdmin: boolean;
     active: boolean;

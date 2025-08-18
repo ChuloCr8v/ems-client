@@ -1,6 +1,3 @@
-import type { ColumnsType } from "antd/es/table";
-import React from "react";
-import type { Department } from "../api/types";
 import { useGetTeamQuery } from "../api/data/departments.api";
 
 type Props = {
@@ -8,7 +5,7 @@ type Props = {
 };
 
 const useGetTeam = ({ teamId }: Props) => {
-  const { data: team, isLoading: gettingTeam } = useGetTeamQuery(teamId);
+  const { data: team, isLoading: _gettingTeam } = useGetTeamQuery(teamId);
 
   return { team };
 };
