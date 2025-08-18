@@ -6,23 +6,24 @@ import { PlusSignCircleFreeIcons } from "@hugeicons/core-free-icons";
 import { useUpdateAssetMutation } from "../../api/data/assets.api";
 import { usePopup } from "../../context/PopupContext";
 import { useEffect } from "react";
-import { useUploader } from "../../context/UploadContext";
 import { fullName } from "../../helpers";
 import { useListUsersQuery } from "../../api/data/users";
 import {
   useCreateDepartmentMutation,
   useFindDepartmentQuery,
 } from "../../api/data/departments.api";
+import { useAuthUser } from "../../hooks/authHooks";
 
 const AddDepartmentModal = ({ id }: { id?: string }) => {
   const { closeModal } = usePopup();
   const [createDepartment, { isLoading }] = useCreateDepartmentMutation();
   const [updateAsset, { isLoading: updatingAsset }] = useUpdateAssetMutation();
 
-  const { data: employees, isLoading: _gettingEmployees } = useListUsersQuery();
+  const user = useAuthUser();
+
+  const { data: employees, isLoading: gettingEmployees } = useListUsersQuery();
 
   const [form] = useForm();
-  const uploader = useUploader();
 
   const { data: department, isLoading: isQueryLoading } =
     useFindDepartmentQuery(id ?? "", {
@@ -31,7 +32,6 @@ const AddDepartmentModal = ({ id }: { id?: string }) => {
 
   useEffect(() => {
     if (!department) return;
-
     (async () => {
       form.setFieldsValue({
         departmentName: department.name,
@@ -46,7 +46,7 @@ const AddDepartmentModal = ({ id }: { id?: string }) => {
       label: "Department Name",
       required: true,
       type: "text",
-      name: "departmentName",
+      name: "name",
     },
     {
       label: "Department Head",
@@ -76,25 +76,31 @@ const AddDepartmentModal = ({ id }: { id?: string }) => {
     try {
       const values = await form.validateFields();
 
+      const upatedData = {
+        ...values,
+        createdBy: user?.id ?? "",
+      };
+
       id
-        ? await updateAsset({ id: id ?? "", body: values }).unwrap()
-        : await createDepartment(values).unwrap();
+        ? await updateAsset({ id: id ?? "", body: upatedData }).unwrap()
+        : await createDepartment(upatedData).unwrap();
 
       message.success(
-        id ? "Asset updated successfully" : "Asset created successfully"
+        id
+          ? "Department updated successfully"
+          : "Department created successfully"
       );
       closeModal();
     } catch (error: any) {
       console.error("Error creating asset:", error);
       message.error(
-        error?.data?.message || "Error creating asset. Please try again."
+        error?.data?.message || "Error creating department. Please try again."
       );
     }
   };
 
   const handleClose = () => {
     form.resetFields();
-    uploader.cleanup();
     closeModal();
   };
 
@@ -106,7 +112,7 @@ const AddDepartmentModal = ({ id }: { id?: string }) => {
       okText={id ? "Update Department" : "Add Department"}
       onOk={handleAddDepartment}
       onCancel={handleClose}
-      loading={isLoading || isQueryLoading || updatingAsset}
+      loading={isLoading || isQueryLoading || updatingAsset || gettingEmployees}
       width={500}
     >
       <Form form={form} layout="vertical" className="space-y-4">

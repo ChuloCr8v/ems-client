@@ -2,7 +2,7 @@
 
 import DashboardLayout from "../../component/common/DashboardLayout.tsx";
 import TableComponent from "../../component/global/TableComponent.tsx";
-import { Dropdown, Button, type MenuProps } from "antd";
+import { Dropdown, Button, type MenuProps, Avatar, Tooltip } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { EllipsisOutlined } from "@ant-design/icons";
 import ProfileCard from "../../component/ProfileCard.tsx";
@@ -24,13 +24,17 @@ import AddBulkAssetModal from "../../component/modals/AddBulkAssetModal.tsx";
 // import DepartmentDetailModal from "../../component/modals/DepartmentDetailModal.tsx";
 import AddDepartmentModal from "../../component/modals/AddDepartmentModal.tsx";
 import { useListDepartmentsQuery } from "../../api/data/departments.api.ts";
+import { useListUsersQuery } from "../../api/data/users.ts";
+import { fullName } from "../../helpers.ts";
+import dayjs from "dayjs";
+import StatusTag from "../../component/global/StatusTag.tsx";
 
 const Departments = () => {
   const { openModal } = usePopup();
 
-  const { data: departments, isLoading: gettingAssets } =
+  const { data: departments, isLoading: gettingDepartments } =
     useListDepartmentsQuery();
-  console.log(departments);
+  const { data: users, isLoading: gettingUsers } = useListUsersQuery();
 
   const columns: ColumnsType<Department> = [
     {
@@ -63,8 +67,46 @@ const Departments = () => {
       title: "Employees",
       dataIndex: "employees",
       key: "employees",
-      render: (_text, _record) => {
-        return <div className=""></div>;
+      render: (_text, record) => {
+        const teamMembers = users?.filter((u) => u.departmentId === record.id);
+        console.log(users);
+
+        console.log(record);
+
+        return (
+          <Avatar.Group
+            max={{
+              count: 2,
+              style: {
+                color: "#fff",
+                backgroundColor: colors.elevated,
+                cursor: "pointer",
+              },
+              popover: { trigger: "click" },
+            }}
+          >
+            {teamMembers
+              ?.map((t) => (
+                <Tooltip
+                  title={fullName({
+                    firstName: t.firstName,
+                    lastName: t.lastName,
+                  })}
+                  placement="top"
+                >
+                  <Avatar
+                    style={{
+                      color: "#fff",
+                      backgroundColor: colors.light_gray,
+                    }}
+                  >
+                    {t.firstName.charAt(0) + " " + t.lastName.charAt(0)}
+                  </Avatar>
+                </Tooltip>
+              ))
+              .slice(0, 3)}
+          </Avatar.Group>
+        );
       },
     },
 
@@ -72,15 +114,17 @@ const Departments = () => {
       title: "Created On",
       dataIndex: "createdOn",
       key: "createdOn",
-      render: (_, _record) => <div className=""></div>,
+      render: (_, record) => (
+        <div className="">{dayjs(record.createdAt).format("DD MMM, YYYY")}</div>
+      ),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      // render: (_, record) => {
-      //   return <StatusTag status={record.status ?? AssetStatus.AVAILABLE} />;
-      // },
+      render: (_, record) => {
+        return <StatusTag status={record.status ?? ""} />;
+      },
     },
     {
       title: "Action",
@@ -214,7 +258,7 @@ const Departments = () => {
           columns={columns}
           dataSource={departments ?? []}
           scroll={"max-content"}
-          loading={gettingAssets}
+          loading={gettingDepartments || gettingUsers}
           // onRow={(record) => handleViewAsset(record)}
         />
       </div>

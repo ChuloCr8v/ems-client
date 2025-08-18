@@ -15,6 +15,11 @@ export const deparmentsApi = baseApi.injectEndpoints({
             providesTags: ["Departments"],
         }),
 
+        getTeam: query<Department[], string>({
+            query: (id) => ({ url: `department/team/${id}` }),
+            providesTags: ["Departments"],
+        }),
+
         findDepartment: query<Department, string>({
             query: (id) => ({ url: `departments/${id}` }),
             providesTags: ["Departments"],
@@ -28,4 +33,4 @@ export const deparmentsApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useListDepartmentsQuery, useCreateDepartmentMutation, useFindDepartmentQuery } = deparmentsApi;
+export const { useListDepartmentsQuery, useCreateDepartmentMutation, useFindDepartmentQuery, useGetTeamQuery } = deparmentsApi;
