@@ -7,7 +7,6 @@ import Departments from "../views/departments/Departments";
 import Testing from "../views/employees/Testing";
 
 const ProtectedRoutes = () => {
-  a;
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
