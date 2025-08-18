@@ -1,6 +1,5 @@
 import { EmployeeStatus, type User } from "../../api/types";
 import DashboardLayout from "../../component/common/DashboardLayout";
-import CustomSegmented from "../../component/global/CustomSegment";
 import TableComponent from "../../component/global/TableComponent";
 import { Dropdown, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -27,9 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { useListUsersQuery } from "../../api/data/users";
 
 const Employees = () => {
-  const [currentList, setCurrentList] = useState<"EMPLOYEES" | "PROSPECTS">(
-    "EMPLOYEES"
-  );
+  const [currentList, setCurrentList] = useState("EMPLOYEES");
   const [userData, setUserData] = useState<User | null>(null);
 
   const { data: invitationResponse, isLoading } = useListInvitationQuery();
@@ -102,19 +99,19 @@ const Employees = () => {
               .filter((i) => i.createdAt)
               .sort(
                 (a, b) =>
-                  new Date(a.createdAt!).getTime() -
-                  new Date(b.createdAt!).getTime()
+                  new Date(b.createdAt!).getTime() -
+                  new Date(a.createdAt!).getTime()
               )[0]?.status
           : undefined;
 
-        return (
-          <StatusTag
-            status={
-              (currentList === "EMPLOYEES" ? record.status : inviteStatus) ??
-              "N/A"
-            }
-          />
-        );
+        const statusToShow =
+          currentList === "EMPLOYEES"
+            ? record.status
+            : record.eId
+            ? record.status
+            : inviteStatus;
+
+        return <StatusTag status={statusToShow ?? "N/A"} />;
       },
     },
     {
@@ -233,26 +230,20 @@ const Employees = () => {
         active: activeEmployees ?? 0,
         inactive: inactiveEmployees ?? 0,
       }}
+      segmentOptions={options}
+      setCurrentList={setCurrentList}
     >
-      <div className="space-y-6 mt-4">
-        <CustomSegmented
-          options={options}
-          setOption={(value) =>
-            setCurrentList((value as "EMPLOYEES") || "PROSPECT")
-          }
-        />
-        <TableComponent
-          columns={currentTableItem().col}
-          dataSource={currentTableItem().data as any}
-          scroll={800}
-          loading={isLoading || gettingUsers}
-          // onRow={(record) =>
-          //   openModal(
-          //     <EmployeeDetailCard data={record} dataSource={currentList} />
-          //   )
-          // }
-        />
-      </div>
+      <TableComponent
+        columns={currentTableItem().col}
+        dataSource={currentTableItem().data as any}
+        scroll={"max-content"}
+        loading={isLoading || gettingUsers}
+        // onRow={(record) =>
+        //   openModal(
+        //     <EmployeeDetailCard data={record} dataSource={currentList} />
+        //   )
+        // }
+      />
     </DashboardLayout>
   );
 };

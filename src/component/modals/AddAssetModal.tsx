@@ -1,4 +1,4 @@
-import { Form, message } from "antd";
+import { Form, message, type UploadFile } from "antd";
 import { CustomModal } from "../common/CustomModal";
 import { useForm } from "antd/es/form/Form";
 import FormItemComponent from "../common/RenderFormItem";
@@ -7,13 +7,20 @@ import { LaptopAddIcon } from "@hugeicons/core-free-icons";
 import {
   useCreateAssetMutation,
   useFindAssetQuery,
+  useUpdateAssetMutation,
 } from "../../api/data/assets.api";
 import { usePopup } from "../../context/PopupContext";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { useUploader } from "../../context/UploadContext";
+import { LocalFilePicker } from "../common/LocalFilePicker";
+import { generateQrFile, parseImageDataToFile } from "../../helpers";
 
 const AddAssetModal = ({ id }: { id?: string }) => {
+  const { closeModal } = usePopup();
+  const [createAsset, { isLoading }] = useCreateAssetMutation();
+  const [updateAsset, { isLoading: updatingAsset }] = useUpdateAssetMutation();
+
   const [form] = useForm();
   const uploader = useUploader();
 
@@ -24,46 +31,26 @@ const AddAssetModal = ({ id }: { id?: string }) => {
     }
   );
 
-  // Fixed useEffect to prevent infinite loops
   useEffect(() => {
     if (!asset) return;
 
-    // Initialize uploader with existing files
-    const uploads = [
-      ...asset.images.map((img, index) => ({
-        id: img.id,
-        url: img.url,
-        order: index,
-      })),
-      ...(asset.barcode
-        ? [
-            {
-              id: asset.barcode.id,
-              url: asset.barcode.url,
-              order: asset.images.length,
-            },
-          ]
-        : []),
-    ];
+    (async () => {
+      const assetImageFiles = await parseImageDataToFile(asset.assetImage);
+      const barcodeImageFiles = await parseImageDataToFile(asset.barcodeImage);
 
-    uploader.addExistingUploads(uploads);
-
-    // Set form values - fixed field name to match formFields
-    form.setFieldsValue({
-      assetImage: asset.images.map((a) => a.id),
-      barcodeImage: asset.barcode ? [asset.barcode.id] : [], // Changed to match form field name
-      name: asset.name ?? "",
-      serialNumber: asset.serialNumber ?? "",
-      category: asset.category ?? "",
-      purchaseDate: dayjs(asset.purchaseDate),
-      vendor: asset.vendor,
-      cost: asset.cost,
-      description: asset.description,
-    });
-  }, [asset]); // Removed uploader from dependencies
-
-  const { closeModal } = usePopup();
-  const [createAsset, { isLoading }] = useCreateAssetMutation();
+      form.setFieldsValue({
+        assetImage: assetImageFiles,
+        barcodeImage: barcodeImageFiles,
+        name: asset.name ?? "",
+        serialNo: asset.serialNo ?? "",
+        category: asset.category ?? "",
+        purchaseDate: dayjs(asset.purchaseDate),
+        vendor: asset.vendor,
+        cost: asset.cost,
+        description: asset.description,
+      });
+    })();
+  }, [asset]);
 
   const formFields = [
     {
@@ -72,12 +59,7 @@ const AddAssetModal = ({ id }: { id?: string }) => {
       type: "file",
       name: "assetImage",
     },
-    {
-      label: "Barcode Image (Optional)",
-      required: false,
-      type: "file",
-      name: "barcodeImage", // This now matches the form.setFieldsValue key
-    },
+
     {
       label: "Asset Name",
       required: true,
@@ -88,7 +70,7 @@ const AddAssetModal = ({ id }: { id?: string }) => {
       label: "Serial Number",
       required: true,
       type: "text",
-      name: "serialNumber",
+      name: "serialNo",
     },
     {
       label: "Category",
@@ -144,11 +126,49 @@ const AddAssetModal = ({ id }: { id?: string }) => {
     form,
   });
 
+  console.log(asset);
+
   const handleAddAsset = async () => {
     try {
       const values = await form.validateFields();
-      await createAsset(values).unwrap();
-      message.success("Asset created successfully");
+
+      // Create FormData instance
+      const formData = new FormData();
+
+      // Append asset images
+      if (Array.isArray(values.assetImage)) {
+        values.assetImage.forEach((file: UploadFile) => {
+          if (file.originFileObj) {
+            formData.append("assetImage", file.originFileObj as File);
+          }
+        });
+      }
+
+      // Append barcode images (optional)
+      const qrFile = await generateQrFile(values.serialNo);
+      formData.append("barcodeImage", qrFile);
+
+      // return;
+
+      // Append other fields
+      Object.entries(values).forEach(([key, value]) => {
+        if (["assetImage", "barcodeImage"].includes(key)) return; // already handled
+
+        if (dayjs.isDayjs(value)) {
+          formData.append(key, value.format("YYYY-MM-DD"));
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, value as Blob);
+        }
+      });
+
+      // Send using FormData
+      id
+        ? await updateAsset({ id: id ?? "", body: formData }).unwrap()
+        : await createAsset(formData).unwrap();
+
+      message.success(
+        id ? "Asset updated successfully" : "Asset created successfully"
+      );
       closeModal();
     } catch (error: any) {
       console.error("Error creating asset:", error);
@@ -171,7 +191,7 @@ const AddAssetModal = ({ id }: { id?: string }) => {
       okText={id ? "Update Asset" : "Add Asset"}
       onOk={handleAddAsset}
       onCancel={handleClose}
-      loading={isLoading || isQueryLoading}
+      loading={isLoading || isQueryLoading || updatingAsset}
     >
       <Form form={form} layout="vertical" className="space-y-4">
         <div className="space-y-6 gap-x-3 lg:max-h-[450px] h-full overflow-auto grid grid-cols-2">
@@ -185,14 +205,18 @@ const AddAssetModal = ({ id }: { id?: string }) => {
                   message: `${item.label} is required`,
                 },
               ]}
-              key={item.name} // Changed to use name as key for better stability
+              key={item.name}
               className={twMerge(
                 ["description", "assetImage", "barcodeImage"].includes(
                   item.name
                 ) && "col-span-2"
               )}
             >
-              {formItem(item)}
+              {["barcodeImage", "assetImage"].includes(item.name) ? (
+                <LocalFilePicker mode={asset ? "EDIT" : "CREATE"} />
+              ) : (
+                formItem(item)
+              )}
             </Form.Item>
           ))}
         </div>

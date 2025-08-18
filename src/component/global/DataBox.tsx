@@ -41,7 +41,7 @@ const DataBox = ({
   return (
     <div
       className={twMerge(
-        "border-gray/20 overflow-hidden border rounded-lg min-w-[200px]",
+        "border-gray/20 overflow-hidden border rounded-lg min-w-[200px] w-full ",
         containerWrapper
       )}
     >

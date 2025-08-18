@@ -13,11 +13,14 @@ import {
   FileTextOutlined,
   CaretDownFilled,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
-type Props = {};
+type Props = {
+  setShowSideNav: Dispatch<SetStateAction<boolean>>;
+  showSideNav: boolean;
+};
 
 const menuItems = [
   {
@@ -131,7 +134,7 @@ const menuItems = [
   },
 ];
 
-const Sidenav = (_props: Props) => {
+const Sidenav = ({ showSideNav, setShowSideNav }: Props) => {
   const location = useLocation();
   const [openSections, setOpenSections] = useState<string[]>([]);
 
@@ -156,10 +159,13 @@ const Sidenav = (_props: Props) => {
   };
 
   return (
-    <div className="h-screen w-screen lg:max-w-[264px]">
+    <div
+      className={twMerge(
+        "min-h-screen w-0 overflow-hidden lg:col-span-1 fixed z-30 left-0 top-0 bg-background xl:bg-transparent mt-18 pt-4 duration-200 xl:w-[264px]",
+        showSideNav && "max-sm:w-screen w-[50vw]"
+      )}
+    >
       <div className="py-8 px-4 w-full h-full flex flex-col gap-6 overflow-y-auto">
-        <img src="miroLogo.png" alt="miro ems" className="mb-4 w-[70px]" />
-
         <div className="space-y-4">
           {menuItems.map((menuItem, index) => (
             <div
@@ -192,6 +198,7 @@ const Sidenav = (_props: Props) => {
                   <Link
                     key={itemIndex}
                     to={item.url}
+                    onClick={() => setShowSideNav(false)}
                     className={twMerge(
                       "flex items-center gap-2 px-3 py-1 rounded-lg text-sm transition-all border-1 border-transparent hover:border-border_primary hover:bg-primary_light hover:text-primary duration-200",
                       location.pathname === item.url &&

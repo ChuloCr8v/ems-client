@@ -31,7 +31,9 @@ const GeneralLayout = ({ children, breadCrumbs }: Props) => {
           ]}
         />
 
-        <ProfileDropdown />
+        <div className="hidden lg:flex">
+          <ProfileDropdown />
+        </div>
       </div>
 
       <div className="">{children}</div>

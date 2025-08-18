@@ -94,11 +94,11 @@ const SummaryCards = ({
   };
 
   return (
-    <div className="flex items-center gap-4 border border-outline rounded-lg py-3 pl-6">
+    <div className="flex flex-col md:flex-row items-center gap-4 border border-outline rounded-lg md:py-3 md:pl-6">
       {data.map((d, idx) => (
         <div
           key={idx}
-          className="flex items-center gap-4 border-r last-of-type:border-none border-outline w-full"
+          className="flex items-center gap-4 border-b md:border-b-0 md:border-r last-of-type:border-none border-outline w-full p-3 md:p-0"
         >
           <div
             className={twMerge(

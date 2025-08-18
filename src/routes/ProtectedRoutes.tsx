@@ -3,6 +3,7 @@ import Dashboard from "../views/admin/Dashboard";
 import Employees from "../views/employees/Employees";
 import Assets from "../views/assets/Assets";
 import EmployeeProfile from "../views/employees/EmployeeProfile";
+import Departments from "../views/departments/Departments";
 
 const ProtectedRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const ProtectedRoutes = () => {
       <Route path="/employees" element={<Employees />} />
       <Route path="/employees/:id" element={<EmployeeProfile />} />
       <Route path="/assets" element={<Assets />} />
+      <Route path="/departments" element={<Departments />} />
     </Routes>
   );
 };

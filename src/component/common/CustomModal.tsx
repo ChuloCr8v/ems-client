@@ -109,7 +109,7 @@ export const CustomModal = ({
 
         <div
           className={twMerge(
-            "w-full p-6 h-full overflow-y-auto overflow-x-hidden",
+            "w-full p-6 pb-2 h-full overflow-y-auto overflow-x-hidden",
             !maxHeight ? "" : "max-h-[500px]"
           )}
         >
@@ -124,7 +124,7 @@ export const CustomModal = ({
 
         {/* Confirmation Checkbox */}
         {showConfirmation && (
-          <div className="w-full px-">
+          <div className="w-full px-6">
             <Checkbox onChange={(e) => setIsConfirmed(e.target.checked)}>
               {confirmationText ?? "I confirm this action"}
             </Checkbox>

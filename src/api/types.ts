@@ -55,11 +55,12 @@ export enum AssetCategory {
 }
 
 export type Asset = {
+    assignments: any;
     description?: string;
     id: string
     name: string
     assetId: string
-    category: string
+    category: AssetCategory
     status: AssetStatus
     assignedTo?: User
     dateAssigned?: string
@@ -71,11 +72,11 @@ export type Asset = {
     value?: number
     condition?: string
     location?: string
-    serialNumber?: string
+    serialNo?: string
     createdAt?: string
     updatedAt?: string
-    images: Image[]
-    barcode: Image
+    assetImage: string
+    barcodeImage: string
 }
 
 export type Image = {
@@ -122,6 +123,9 @@ export type Levels = {
 }
 
 export type Department = {
+    status?: AssetStatus;
+    head?: User;
+    description?: string;
     id: Id;
     name: string;
 };

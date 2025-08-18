@@ -8,8 +8,9 @@ import {
   CircleArrowDiagonal02FreeIcons,
   UserCheck01FreeIcons,
   CheckmarkCircle01Icon,
-  UserBlock01FreeIcons,
   CheckmarkCircle03Icon,
+  LaptopIssueIcon,
+  Settings01FreeIcons,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AssetStatus, EmployeeStatus } from "../../api/types"; // adjust this path as needed
@@ -44,12 +45,14 @@ const StatusTag = ({ status }: StatusTagProps) => {
       switch (status) {
         case AssetStatus.AVAILABLE:
           return { icon: CheckmarkCircle03Icon, color: "purple" };
+        case AssetStatus.MAINTENANCE:
+          return { icon: Settings01FreeIcons, color: "orange" };
         case AssetStatus.ACCEPTED:
           return { icon: UserCheck01FreeIcons, color: "green" };
         case AssetStatus.ASSIGNED:
-          return { icon: CheckmarkCircle01Icon, color: "yellow" };
+          return { icon: CheckmarkCircle01Icon, color: "green" };
         case AssetStatus.FAULTY:
-          return { icon: UserBlock01FreeIcons, color: "red" };
+          return { icon: LaptopIssueIcon, color: "red" };
         case AssetStatus.MAINTENANCE:
           return { icon: Loading01Icon, color: "gray" };
         case AssetStatus.RETIRED:

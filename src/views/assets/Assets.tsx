@@ -2,7 +2,7 @@
 
 import DashboardLayout from "../../component/common/DashboardLayout";
 import TableComponent from "../../component/global/TableComponent";
-import { Dropdown, Button, Image } from "antd";
+import { Dropdown, Button, Image, type MenuProps } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { EllipsisOutlined } from "@ant-design/icons";
 import ProfileCard from "../../component/ProfileCard";
@@ -10,11 +10,13 @@ import StatusTag from "../../component/global/StatusTag";
 import {
   ArrowRight02FreeIcons,
   Edit02Icon,
-  Delete02Icon,
   MailSend01Icon,
   ArrowReloadHorizontalIcon,
   UserCheck01Icon,
   ModernTvIssueIcon,
+  LaptopAddIcon,
+  LaptopPhoneSyncIcon,
+  SettingDone01Icon,
 } from "@hugeicons/core-free-icons";
 import Icon from "../../component/common/Icon";
 import { colors } from "../../constants/colors";
@@ -28,6 +30,11 @@ import { sentenceCase } from "../../helpers";
 import AssignAssetModal from "../../component/modals/AssignAssetModal";
 import RetrieveAssetModal from "../../component/modals/RetrieveAssetModal.tsx";
 import ReportFaultModal from "../../component/modals/ReportFaultModal.tsx";
+import { baseUrl } from "../../api/base.ts";
+import AddBulkAssetModal from "../../component/modals/AddBulkAssetModal.tsx";
+import AssetImage from "../../component/global/AssetImage.tsx";
+import ResolveFaultModal from "../../component/modals/ResolveFaultModal.tsx";
+import dayjs from "dayjs";
 
 const Assets = () => {
   const { openModal } = usePopup();
@@ -40,37 +47,31 @@ const Assets = () => {
       dataIndex: "name",
       key: "name",
       render: (_text, record) => {
+        const img = record.assetImage
+          ? JSON.parse(record?.assetImage)
+          : undefined;
+
         return (
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-[#ECF8EE] overflow-hidden rounded-full flex items-center justify-center">
-              <Image
-                src={record.images[0]?.url}
-                className="h-full w-full object-cover"
-              />
+              {img ? (
+                <Image
+                  src={baseUrl + img?.url}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                AssetImage({
+                  assetType: record.category,
+                })
+              )}
             </div>
             <div>
               <p className="font-semibold text-custom_black text-sm">
-                {record.name}
+                {record?.name}
               </p>
-              <p className="text-xs text-gray">{record.assetId}</p>
+              <p className="text-xs text-gray">{record?.assetId}</p>
             </div>
           </div>
-        );
-      },
-    },
-    {
-      title: "Assigned To",
-      dataIndex: "assignedTo",
-      key: "assignedTo",
-      render: (_text, record) => {
-        return record.assignedTo ? (
-          <ProfileCard
-            firstName={record.assignedTo.firstName}
-            lastName={record.assignedTo.lastName}
-            email={record.assignedTo.email ?? ""}
-          />
-        ) : (
-          <span className="text-gray-400">Unassigned</span>
         );
       },
     },
@@ -83,11 +84,36 @@ const Assets = () => {
       ),
     },
     {
+      title: "Assigned To",
+      dataIndex: "assignedTo",
+      key: "assignedTo",
+      render: (_text, record) => {
+        return record?.assignments?.length &&
+          record?.assignments[0]?.condition !== "RETURNED" &&
+          record.status !== AssetStatus.AVAILABLE ? (
+          <ProfileCard
+            firstName={record?.assignments[0]?.user.firstName}
+            lastName={record.assignments[0]?.user.lastName}
+            email={record.assignments[0]?.user.email ?? ""}
+          />
+        ) : (
+          <span className="text-gray-400">Unassigned</span>
+        );
+      },
+    },
+
+    {
       title: "Date Assigned",
       dataIndex: "dateAssigned",
       key: "dateAssigned",
-      render: (date) => (
-        <span className="text-gray text-sm">{date || "-"}</span>
+      render: (_, record) => (
+        <span className="text-gray text-sm">
+          {record?.assignments[0]?.assignedAt &&
+          record?.assignments[0]?.condition !== "RETURNED" &&
+          record.status !== AssetStatus.AVAILABLE
+            ? dayjs(record?.assignments[0]?.assignedAt).format("DD MMMM YYYY")
+            : "-"}
+        </span>
       ),
     },
     {
@@ -175,16 +201,27 @@ const Assets = () => {
                 }),
               },
               {
-                key: "delete",
-                label: "Delete Asset",
-                onClick: () => handleDeleteAsset(record),
-                style: { color: "red" },
+                key: "resolve",
+                label: "Resolve Fault",
+                onClick: () => openModal(<ResolveFaultModal data={record} />),
+                style: { color: "green" },
                 icon: Icon({
-                  icon: Delete02Icon,
+                  icon: SettingDone01Icon,
                   size: 16,
-                  color: "red",
+                  color: "green",
                 }),
               },
+              // {
+              //   key: "delete",
+              //   label: "Delete Asset",
+              //   onClick: () => handleDeleteAsset(record),
+              //   style: { color: "red" },
+              //   icon: Icon({
+              //     icon: Delete02Icon,
+              //     size: 16,
+              //     color: "red",
+              //   }),
+              // },
             ],
           }}
         >
@@ -206,10 +243,6 @@ const Assets = () => {
     openModal(<AssetDetailsModal asset={asset} />);
   };
 
-  const handleDeleteAsset = (asset: Asset) => {
-    console.log("Delete asset:", asset);
-  };
-
   const totalAssets = assets?.length;
   const assignedAssets = assets?.filter(
     (a) => a.status === AssetStatus.ASSIGNED
@@ -221,10 +254,32 @@ const Assets = () => {
     (a) => a.status === AssetStatus.ACTIVE
   ).length;
 
+  const listItems: MenuProps["items"] = [
+    {
+      key: "Single",
+      label: "Single",
+      icon: Icon({
+        icon: LaptopAddIcon,
+        color: "",
+      }),
+      onClick: () => openModal(<AddAssetModal />),
+    },
+    {
+      key: "Multiple",
+      label: "Multiple",
+      icon: Icon({
+        icon: LaptopPhoneSyncIcon,
+        color: "",
+      }),
+      onClick: () => openModal(<AddBulkAssetModal />),
+    },
+  ];
+
   return (
     <DashboardLayout
       primaryButtonText="Add Asset"
-      action={() => openModal(<AddAssetModal />)}
+      primaryButtonType="DROPDOWN"
+      primaryButtonListItems={listItems}
       primaryButtonIcon={MailSend01Icon}
       pageTitle="Assets"
       pageDescription="Manage and track all company assets and equipment."
@@ -236,11 +291,11 @@ const Assets = () => {
         faulty: faultyAssets,
       }}
     >
-      <div className="space-y-6 mt-4 max-w-full overflow-hidden">
+      <div className="max-w-full overflow-hidden">
         <TableComponent
           columns={columns}
           dataSource={assets ?? []}
-          // scroll={"max-content"}
+          scroll={"max-content"}
           loading={gettingAssets}
           // onRow={(record) => handleViewAsset(record)}
         />

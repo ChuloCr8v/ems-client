@@ -15,7 +15,7 @@ const AssetTag = ({ name, id }: Props) => {
         </div>
         <div className="">
           <p className="font-semibold text-sm">{name}</p>
-          <p className="text-gray leading-0 text-xs">ID: {id}</p>
+          <p className="text-gray text-xs">ID: {id}</p>
         </div>
       </div>
     </div>

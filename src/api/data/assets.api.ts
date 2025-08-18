@@ -21,8 +21,51 @@ export const assetsApi = baseApi.injectEndpoints({
             invalidatesTags: ["Assets"],
         }),
 
+        updateAsset: mutation<Asset[], { id: string, body: FormData }>({
+            query: ({ id, body }) => ({ url: `assets/update/${id}`, method: 'Put', body }),
+            invalidatesTags: ["Assets"],
+        }),
+
+        createBulkAssets: mutation<Asset[], FormData>({
+            query: (body) => ({ url: 'assets/bulk-upload', method: 'POST', body }),
+            invalidatesTags: ["Assets"],
+        }),
+
+        assignAsset: mutation<Asset[], { id: string, userId: string }>({
+            query: ({ id, userId }) => ({ url: `assets/assign/${id}`, method: 'PUT', body: { userId } }),
+            invalidatesTags: ["Assets"],
+        }),
+
+        reportFault: mutation<Asset[], {
+            assetId: string,
+            reportedBy: string,
+            notes: string
+        }>({
+            query: (body) => ({ url: `assets/report-fault`, method: 'POST', body }),
+            invalidatesTags: ["Assets"],
+        }),
+
+        resolveFault: mutation<Asset[], {
+            id: string,
+            resolvedById: string,
+            notes: string
+        }>({
+            query: ({ id, ...body }) => ({ url: `assets/faults/${id}/status`, method: 'PUT', body }),
+            invalidatesTags: ["Assets"],
+        }),
+
+        retrieveAsset: mutation<Asset[], {
+            assetId: string,
+            retrievedById: string,
+            notes: string
+        }>({
+            query: ({ assetId, ...body }) => ({ url: `assets/retrieve/${assetId}`, method: 'PUT', body }),
+            invalidatesTags: ["Assets"],
+        }),
 
     }),
 });
 
-export const { useCreateAssetMutation, useListAssetsQuery, useFindAssetQuery } = assetsApi;
+export const { useCreateAssetMutation, useListAssetsQuery, useFindAssetQuery, useAssignAssetMutation,
+    useCreateBulkAssetsMutation, useReportFaultMutation, useRetrieveAssetMutation, useResolveFaultMutation, useUpdateAssetMutation
+} = assetsApi;

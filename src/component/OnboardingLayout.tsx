@@ -19,7 +19,7 @@ import {
   type ReactNode,
   type SetStateAction,
 } from "react";
-import { message } from "antd";
+import { message, type UploadFile } from "antd";
 import { useSubmitProspectDataMutation } from "../api/data/invitations.api";
 
 interface OnboardingWrapperProps {
@@ -106,6 +106,7 @@ const OnboardingLayout = ({
           id: prospect?.id,
           guarantor: formattedGuarantorPhoneNumber,
           emergency: formattedEmergencyPhoneNumber,
+          uploads: allValues.uploads.map((a: UploadFile) => a.originFileObj),
         };
 
         await submitProspectData(updatedData).unwrap();

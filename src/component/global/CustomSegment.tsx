@@ -12,6 +12,7 @@ const CustomSegmented = ({ options, setOption }: Props) => {
       <Segmented<string>
         options={options}
         onChange={(value) => setOption(value)}
+        className=" w-full md:w-fit"
       />
     </div>
   );
