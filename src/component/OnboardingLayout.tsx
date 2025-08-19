@@ -12,7 +12,6 @@ import Icon from "./common/Icon";
 import FormItemComponent, {
   type FormFieldProps,
 } from "./common/RenderFormItem";
-import useGetPropspect from "../hooks/useGetPropspect";
 import {
   useEffect,
   type Dispatch,
@@ -20,7 +19,11 @@ import {
   type SetStateAction,
 } from "react";
 import { message, type UploadFile } from "antd";
-import { useSubmitProspectDataMutation } from "../api/data/invitations.api";
+import {
+  useGetInviteByTokenQuery,
+  useSubmitProspectDataMutation,
+} from "../api/data/invitations.api";
+import { useParams } from "react-router-dom";
 
 interface OnboardingWrapperProps {
   formFields: {
@@ -52,18 +55,24 @@ const OnboardingLayout = ({
 }: OnboardingWrapperProps) => {
   const [submitProspectData] = useSubmitProspectDataMutation();
 
-  const { prospect, isLoading: gettingProspect } = useGetPropspect();
+  const { token } = useParams<{ token: string }>();
+
+  const { data: invite, isLoading: gettingProspect } = useGetInviteByTokenQuery(
+    token as string
+  );
 
   const { formItem } = FormItemComponent({ form });
 
+  const prospect = invite?.prospect;
+
   useEffect(() => {
     const populateForm = async () => {
-      if (prospect) {
-        form.setFieldValue("gender", prospect.gender);
-        form.setFieldValue("firstName", prospect.firstName);
-        form.setFieldValue("lastName", prospect.lastName);
-        form.setFieldValue("email", prospect.email);
-        form.setFieldValue("phone", prospect.phone);
+      if (invite) {
+        form.setFieldValue("gender", prospect?.gender);
+        form.setFieldValue("firstName", prospect?.firstName);
+        form.setFieldValue("lastName", prospect?.lastName);
+        form.setFieldValue("email", prospect?.email);
+        form.setFieldValue("phone", prospect?.phone);
       }
     };
     populateForm();
@@ -103,7 +112,7 @@ const OnboardingLayout = ({
 
         const updatedData = {
           ...allValues,
-          id: prospect?.id,
+          id: invite?.id,
           guarantor: formattedGuarantorPhoneNumber,
           emergency: formattedEmergencyPhoneNumber,
           uploads: allValues.uploads.map((a: UploadFile) => a.originFileObj),

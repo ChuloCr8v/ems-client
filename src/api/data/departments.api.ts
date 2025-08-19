@@ -1,5 +1,5 @@
 import { baseApi } from '../base';
-import type { Department } from '../types';
+import type { Department, User } from '../types';
 
 type CreateDepartment = {
     name: string
@@ -15,7 +15,7 @@ export const deparmentsApi = baseApi.injectEndpoints({
             providesTags: ["Departments"],
         }),
 
-        getTeam: query<Department[], string>({
+        getTeam: query<User[], string>({
             query: (id) => ({ url: `department/team/${id}` }),
             providesTags: ["Departments"],
         }),

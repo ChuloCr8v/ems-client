@@ -13,7 +13,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const safeRoutes = ["/onboarding/invitation"];
+  const safeRoutes = [
+    "/onboarding/invitation",
+    "/onboarding/invitation/decline",
+  ];
 
   const isSafeRoute = safeRoutes.some((route) =>
     location.pathname.startsWith(route)

@@ -1,35 +1,51 @@
-import { useState } from "react";
-import { LaptopIcon, UserAdd01FreeIcons } from "@hugeicons/core-free-icons";
+import {
+  Profile02Icon,
+  ProfileIcon,
+  UserAdd01FreeIcons,
+} from "@hugeicons/core-free-icons";
 import type { Department } from "../../api/types";
 import { CustomModal } from "../common/CustomModal";
 import DataBox from "../global/DataBox";
-import CustomSegmented from "../global/CustomSegment";
 import { twMerge } from "tailwind-merge";
-import LogComponent from "../global/LogComponent";
+import dayjs from "dayjs";
+import StatusTag from "../global/StatusTag";
+import { useGetTeamQuery } from "../../api/data/departments.api";
+import ProfileCard from "../ProfileCard";
+import { Tag } from "antd";
 
 interface AssetDetailsModalProps {
   department: Department;
 }
 
 const DepartmentDetailModal = ({ department }: AssetDetailsModalProps) => {
-  const [activeTab, setActiveTab] = useState("Overview");
+  const { data: team } = useGetTeamQuery(department?.id);
 
   const departmentDetails = [
     {
-      label: "ID",
-      value: "asset.serialNo",
+      label: "Created On",
+      value: dayjs(department.createdAt).format("MMM D, YYYY"),
+    },
+    {
+      label: "Status",
+      value: <StatusTag status={department.status ?? ""} />,
     },
   ];
 
-  const OverviewTab = () => (
-    <div className="space-y-4 w-full">
-      {/* Asset Details */}
+  return (
+    <CustomModal
+      title={department.name}
+      modalSubtitle={team?.length.toString() + " members"}
+      icon={UserAdd01FreeIcons}
+      width={600}
+      hideFooter={true}
+      maxHeight={true}
+    >
       <DataBox
         data={{
           header: {
             title: {
-              icon: LaptopIcon,
-              text: "Asset Details",
+              icon: ProfileIcon,
+              text: "Overview",
             },
           },
           body: departmentDetails,
@@ -37,26 +53,35 @@ const DepartmentDetailModal = ({ department }: AssetDetailsModalProps) => {
         bodyWrapper="grid grid-cols-2"
         contentWrapper={twMerge("!grid")}
       />
-    </div>
-  );
 
-  const LogsTab = () => <LogComponent />;
+      <DataBox
+        data={{
+          header: {
+            title: {
+              icon: Profile02Icon,
+              text: "Team Members",
+            },
+          },
+        }}
+        containerWrapper="mt-4"
+        contentWrapper={"!grid border-b border-b-gray-100 last:border-b-0 pb-2"}
+      >
+        {team?.map((t) => (
+          <div className="flex justify-between items-center">
+            <ProfileCard
+              firstName={t.firstName}
+              lastName={t.lastName}
+              email={t.email}
+            />
 
-  const tabItems = ["Overview", "Logs"];
-
-  return (
-    <CustomModal
-      title={department.name}
-      // modalSubtitle={department}
-      icon={UserAdd01FreeIcons}
-      width={800}
-      hideFooter={true}
-      maxHeight={true}
-    >
-      <div className="flex flex-col justify-center items-center gap-6">
-        <CustomSegmented options={tabItems} setOption={setActiveTab} />
-        {activeTab === "Overview" ? <OverviewTab /> : <LogsTab />}
-      </div>
+            {t.id === department.departmentHeadId && (
+              <Tag className="">
+                {t.id === department.departmentHeadId ? "Department Head" : ""}
+              </Tag>
+            )}
+          </div>
+        ))}
+      </DataBox>
     </CustomModal>
   );
 };

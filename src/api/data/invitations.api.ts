@@ -1,5 +1,5 @@
 import { baseApi } from '../base';
-import type { InvitationResponse, Prospect } from '../types';
+import type { Invite, Prospect } from '../types';
 
 
 export const invitationsApi = baseApi.injectEndpoints({
@@ -10,7 +10,7 @@ export const invitationsApi = baseApi.injectEndpoints({
             invalidatesTags: ["User", "Invitations"],
         }),
 
-        listInvitation: query<InvitationResponse, void>({
+        listInvitation: query<Prospect[], void>({
             query: () => ({ url: `invite` }),
             providesTags: ["User", "Invitations"],
         }),
@@ -20,8 +20,24 @@ export const invitationsApi = baseApi.injectEndpoints({
             providesTags: ["User", "Invitations"],
         }),
 
-        acceptOffer: mutation<InvitationResponse, string>({
+        getInviteByToken: query<Invite, string>({
+            query: (token) => ({
+                url: `invite/prospect/${token}`,
+                method: "GET",
+            }),
+            providesTags: ["User", "Invitations"],
+        }),
+
+        acceptOffer: mutation<Prospect, string>({
             query: (token) => ({ url: `invite/accept/${token}`, method: "PUT" }),
+            invalidatesTags: ["User", "Invitations"],
+        }),
+
+        declineOffer: mutation<void, { token: string, reasons: Array<string> }>({
+            query: ({ token, reasons }) => ({
+                url: `invite/decline/${token}`, method: "PUT",
+                body: reasons
+            }),
             invalidatesTags: ["User", "Invitations"],
         }),
 
@@ -38,4 +54,4 @@ export const invitationsApi = baseApi.injectEndpoints({
 
 });
 
-export const { useSendInvitationMutation, useListInvitationQuery, useAcceptOfferMutation, useGetInviteQuery, useSubmitProspectDataMutation, useApproveProspectMutation } = invitationsApi;
+export const { useSendInvitationMutation, useListInvitationQuery, useAcceptOfferMutation, useGetInviteQuery, useSubmitProspectDataMutation, useApproveProspectMutation, useGetInviteByTokenQuery, useDeclineOfferMutation } = invitationsApi;

@@ -6,7 +6,7 @@ export const msalConfig: Configuration = {
     auth: {
         clientId: 'f4969f79-b174-4b2e-a018-883bd31a3829',
         authority: 'https://login.microsoftonline.com/zoracom.com',
-        redirectUri: `https://ems.miro.zoracom.com/login`,
+        redirectUri: `${window.location.origin}/login`,
     },
     cache: {
         cacheLocation: 'sessionStorage',

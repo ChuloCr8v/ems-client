@@ -92,6 +92,7 @@ export type Invite = {
     token: string,
     status: EmployeeStatus
     createdAt: string
+    prospect: Prospect
 }
 
 
@@ -114,10 +115,7 @@ export type Prospect = {
     user: User
 };
 
-export type InvitationResponse = {
-    message: string,
-    prospects: Prospect[]
-}
+
 
 export type Levels = {
     name: string;
@@ -125,6 +123,7 @@ export type Levels = {
 }
 
 export type Department = {
+    departmentHeadId: string;
     createdAt?: Dayjs
     status?: AssetStatus;
     head?: User;

@@ -28,6 +28,7 @@ import { useListUsersQuery } from "../../api/data/users.ts";
 import { fullName } from "../../helpers.ts";
 import dayjs from "dayjs";
 import StatusTag from "../../component/global/StatusTag.tsx";
+import DepartmentDetailModal from "../../component/modals/DepartmentDetailModal.tsx";
 
 const Departments = () => {
   const { openModal } = usePopup();
@@ -139,10 +140,10 @@ const Departments = () => {
               {
                 key: "view",
                 label: "View Details",
-                // onClick: (e) => {
-                //   e.domEvent.stopPropagation();
-                //   handleViewAsset(record);
-                // },
+                onClick: (e) => {
+                  e.domEvent.stopPropagation();
+                  openModal(<DepartmentDetailModal department={record} />);
+                },
                 icon: Icon({
                   size: 16,
                   color: colors.icon_gray,

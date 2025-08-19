@@ -32,7 +32,7 @@ const Employees = () => {
   const [currentList, setCurrentList] = useState("EMPLOYEES");
   const [userData, setUserData] = useState<User | null>(null);
 
-  const { data: invitationResponse, isLoading } = useListInvitationQuery();
+  const { data: invitationData, isLoading } = useListInvitationQuery();
   const { data: users, isLoading: gettingUsers } = useListUsersQuery();
 
   const navigate = useNavigate();
@@ -244,8 +244,6 @@ const Employees = () => {
       ),
     },
   ];
-
-  const invitationData = invitationResponse?.prospects;
 
   const iColumns = columns.filter(
     (c) => c.title !== "ID" && c.title !== "Level"

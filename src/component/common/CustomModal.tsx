@@ -79,18 +79,23 @@ export const CustomModal = ({
       closeIcon={false}
     >
       <div className="flex flex-col items-center ">
-        <div className="modal-header flex items-center gap-4 bg-gradient-to-r from-[#5BB9DD]/20 to-[#66C476]/20 w-full  px-6 py-4">
+        <div
+          className={twMerge(
+            "modal-header flex items-center gap-4 bg-gradient-to-r from-[#5BB9DD]/20 to-[#66C476]/20 w-full  px-6 py-4",
+            warning && "from-red-50 to-red-100"
+          )}
+        >
           <div
             className={twMerge(
               "text-primary text-4xl bg-green-50 p-2 rounded-full flex items-center justify-center",
-              warning && "bg-red-50 text-red-600"
+              warning && "bg-red-200 text-red-600"
             )}
           >
             <HugeiconsIcon
               icon={icon ?? Activity01Icon}
               size={24}
               strokeWidth={1.5}
-              color={"green"}
+              color={warning ? "red" : "green"}
             />
           </div>
 
@@ -150,7 +155,7 @@ export const CustomModal = ({
               size="large"
               className={twMerge(
                 "!text-sm !px-6",
-                warning && "bg-red-600 text-white"
+                warning && "!bg-red-400 text-white"
               )}
               disabled={showConfirmation ? !isConfirmed : false} // Disable based on checkbox
             >

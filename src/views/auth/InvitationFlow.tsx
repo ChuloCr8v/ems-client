@@ -1,6 +1,5 @@
 import { useState } from "react";
 import InvitationBackgroundWrapper from "../../component/InvitationBackgroundWrapper";
-import useGetPropspect from "../../hooks/useGetPropspect";
 import OnboardingPersonalInfo from "./OnBoardingPersonalInfo";
 import OnboardingKeyContacts from "./Onboarding-key-contacts";
 import OnboardingDocuments from "./OnboardingDocuments";
@@ -8,16 +7,20 @@ import OfferAcceptance from "./OfferAcceptance";
 import { useForm } from "antd/es/form/Form";
 import { EmployeeStatus } from "../../api/types";
 import OnboardingSuccess from "./OnboardingSuccess";
+import { useGetInviteByTokenQuery } from "../../api/data/invitations.api";
+import { useParams } from "react-router-dom";
 
 const InvitationFlow: React.FC = () => {
   const [form] = useForm();
   const [step, setStep] = useState<number>(1);
 
-  const { isLoading, prospect, isFetching } = useGetPropspect();
+  const { token } = useParams<{ token: string }>();
 
-  const acceptedInvite = prospect?.invite.some(
-    (i) => i.status === EmployeeStatus.ACCEPTED
+  const { data: invite, isLoading: gettingInvite } = useGetInviteByTokenQuery(
+    token ?? ""
   );
+
+  const acceptedInvite = invite?.status === EmployeeStatus.ACCEPTED;
 
   const stepProps = {
     form: form,
@@ -45,7 +48,7 @@ const InvitationFlow: React.FC = () => {
   };
 
   return (
-    <InvitationBackgroundWrapper loading={isLoading || isFetching}>
+    <InvitationBackgroundWrapper loading={gettingInvite}>
       <div className="flex flex-col justify-center items-center gap-6">
         {renderItem()}
         <p className="text-gray">
