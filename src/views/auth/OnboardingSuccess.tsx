@@ -41,7 +41,7 @@ const OnboardingSuccess = ({ step }: { step: number }) => {
           team will verify your information and get back to you shortly.
         </p>
 
-        <div className="bg-gray-50 py-2 px-3 rounded-lg text-left !space-y-4">
+        <div className="bg-gray-50 py-4 px-3 rounded-lg text-left !space-y-4">
           {messages.map((item) => (
             <div className="flex items-center gap-4" key={item}>
               <Icon color="green" icon={CheckmarkCircle03Icon} size={24} />

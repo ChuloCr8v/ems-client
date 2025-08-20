@@ -8,19 +8,23 @@ import { useForm } from "antd/es/form/Form";
 import { EmployeeStatus } from "../../api/types";
 import OnboardingSuccess from "./OnboardingSuccess";
 import { useGetInviteByTokenQuery } from "../../api/data/invitations.api";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const InvitationFlow: React.FC = () => {
   const [form] = useForm();
   const [step, setStep] = useState<number>(1);
 
-  const { token } = useParams<{ token: string }>();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
 
   const { data: invite, isLoading: gettingInvite } = useGetInviteByTokenQuery(
-    token ?? ""
+    token ?? "",
+    { skip: !token }
   );
 
   const acceptedInvite = invite?.status === EmployeeStatus.ACCEPTED;
+
+  // console.log(token);
 
   const stepProps = {
     form: form,

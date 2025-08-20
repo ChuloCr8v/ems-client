@@ -16,7 +16,7 @@ const noUser: AuthUser = {
     firstName: '',
     lastName: '',
     level: { id: '', name: '', rank: 0 },
-    department: { id: '', name: '' },
+    department: { id: '', name: '', departmentHeadId: '' },
     approverOf: [],
     eId: 0,
     isAdmin: false,

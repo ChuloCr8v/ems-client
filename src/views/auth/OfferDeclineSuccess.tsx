@@ -5,10 +5,10 @@ import { CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
 const OfferDeclineSuccess: React.FC = () => {
   return (
     <div className="  text-center  mx-auto flex flex-col items-center justify-center">
-      <div className="flex justify-center items-center mb-6 bg-primary/10 p-6 rounded-full">
-        <Icon icon={CheckmarkCircle02Icon} size={50} />
+      <div className="flex justify-center items-center mb-4 bg-primary/10 p-5 rounded-full">
+        <Icon icon={CheckmarkCircle02Icon} size={40} />
       </div>
-      <h2 className="!text-2xl !font-bold text-black !mb-2">
+      <h2 className="!text-xl !font-bold text-black !mb-2">
         Employment Offer Declined!
       </h2>
       <p className="!text-gray-500 !text-base !mb-8">

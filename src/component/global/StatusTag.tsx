@@ -32,6 +32,7 @@ const StatusTag = ({ status }: StatusTagProps) => {
           return { icon: Loading01Icon, color: "orange" };
         case EmployeeStatus.REJECTED:
         case EmployeeStatus.INACTIVE:
+        case EmployeeStatus.DECLINED:
           return { icon: CancelCircleFreeIcons, color: "red" };
         case EmployeeStatus.ACTIVE:
         case AssetStatus.ACCEPTED:

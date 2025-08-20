@@ -23,7 +23,7 @@ import {
   useGetInviteByTokenQuery,
   useSubmitProspectDataMutation,
 } from "../api/data/invitations.api";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 interface OnboardingWrapperProps {
   formFields: {
@@ -55,7 +55,8 @@ const OnboardingLayout = ({
 }: OnboardingWrapperProps) => {
   const [submitProspectData] = useSubmitProspectDataMutation();
 
-  const { token } = useParams<{ token: string }>();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
 
   const { data: invite, isLoading: gettingProspect } = useGetInviteByTokenQuery(
     token as string
@@ -91,7 +92,6 @@ const OnboardingLayout = ({
   const nextStep = async () => {
     try {
       await form.validateFields();
-      console.log("Validation succeeded, current step:", step);
 
       if (step === stepItems.length) {
         const allValues = form.getFieldsValue(true);

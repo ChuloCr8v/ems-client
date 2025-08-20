@@ -35,6 +35,9 @@ const Employees = () => {
   const { data: invitationData, isLoading } = useListInvitationQuery();
   const { data: users, isLoading: gettingUsers } = useListUsersQuery();
 
+  console.log(users);
+  console.log(invitationData);
+
   const navigate = useNavigate();
 
   const options = ["EMPLOYEES", "PROSPECTS"];

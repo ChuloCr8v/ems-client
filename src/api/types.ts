@@ -35,6 +35,7 @@ export enum EmployeeStatus {
     PENDING_INVITE = "PENDING_INVITE",
     PENDING_REVIEW = "PENDING_REVIEW",
     REJECTED = "REJECTED",
+    DECLINED = "DECLINED",
 }
 
 export enum AssetStatus {
