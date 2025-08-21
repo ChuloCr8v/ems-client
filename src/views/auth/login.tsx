@@ -30,7 +30,7 @@ const Login: React.FC = () => {
     <BackgroundWrapper>
       <div className="relative min-h-screen w-screen overflow-hidden ">
         {/* Background elements */}
-        <div className="absolute top-0 !right-8 z-2 md:hidden">
+        <div className="absolute top-0 z-2 md:hidden">
           <img src="/login/login-image.png" alt="logn" />
         </div>
         <div className="bg-white/60 h-full w-full absolute top-0 left-0 z-1 backdrop-blur-2xl"></div>
