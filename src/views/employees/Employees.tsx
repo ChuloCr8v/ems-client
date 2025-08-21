@@ -9,10 +9,8 @@ import StatusTag from "../../component/global/StatusTag";
 import {
   ArrowRight02FreeIcons,
   CheckmarkCircle01Icon,
-  Delete02Icon,
   Download03FreeIcons,
   Logout03FreeIcons,
-  MailAccount01Icon,
   MailSend01Icon,
 } from "@hugeicons/core-free-icons";
 import { usePopup } from "../../context/PopupContext";
@@ -116,30 +114,36 @@ const Employees = () => {
             color: colors.icon_gray,
             icon: CheckmarkCircle01Icon,
           }),
-          style: { color: colors.icon_gray },
-        },
-        {
-          key: "slink",
-          label: "Send Link",
-          onClick: () => console.log("Deactivate", record),
-          icon: Icon({
-            size: 16,
+          style: {
             color: colors.icon_gray,
-            icon: MailAccount01Icon,
-          }),
-          style: { color: colors.icon_gray },
+            display:
+              record.invite[0].status === "PENDING" || record.level
+                ? "none"
+                : "flex",
+          },
         },
-        {
-          key: "delete",
-          label: "Delete Invitation",
-          onClick: () => console.log("Deactivate", record),
-          style: { color: colors.icon_gray },
-          icon: Icon({
-            icon: Delete02Icon,
-            size: 16,
-            color: colors.icon_gray,
-          }),
-        },
+        // {
+        //   key: "slink",
+        //   label: "Send Link",
+        //   onClick: () => console.log("Deactivate", record),
+        //   icon: Icon({
+        //     size: 16,
+        //     color: colors.icon_gray,
+        //     icon: MailAccount01Icon,
+        //   }),
+        //   style: { color: colors.icon_gray },
+        // },
+        // {
+        //   key: "delete",
+        //   label: "Delete Invitation",
+        //   onClick: () => console.log("Deactivate", record),
+        //   style: { color: colors.icon_gray },
+        //   icon: Icon({
+        //     icon: Delete02Icon,
+        //     size: 16,
+        //     color: colors.icon_gray,
+        //   }),
+        // },
       ];
     }
   };
